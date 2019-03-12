@@ -97,14 +97,24 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
         in 1..100   ->
         {
           routs++
-          when (node)
+          
+          if (node in 1..min)
           {
-            in 1..min   -> min = node
-            in max..100 -> max = node
-          } 
+            min = node
+          }
+
+          if (node in max..100)
+          {
+            max = node
+          }
         }
       }
     }
+  }
+
+  if (min == 101)
+  {
+    min = 0
   }
 
   println("Matrix size is $size.")

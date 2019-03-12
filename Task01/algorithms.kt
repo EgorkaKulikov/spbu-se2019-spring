@@ -26,7 +26,7 @@ fun algDijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>
     
     for (i in 0..(size-1))
     {
-      if (visited[i] == false && map[i] < min)
+      if (visited[i] == false && map[i] <= min)
       {
         min = map[i]
         current = i
