@@ -5,8 +5,13 @@ import kotlin.math.max as max
 const val MAX_BRANCH_LENGTH = 100
 const val MAX_N = 2000
 const val INF = MAX_BRANCH_LENGTH * MAX_N
+const val NULL_BRANCH = "*"
 
-fun Int.length() : Int = this.toString().length
+fun Int?.length() : Int =
+    if (this == null)
+        NULL_BRANCH.length
+    else
+        this.toString().length
 
 class SymMatrix(val N : Int) {
     private val table : MutableMap<Int, Int> = mutableMapOf()
@@ -20,10 +25,13 @@ class SymMatrix(val N : Int) {
     }
     override fun toString() : String {
         var result = ""
-        val maxIntLength = this.table.maxBy {it.value.length()}!!.value.length()
+        val maxIntLength = if (this.table.isEmpty())
+            NULL_BRANCH.length
+        else
+            max(this.table.maxBy {it.value.length()}!!.value.length(), NULL_BRANCH.length)
         for (i in 1..this.N) {
             for (j in 1..this.N) {
-                result += " ".repeat(maxIntLength - (this[i, j] ?: 0).length()) + "${this[i, j] ?: 0} "
+                result += " ".repeat(maxIntLength - this[i, j].length()) + "${this[i, j] ?: NULL_BRANCH} "
             }
             result += '\n'
         }
@@ -52,7 +60,7 @@ class ArrayFrom1(val N : Int, private val funGenerator : (Int) -> Int?) {
     }
     override fun toString() : String {
         var result = ""
-        for (i in 1..this.N) result += "$i: ${this[i]}\n"
+        for (i in 1..this.N) result += "$i: ${this[i] ?: "нет пути"}\n"
         return result
     }
 }
@@ -191,7 +199,7 @@ fun main(args: Array<String>) {
             continue
         }
         if (n < 1 || n > MAX_N) {
-            println("Первый параметр некорректный! (меньше 0 или больше $MAX_N)")
+            println("Первый параметр некорректный! (меньше 1 или больше $MAX_N)")
             continue
         }
         try {
