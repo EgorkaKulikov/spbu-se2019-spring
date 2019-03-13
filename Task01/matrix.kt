@@ -3,6 +3,7 @@ package graph
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
+internal val nodeMaxValue: Int = 100
 
 fun extractArgs(args: Array<String>): Triple<Int, Int, Int>
 {
@@ -38,7 +39,7 @@ fun createMatrix(N: Int, M: Int): Array<Array<Int>>
   var nodes: Int = 0
   var zeroes: Int = if (N*(N - 1)/2 > M) {N*(N - 1)/2 - M} else 0
   
-  val matrix: Array<Array<Int>> = Array(N, {Array(N, {0})})
+  val matrix: Array<Array<Int>> = Array(N, {Array(N, {0})}) 
   
   for (i in 0 until N)
   {
@@ -60,7 +61,7 @@ fun createMatrix(N: Int, M: Int): Array<Array<Int>>
 
         (nodes < M) && (j > i) ->
         {
-          matrix[i][j] = Random.nextInt(1, 101)
+          matrix[i][j] = Random.nextInt(1, nodeMaxValue + 1)
           nodes++
         }
 
@@ -81,7 +82,7 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
   val size = matrix.size
   
   var routes = 0
-  var min = 101
+  var min = nodeMaxValue + 1
   var max = 0
   var node: Int
   
@@ -93,8 +94,8 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
       
       when (node)
       {
-        0           -> continue@inner
-        in 1..100   ->
+        0 -> continue@inner
+        in 1..nodeMaxValue ->
         {
           routes++
           
@@ -103,7 +104,7 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
             min = node
           }
 
-          if (node in max..100)
+          if (node in max..nodeMaxValue)
           {
             max = node
           }
@@ -112,7 +113,7 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
     }
   }
 
-  if (min == 101)
+  if (min == nodeMaxValue + 1)
   {
     min = 0
   }
