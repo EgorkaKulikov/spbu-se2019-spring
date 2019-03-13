@@ -1,11 +1,10 @@
-import com.sun.org.apache.xml.internal.security.Init
-import com.sun.org.apache.xpath.internal.operations.Bool
-import org.omg.CORBA.INTERNAL
-import kotlin.math.max
 import kotlin.random.Random
 
 
-fun buildMatrix(graph: Array<Array<Int>>, n: Int, m: Int, max: Array<Int>, min: Array<Int>) {
+fun buildMatrix(
+    graph: Array<Array<Int>>, n: Int, m: Int,
+    max: Array<Int>, min: Array<Int>
+) {
     println("Adjacency matrix of graph n x n:")
 
     var max1 = 0
@@ -40,8 +39,6 @@ fun buildMatrix(graph: Array<Array<Int>>, n: Int, m: Int, max: Array<Int>, min: 
 }
 
 
-
-
 fun printStats(n: Int, m: Int, max: Array<Int>, min: Array<Int>) {
     println("Stats:")
     println("Counts of vertices: $n")
@@ -51,73 +48,64 @@ fun printStats(n: Int, m: Int, max: Array<Int>, min: Array<Int>) {
     println()
 }
 
-fun DijkstraAlgo(graph: Array<Array<Int>>, n:Int) : Array<Int> {
-    println("Number of vertex from 0 to ${n - 1} for DijkstraAlgo")
-    val k = readLine()!!.toInt()
-    println()
-
+fun DijkstraAlgo(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
 
     val visited = Array(n) { false }
 
-    val d = Array(n) { 1000 }
+    val distance = Array(n) { Int.MAX_VALUE }
 
 
-    d[k] = 0
+    distance[k] = 0
 
     for (i in 0 until n) {
 
-        var v = -1
+        var vertex = -1
 
         for (j in 0 until n) {
-            if (!visited[j]  && (v == -1 || d[j] < d[v]))
-                v = j
+            if (!visited[j] && (vertex == -1 || distance[j] < distance[vertex]))
+                vertex = j
         }
 
-        if (d[v] == 1000) break
-        visited[v] = true
+        if (distance[vertex] == 1000) break
+        visited[vertex] = true
 
         //create temp list
-        var listv : List<Int> = emptyList()
-        for (j in 0 until n){
-            if (graph[v][j] > 0){
+        var listv: List<Int> = emptyList()
+        for (j in 0 until n) {
+            if (graph[vertex][j] > 0) {
                 listv = listv.plus(j)
             }
         }
 
         for (j in listv) {
-            val len = graph[v][j]
-            if (d[v] + len < d[j]) {
-                d[j] = d[v] + len
+            val len = graph[vertex][j]
+            if (distance[vertex] + len < distance[j]) {
+                distance[j] = distance[vertex] + len
             }
 
         }
 
     }
 
-    return d
+    return distance
 }
 
-fun Ford_bellmanAlgo(graph: Array<Array<Int>>, n:Int) : Array<Int> {
-    println("Number of vertex from 0 to ${n - 1} for Ford_bellmanAlgo")
-    val k = readLine()!!.toInt()
+fun algoFord_Bellman(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
+    val distance = Array(n) { Int.MAX_VALUE }
+    distance[k] = 0
 
-
-    val d = Array(n) { 1000 }
-
-
-    d[k] = 0
-
-    for(m in 0 until n){
-    for (i in 0 until n) {
-        for (j in 0 until n) {
-            if (graph[i][j] != 0) {
-                if (d[j] > d[i] + graph[i][j])
-                    d[j] = d[i] + graph[i][j]
+    for (m in 0 until n) {
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                if (graph[i][j] != 0) {
+                    if (distance[j] > distance[i] + graph[i][j])
+                        distance[j] = distance[i] + graph[i][j]
+                }
             }
         }
     }
-    }
-    return d
+
+    return distance
 }
 
 
@@ -126,52 +114,54 @@ fun main() {
     val n = try {
         print("Print n: ")
         val temp = readLine()!!.toInt()
-        if (temp <= 0 || temp >= 1000) throw ExceptionInInitializerError()
-        else temp
-    }catch (e: ExceptionInInitializerError){
+        if (temp in 0 until 1000) temp
+        else throw Exception()
+    } catch (e: Exception) {
         println("Initializer error, allowable range [1; 1000)")
         return
     }
 
 
-
-    val m =  try {
+    val m = try {
         print("Print m: ")
         val tmp = readLine()!!.toInt()
-        if (tmp > n * (n - 1) / 2 || (tmp <= 0 || tmp >= 100000)) throw ExceptionInInitializerError()
-        else tmp
-    }
-    catch(e: ExceptionInInitializerError) {
-        println("Initializer error, m must be <= ${n * (n - 1) / 2} or m should be contained in range from 0 to 100000")
+        if ((tmp <= n * (n - 1) / 2) && (tmp in 0 until 100000)) tmp
+        else throw Exception()
+    } catch (e: Exception) {
+        println(
+            "Initializer error, m must be <= ${n * (n - 1) / 2} " +
+                    "or m should be contained in range from 0 to 100000"
+        )
         return
     }
 
-    val graph : Array<Array<Int>> = Array(n){Array(n){0}}
-
-    val max = Array(1) {0}
-
-    val min = Array(1) {0}
+    val graph: Array<Array<Int>> = Array(n) { Array(n) { 0 } }
+    val max = Array(1) { 0 }
+    val min = Array(1) { 0 }
 
 
     buildMatrix(graph, n, m, max, min)
-
-
     printStats(n, m, max, min)
 
 
+    println("Number of vertex from 0 to ${n - 1}")
 
-    val dDj = DijkstraAlgo(graph, n).forEach {
+    val k = readLine()!!.toInt()
+    println()
+
+    val distDijkstra = DijkstraAlgo(graph, n, k).forEach {
         print("$it ")
     }
 
     println()
-    val dFb = Ford_bellmanAlgo(graph, n).forEach { print("$it ") }
+    val distFord_Bellman =
+        algoFord_Bellman(graph, n, k).forEach { print("$it ") }
     println()
 
-
-    if(dDj == dFb) println("Algorithms are equel")
+    if (distDijkstra == distFord_Bellman)
+        println("Both algorithms work the same way.")
     else {
-        println("Error, algorithms are not equel")
+        println("Error, algorithms give different results.")
         return
 
     }
