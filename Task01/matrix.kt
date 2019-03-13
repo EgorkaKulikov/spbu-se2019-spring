@@ -22,13 +22,13 @@ fun extractArgs(args: Array<String>): Triple<Int, Int, Int>
     exitProcess(1)
   }
 
-  if (args[2].toInt() !in 0..(args[0].toInt() - 1))
+  if (args[2].toInt() !in (0 until args[0].toInt()))
   {
     println("Wrong value!")
     println("Variable K have to be in 0..(N-1).")
     exitProcess(1)
   }
-  
+
   return Triple(args[0].toInt(), args[1].toInt(), args[2].toInt())
 }
 
@@ -40,9 +40,9 @@ fun createMatrix(N: Int, M: Int): Array<Array<Int>>
   
   val matrix: Array<Array<Int>> = Array(N, {Array(N, {0})})
   
-  for (i in 0..(N-1))
+  for (i in 0 until N)
   {
-    for (j in 0..(N-1))
+    for (j in 0 until N)
     {
       when
       {
@@ -80,14 +80,14 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
 {
   val size = matrix.size
   
-  var routs = 0
+  var routes = 0
   var min = 101
   var max = 0
   var node: Int
   
-  for (i in 0..(size - 1))
+  for (i in 0 until size)
   {
-    inner@ for (j in i..(size - 1))
+    inner@ for (j in i until size)
     {
       node = matrix[i][j]
       
@@ -96,7 +96,7 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
         0           -> continue@inner
         in 1..100   ->
         {
-          routs++
+          routes++
           
           if (node in 1..min)
           {
@@ -118,7 +118,7 @@ fun analyseMatrix(matrix : Array<Array<Int>>)
   }
 
   println("Matrix size is $size.")
-  println("It includes $routs routs.")
-  println("Minimal rout is $min.")
-  println("Maximal rout is $max.")
+  println("It includes $routes routes.")
+  println("Minimal route is $min.")
+  println("Maximal route is $max.")
 }

@@ -12,7 +12,7 @@ fun algDijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>
   
   map[start] = 0
 
-  for (i in 0..(size-1))
+  for (i in 0 until size)
   {
     if (matrix[i].all{it -> it == 0})
     {
@@ -24,7 +24,7 @@ fun algDijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>
   {
     min = Int.MAX_VALUE
     
-    for (i in 0..(size-1))
+    for (i in 0 until size)
     {
       if (visited[i] == false && map[i] <= min)
       {
@@ -35,7 +35,7 @@ fun algDijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>
     
     visited[current] = true
     
-    for (i in 0..(size-1))
+    for (i in 0 until size)
     {
       if (visited[i] == false && matrix[current][i] != 0 &&
           map[i] - matrix[current][i] > map[current])
@@ -44,6 +44,7 @@ fun algDijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>
       }
     }
   }
+  
   return map
 }
 
@@ -55,11 +56,11 @@ fun algFordBellman(matrix: Array<Array<Int>>, start: Int): Array<Int>
   
   map[start] = 0
 
-  for (i in 1..(size-1))
+  for (i in 1 until size)
   {
-    for (j in 0..(size-1))
+    for (j in 0 until size)
     {
-      for (k in 0..(size-1))
+      for (k in 0 until size)
       {
         if (map[k] - map[j] > matrix[j][k] && matrix[j][k] != 0)
         {
