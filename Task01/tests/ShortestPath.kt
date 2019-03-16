@@ -1,4 +1,4 @@
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TestMyGraph {
@@ -8,9 +8,9 @@ class TestMyGraph {
             for (M in 1..(N * (N - 1) / 2)) {
                 val graph = MyGraph(N, M)
                 for (K in 1..N) {
-                    val lenDijkstra: Array<Int> = graph.getDijkstraShortestPath(K).first
-                    val lenFordBellman: Array<Int> = graph.getFordBellmanShortestPath(K).first
-                    val lenLevit: Array<Int> = graph.getLevitShortestPath(K).first
+                    val lenDijkstra: Array<Int> = graph.getDijkstraShortestPath(K)
+                    val lenFordBellman: Array<Int> = graph.getFordBellmanShortestPath(K)
+                    val lenLevit: Array<Int> = graph.getLevitShortestPath(K)
                     for (i in 1..N) {
                         assertEquals(lenDijkstra[i], lenLevit[i])
                         assertEquals(lenLevit[i], lenFordBellman[i])
