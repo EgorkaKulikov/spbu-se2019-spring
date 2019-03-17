@@ -1,89 +1,28 @@
-import java.lang.Exception
-import kotlin.math.min as min
-import kotlin.math.max as max
+import kotlin.math.min
 
 const val MAX_BRANCH_LENGTH = 100
 const val MAX_N = 2000
 const val INF = MAX_BRANCH_LENGTH * MAX_N
 const val NULL_BRANCH = "*"
 
-fun Int?.length() : Int =
-    if (this == null)
+val Int?.length: Int
+    get() = if (this == null)
         NULL_BRANCH.length
     else
-        this.toString().length
+        toString().length
 
-class SymMatrix(val N : Int) {
-    private val table : MutableMap<Int, Int> = mutableMapOf()
-    operator fun get(i: Int, j: Int) : Int? {
-        val key = this.N * min(i, j) + max(i, j)
-        return if (key in this.table.keys) table[key] else null
-    }
-    operator fun set(i : Int, j : Int, value : Int) {
-        val key = this.N * min(i, j) + max(i, j)
-        this.table[key] = value
-    }
-    override fun toString() : String {
-        var result = ""
-        val maxIntLength = if (this.table.isEmpty())
-            NULL_BRANCH.length
-        else
-            max(this.table.maxBy {it.value.length()}!!.value.length(), NULL_BRANCH.length)
-        for (i in 1..this.N) {
-            for (j in 1..this.N) {
-                result += " ".repeat(maxIntLength - this[i, j].length()) + "${this[i, j] ?: NULL_BRANCH} "
-            }
-            result += '\n'
-        }
-        return result
-    }
+fun arrayBeginningFrom1Of(size: Int, init: (Int) -> Int?): Array<Int?> = Array(size + 1, init)
+
+fun equalsElements(firstArray: Array<Int?>, secondArray: Array<Int?>): Boolean {
+    if (firstArray.size != secondArray.size)
+        return false
+    for (i in 0 until firstArray.size)
+        if (firstArray[i] != secondArray[i])
+            return false
+    return true
 }
 
-class ArrayFrom1(val N : Int, private val funGenerator : (Int) -> Int?) {
-    private var table = Array(N) {funGenerator(it + 1)}
-    operator fun get(i: Int) : Int? = this.table[i - 1]
-    operator fun set(i : Int, value : Int) {this.table[i - 1] = value}
-    override operator fun equals(other : Any?) : Boolean {
-        if (other !is ArrayFrom1) return false
-        if (this.N != other.N) return false
-        for (i in 1..this.N) {
-            if (this[i] != other[i]) return false
-        }
-        return true
-    }
-    override fun hashCode(): Int {
-        var hash = this.N * 1313
-        for (i in 1..this.N) {
-            hash = (hash xor (this[i] ?: 131313 * (i + 13))) shl 1
-        }
-        return hash
-    }
-    override fun toString() : String {
-        var result = ""
-        for (i in 1..this.N) result += "$i: ${this[i] ?: "нет пути"}\n"
-        return result
-    }
-}
-
-class Heap {
-    private val table = sortedSetOf<Pair<Int, Int>>(Comparator { it, other ->
-        if (it.first == other.first)
-            it.second - other.second
-        else
-            it.first - other.first})
-    fun push(key : Int, value : Int) {this.table.add(Pair(key, value))}
-    fun pop() : Int {
-        val result = this.table.first()!!
-        this.table.remove(result)
-        return result.second
-    }
-    fun remove(key : Int, value : Int) {this.table.remove(Pair(key, value))}
-    fun size() : Int = this.table.size
-}
-
-fun autoCreateGraph(N : Int, M : Int) : SymMatrix? {
-    if (N * (N - 1) < M * 2)
-        return null
+fun autoCreateGraph(N : Int, M : Int) : SymMatrix {
     val resGraph = SymMatrix(N)
     val pairs = mutableListOf<Pair<Int, Int>>()
     var k = 0
@@ -99,76 +38,63 @@ fun autoCreateGraph(N : Int, M : Int) : SymMatrix? {
     return resGraph
 }
 
-fun statisticGraph(graph : SymMatrix) {
+fun statisticGraph(graph: SymMatrix) {
     println("Статистика графа:")
-    var minBranch = MAX_BRANCH_LENGTH
-    var maxBranch = 0
-    var numBranch = 0
-    for (i in 1..graph.N) {
-        for (j in i + 1..graph.N) {
-            val value = graph[i, j]
-            if (value != null) {
-                minBranch = min(minBranch, value)
-                maxBranch = max(maxBranch, value)
-                numBranch++
-            }
-        }
-    }
-    println("Граф состоит из ${graph.N} ${if (graph.N == 1) "вершины" else "вершин"} " +
-            "и $numBranch ${if (numBranch == 1) "ребра" else "рёбер"}.")
-    if (numBranch != 0)
+    print("Граф состоит из ${graph.N} ")
+    if (graph.N == 1)
+        print("вершины")
+    else
+        print("вершин")
+    print(" и ${graph.branches.size} ")
+    if (graph.branches.size == 1)
+        print("ребра")
+    else
+        print("рёбер")
+    println()
+    if (!graph.branches.isEmpty())
     {
-        println("Минимальная длина ребра = $minBranch")
-        println("Максимальная длина ребра = $maxBranch")
+        println("Минимальная длина ребра = ${graph.branches.minBy { it.value }!!.value}")
+        println("Максимальная длина ребра = ${graph.branches.maxBy { it.value }!!.value}")
     }
 }
 
-fun algoDijkstra(graph : SymMatrix, start_vertex : Int) : ArrayFrom1 {
-    val length = ArrayFrom1(graph.N) {if (it == start_vertex) 0 else null}
-    val p = ArrayFrom1(graph.N) {null}
-    val heap = Heap()
-    heap.push(0, start_vertex)
-    while (heap.size() > 0) {
-        val v = heap.pop()
-        for (to in 1..graph.N) {
-            if (graph[v, to] != null) {
-                if (length[to] == null) {
-                    length[to] = length[v]!! + graph[v, to]!!
-                    p[to] = v
-                    heap.push(length[to]!!, to)
-                }
-                else if (length[to]!! > length[v]!! + graph[v, to]!!) {
-                    heap.remove(length[to]!!, to)
-                    length[to] = min(length[to]!!, length[v]!! + graph[v, to]!!)
-                    p[to] = v
-                    heap.push(length[to]!!, to)
-                }
+fun algoDijkstra(graph: SymMatrix, start_vertex: Int): Array<Int?> {
+    val length = arrayBeginningFrom1Of(graph.N) {if (it == start_vertex) 0 else null}
+    val heap = sortedSetOf<SortedVertex>()
+    heap.add(SortedVertex(start_vertex, 0))
+    while (!heap.isEmpty()) {
+        val v = heap.first().vertex
+        heap.remove(heap.first())
+        for (to in graph.adjacentVertexes(v)) {
+            if (length[to] == null) {
+                length[to] = length[v]!! + graph[v, to]!!
+                heap.add(SortedVertex(to, length[to]!!))
+            }
+            else if (length[to]!! > length[v]!! + graph[v, to]!!) {
+                heap.remove(SortedVertex(to, length[to]!!))
+                length[to] = min(length[to]!!, length[v]!! + graph[v, to]!!)
+                heap.add(SortedVertex(to, length[to]!!))
             }
         }
     }
     return length
 }
 
-fun algoBellmanFord(graph : SymMatrix, start_vertex : Int) : ArrayFrom1 {
-    val length = ArrayFrom1(graph.N) {if (it == start_vertex) 0 else null}
-    val p = ArrayFrom1(graph.N) {null}
+fun algoBellmanFord(graph: SymMatrix, start_vertex: Int): Array<Int?> {
+    val length = arrayBeginningFrom1Of(graph.N) {if (it == start_vertex) 0 else null}
     var lengthUpdate: Boolean
     do {
         lengthUpdate = false
-        for (v in 1..graph.N) {
-            for (u in v + 1..graph.N) {
-                if (graph[v, u] != null) {
-                    if (length[v] != null && length[v]!! + graph[v, u]!! < length[u] ?: INF) {
-                        length[u] = length[v]!! + graph[v, u]!!
-                        p[u] = v
-                        lengthUpdate = true
-                    }
-                    if (length[u] != null && length[u]!! + graph[v, u]!! < length[v] ?: INF) {
-                        length[v] = length[u]!! + graph[v, u]!!
-                        p[v] = u
-                        lengthUpdate = true
-                    }
-                }
+        for (branch in graph.branches) {
+            val (v, u) = branch.key
+            val branchLength = branch.value
+            if (length[v] != null && length[v]!! + branchLength < length[u] ?: INF) {
+                length[u] = length[v]!! + branchLength
+                lengthUpdate = true
+            }
+            if (length[u] != null && length[u]!! + branchLength < length[v] ?: INF) {
+                length[v] = length[u]!! + branchLength
+                lengthUpdate = true
             }
         }
     } while (lengthUpdate)
@@ -176,25 +102,25 @@ fun algoBellmanFord(graph : SymMatrix, start_vertex : Int) : ArrayFrom1 {
 }
 
 fun main(args: Array<String>) {
-    var correct_input = false
+    var correctInput = false
     var n: Int? = null
     var m: Int? = null
-    while (!correct_input) {
+    while (!correctInput) {
         println("Введите желаемое количество вершин и рёбер графа: ")
-        val string_input = readLine()
-        if (string_input == null) {
+        val stringInput = readLine()
+        if (stringInput == null) {
             println("Вы ничего не ввели!")
             continue
         }
-        val params_input = string_input.split(' ')
-        if (params_input.size != 2) {
+        val paramsInput = stringInput.split(' ')
+        if (paramsInput.size != 2) {
             println("Вы ввели неверное количество параметров!")
             continue
         }
         try {
-            n = params_input[0].toInt()
+            n = paramsInput[0].toInt()
         }
-        catch (NumberFormatException: Exception) {
+        catch (e: NumberFormatException) {
             println("Первый параметр - не число!")
             continue
         }
@@ -203,9 +129,9 @@ fun main(args: Array<String>) {
             continue
         }
         try {
-            m = params_input[1].toInt()
+            m = paramsInput[1].toInt()
         }
-        catch (NumberFormatException: Exception) {
+        catch (e: NumberFormatException) {
             println("Второй параметр - не число!")
             continue
         }
@@ -213,40 +139,38 @@ fun main(args: Array<String>) {
             println("Второй параметр некорректный! (меньше 0 или больше ${n * (n - 1) / 2})")
             continue
         }
-        correct_input = true
+        correctInput = true
     }
     val graph = autoCreateGraph(n!!, m!!)
-    if (graph == null) {
-        println("НЕ удалось создать граф из $n ${if (n == 1) "вершины" else "вершин"} " +
-                "и $m ${if (m == 1) "ребра" else "рёбер"}.")
-        return
-    }
     print("Граф:\n$graph")
     statisticGraph(graph)
-    correct_input = false
-    var start_vertex: Int? = null
-    while (!correct_input) {
+    correctInput = false
+    var startVertex: Int? = null
+    while (!correctInput) {
         println("Введите номер стартовой вершины:")
-        val string_input = readLine()
-        if (string_input == null) {
+        val stringInput = readLine()
+        if (stringInput == null) {
             println("Вы ничего не ввели!")
             continue
         }
         try {
-            start_vertex = string_input.toInt()
+            startVertex = stringInput.toInt()
         }
-        catch (NumberFormatException: Exception) {
+        catch (e: NumberFormatException) {
             println("Вы ввели не число!")
             continue
         }
-        if (start_vertex < 1 || start_vertex > n) {
+        if (startVertex < 1 || startVertex > n) {
             println("Неверный номер вершины! (должен быть от 1 до $n)")
             continue
         }
-        correct_input = true
+        correctInput = true
     }
-    val lengthD = algoDijkstra(graph, start_vertex!!)
-    val lengthBF = algoBellmanFord(graph, start_vertex)
-    println("Ответы двух алгоритмов ${if (lengthD == lengthBF) "совпали." else "НЕ СОВПАЛИ!!!"}")
-    print("Длины путей от вершины с номером $start_vertex до всех остальных:\n$lengthD")
+    val lengthD = algoDijkstra(graph, startVertex!!)
+    val lengthBF = algoBellmanFord(graph, startVertex)
+    println("Ответы двух алгоритмов ${if (equalsElements(lengthD, lengthBF)) "совпали." else "НЕ СОВПАЛИ!!!"}")
+    println("Длины путей от вершины с номером $startVertex:")
+    for (i in 1..graph.N)
+        if (i != startVertex && lengthD[i] != null)
+            println("($startVertex -> $i) = ${lengthD[i]}")
 }
