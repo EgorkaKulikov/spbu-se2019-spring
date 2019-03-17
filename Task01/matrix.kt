@@ -39,7 +39,7 @@ fun extractArgs(args: Array<String>): Triple<Int, Int, Int>
 fun createMatrix(N: Int, M: Int): Array<Array<Int>>
 {
   var nodes: Int = 0
-  var zeroes: Int = if (N*(N - 1)/2 > M) N*(N - 1)/2 - M else 0
+  var numberOfZeroes: Int = if (N*(N - 1)/2 > M) N*(N - 1)/2 - M else 0
   
   val matrix: Array<Array<Int>> = Array(N) {Array(N) {0}} 
   
@@ -47,33 +47,29 @@ fun createMatrix(N: Int, M: Int): Array<Array<Int>>
   {
     for (j in 0 until N)
     {
-      when
+      if (j < i)
       {
-        (j < i) ->
-        {
-          matrix[i][j] = matrix[j][i]
-        }
-
-        (zeroes != 0)
-        && (nodes < M)
-        && (j > i)
-        && (Random.nextInt(0, 2) == 0) ->
+        matrix[i][j] = matrix[j][i]
+      }
+      
+      else if (nodes < M && j > i)
+      {
+        if (numberOfZeroes != 0 && Random.nextInt(0, 2) == 0)
         {
           matrix[i][j] = 0
-          zeroes--
+          numberOfZeroes--
         }
-
-        (nodes < M)
-        && (j > i) ->
+        
+        else
         {
           matrix[i][j] = Random.nextInt(1, nodeMaxValue + 1)
           nodes++
         }
-
-        else ->
-        {
-          matrix[i][j] = 0
-        }
+      }
+      
+      else
+      {
+        matrix[i][j] = 0
       }
     }
   }

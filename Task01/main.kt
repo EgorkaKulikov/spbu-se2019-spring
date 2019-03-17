@@ -11,6 +11,7 @@ fun main(args: Array<String>)
   val res1: Array<Int> = algDijkstra(matrix, K)
   val res2: Array<Int> = algFordBellman(matrix, K)
   
-  print("It`s ${res1.contentEquals(res2)} that ")
+  val equality: Boolean = res1.contentEquals(res2)
+  print("It`s $equality that ")
   println("Dijkstra`s and Ford-Bellman`s algorithms give the same result.")
 }
