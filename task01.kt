@@ -6,13 +6,9 @@ fun buildMatrix(
     max: Array<Int>, min: Array<Int>
 ) {
     println("Adjacency matrix of graph n x n:")
-
     var max1 = 0
-
     var min1 = 100
-
     var countofedges = 0
-
     while (countofedges != m) {
         val i = Random.nextInt(n)
         val j = Random.nextInt(n)
@@ -28,11 +24,8 @@ fun buildMatrix(
     for (i in 0 until n) {
         for (j in 0 until n)
             print("${graph[i][j]} \t")
-
-
         println()
     }
-
     max[0] = max1
     min[0] = min1
     println()
@@ -51,10 +44,7 @@ fun printStats(n: Int, m: Int, max: Array<Int>, min: Array<Int>) {
 fun DijkstraAlgo(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
 
     val visited = Array(n) { false }
-
     val distance = Array(n) { Int.MAX_VALUE }
-
-
     distance[k] = 0
 
     for (i in 0 until n) {
@@ -66,7 +56,7 @@ fun DijkstraAlgo(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
                 vertex = j
         }
 
-        if (distance[vertex] == 1000) break
+        if (distance[vertex] == Int.MAX_VALUE) break
         visited[vertex] = true
 
         //create temp list
@@ -93,12 +83,11 @@ fun DijkstraAlgo(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
 fun algoFord_Bellman(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
     val distance = Array(n) { Int.MAX_VALUE }
     distance[k] = 0
-
     for (m in 0 until n) {
         for (i in 0 until n) {
             for (j in 0 until n) {
                 if (graph[i][j] != 0) {
-                    if (distance[j] > distance[i] + graph[i][j])
+                    if (distance[j].toLong() > distance[i].toLong() + graph[i][j].toLong())
                         distance[j] = distance[i] + graph[i][j]
                 }
             }
@@ -107,7 +96,6 @@ fun algoFord_Bellman(graph: Array<Array<Int>>, n: Int, k: Int): Array<Int> {
 
     return distance
 }
-
 
 fun main() {
 
@@ -120,7 +108,6 @@ fun main() {
         println("Initializer error, allowable range [1; 1000)")
         return
     }
-
 
     val m = try {
         print("Print m: ")
@@ -139,30 +126,22 @@ fun main() {
     val max = Array(1) { 0 }
     val min = Array(1) { 0 }
 
-
     buildMatrix(graph, n, m, max, min)
     printStats(n, m, max, min)
 
-
     println("Number of vertex from 0 to ${n - 1}")
-
     val k = readLine()!!.toInt()
+    val distDijkstra: Array<Int> = DijkstraAlgo(graph, n, k)
+    distDijkstra.forEach { print("$it ") }
     println()
-
-    val distDijkstra = DijkstraAlgo(graph, n, k).forEach {
-        print("$it ")
-    }
-
+    val distFord_Bellman: Array<Int> = algoFord_Bellman(graph, n, k)
+    distFord_Bellman.forEach { print("$it ") }
     println()
-    val distFord_Bellman =
-        algoFord_Bellman(graph, n, k).forEach { print("$it ") }
-    println()
-
-    if (distDijkstra == distFord_Bellman)
+    if (distDijkstra.contentEquals(distFord_Bellman)) {
         println("Both algorithms work the same way.")
-    else {
+    } else {
         println("Error, algorithms give different results.")
         return
-
     }
+
 }
