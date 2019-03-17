@@ -3,33 +3,30 @@ import java.util.*
 const val INF = 10000001
 
 class Graph(N: Int) {
-    private var adjMat: Array<Array<Int>>
-    private var minWeight: Int
-    private var maxWeight: Int
-    private var numberOfEdges: Int
+    private var adjMat: Array<Array<Int>> = Array(N){ _ -> Array(N) { 0 } }
+    private var minWeight: Int = 0
+    private var maxWeight: Int = 0
+    private var numberOfEdges: Int = 0
 
-    init {
-        adjMat = Array(N){ _ -> Array(N) { _ -> 0 } }
-        maxWeight = 0
-        minWeight = 0
-        numberOfEdges = 0
-    }
 
     fun addRandomEdges(M: Int) {
-        var freeEdges = Array<Array<Pair<Int, Int>>>(adjMat.size) { i -> Array(adjMat.size - i - 1) { j -> Pair(i, i + j + 1) } }
+        var freeEdges = Array<Array<Pair<Int, Int>>>(adjMat.size)
+            { i -> Array(adjMat.size - i - 1) { j -> Pair(i, i + j + 1) } }
                 .flatMap { v -> v.asList() }
                 .filter { p -> adjMat[p.first][p.second] == 0 }
                 .shuffled()
         val randGen = Random()
 
-        for (i in 0..(M - 1)) {
+        for (i in 0.until(M)) {
             val weight = randGen.nextInt(100) + 1
 
-            if (maxWeight < weight)
+            if (maxWeight < weight) {
                 maxWeight = weight
+            }
 
-            if (minWeight == 0 || minWeight > weight)
+            if (minWeight == 0 || minWeight > weight) {
                 minWeight = weight
+            }
 
             numberOfEdges++
             adjMat[freeEdges[i].first][freeEdges[i].second] = weight
@@ -48,17 +45,19 @@ class Graph(N: Int) {
         var distances = Array<Int>(adjMat.size) {i -> if(i == start) 0 else INF}
         var visited = Array<Boolean>(adjMat.size) { _ -> false }
 
-        for (i in 0..(adjMat.size - 1)) {
-            var v: Int = (0..(adjMat.size - 1)).filter { j: Int -> !visited[j] }.minBy { j: Int -> distances[j] }!!
+        for (i in 0.until(adjMat.size)) {
+            var v: Int = 0.until(adjMat.size).filter { j: Int -> !visited[j] }.minBy { j: Int -> distances[j] }!!
 
-            if (distances[v] == INF)
+            if (distances[v] == INF) {
                 break
+            }
 
             visited[v] = true
 
-            for (j in 0..(adjMat.size - 1)) {
-                if (adjMat[v][j] != 0 && distances[v] + adjMat[v][j] < distances[j])
+            for (j in 0.until(adjMat.size)) {
+                if (adjMat[v][j] != 0 && distances[v] + adjMat[v][j] < distances[j]) {
                     distances[j] = distances[v] + adjMat[v][j]
+                }
             }
         }
 
@@ -71,7 +70,7 @@ class Graph(N: Int) {
                 .flatMap { v -> v.asList() }
                 .filter { p -> adjMat[p.first][p.second] != 0 }
 
-        for (k in 0..(adjMat.size - 1)) {
+        for (k in 0.until(adjMat.size)) {
             var changed = false
 
             for (e in edges) {
@@ -81,8 +80,9 @@ class Graph(N: Int) {
                 }
             }
 
-            if (!changed)
+            if (!changed) {
                 break
+            }
         }
 
         return distances
