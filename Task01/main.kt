@@ -19,15 +19,15 @@ fun buildGraph(numberOfVertexes: Int, numberOfEdges: Int): Array<IntArray> {
 
 }
 
-fun statistic(adjacencyMatrix: Array<IntArray>, N: Int, M: Int) {
+fun statistic(adjacencyMatrix: Array<IntArray>,numberOfVertexes: Int, numberOfEdges: Int) {
 
-    println("There are $N vertexes and $M edges in graph")
+    println("There are $numberOfVertexes vertexes and $numberOfEdges edges in graph")
 
     var minEdgeWeight = Int.MAX_VALUE
     var maxEdgeWeight = Int.MIN_VALUE
 
-    for (i in 0 until N) {
-        for (j in i until N) {
+    for (i in 0 until numberOfVertexes) {
+        for (j in i until numberOfVertexes) {
             if (adjacencyMatrix[i][j] > maxEdgeWeight)
                 maxEdgeWeight = adjacencyMatrix[i][j]
             if (adjacencyMatrix[i][j] < minEdgeWeight && adjacencyMatrix[i][j] != 0)
@@ -39,23 +39,23 @@ fun statistic(adjacencyMatrix: Array<IntArray>, N: Int, M: Int) {
 
 }
 
-fun dijkstra(adjacencyMatrix: Array<IntArray>, N: Int, K: Int): Array<Int> {
+fun dijkstra(adjacencyMatrix: Array<IntArray>, numberOfVertexes: Int, indexOfVertex: Int): Array<Int> {
 
-    val distances: Array<Int> = Array(N) { Int.MAX_VALUE }
-    val used: Array<Boolean> = Array(N) { false }
+    val distances: Array<Int> = Array(numberOfVertexes) { Int.MAX_VALUE }
+    val used: Array<Boolean> = Array(numberOfVertexes) { false }
 
-    distances[K] = 0
+    distances[indexOfVertex] = 0
 
-    for (i in 0 until N) {
+    for (i in 0 until numberOfVertexes) {
         var indexMinWeight = -1
-        for (j in 0 until N) {
+        for (j in 0 until numberOfVertexes) {
             if (!used[j] && (indexMinWeight == -1 || distances[j] < distances[indexMinWeight])) {
                 indexMinWeight = j
             }
         }
         if (distances[indexMinWeight] == Int.MAX_VALUE) break
         used[indexMinWeight] = true
-        for (j in 0 until N) {
+        for (j in 0 until numberOfVertexes) {
             if (adjacencyMatrix[indexMinWeight][j] == 0) continue
             if (distances[indexMinWeight] + adjacencyMatrix[indexMinWeight][j] < distances[j]) {
                 distances[j] = distances[indexMinWeight] + adjacencyMatrix[indexMinWeight][j]
@@ -63,32 +63,32 @@ fun dijkstra(adjacencyMatrix: Array<IntArray>, N: Int, K: Int): Array<Int> {
         }
     }
 
-    for (i in 0 until N) {
+    for (i in 0 until numberOfVertexes) {
         if (distances[i] == Int.MAX_VALUE)
-            println("There's no way from vertex number ${K + 1} to vertex number ${i + 1}")
+            println("There's no way from vertex number ${indexOfVertex + 1} to vertex number ${i + 1}")
         else
-            println("From ${K + 1} to ${i + 1}: ${distances[i]}")
+            println("From ${indexOfVertex + 1} to ${i + 1}: ${distances[i]}")
     }
 
     return distances
 
 }
 
-fun fordBellman(adjacencyMatrix: Array<IntArray>, N: Int, K: Int): Array<Int> {
+fun fordBellman(adjacencyMatrix: Array<IntArray>, numberOfVertexes: Int, indexOfVertex: Int): Array<Int> {
 
     data class Edge(val from: Int, val to: Int, val weight: Int)
 
     var edges: Array<Edge> = emptyArray()
 
-    for (i in 0 until N) {
-        for (j in 0 until N) {
+    for (i in 0 until numberOfVertexes) {
+        for (j in 0 until numberOfVertexes) {
             edges = edges.plus(Edge(i, j, adjacencyMatrix[i][j]))
             edges = edges.plus(Edge(j, i, adjacencyMatrix[i][j]))
         }
     }
 
-    val distances: Array<Int> = Array(N) { Int.MAX_VALUE }
-    distances[K] = 0
+    val distances: Array<Int> = Array(numberOfVertexes) { Int.MAX_VALUE }
+    distances[indexOfVertex] = 0
 
     while (true) {
         var any = false
@@ -103,11 +103,11 @@ fun fordBellman(adjacencyMatrix: Array<IntArray>, N: Int, K: Int): Array<Int> {
         if (!any) break
     }
 
-    for (i in 0 until N) {
+    for (i in 0 until numberOfVertexes) {
         if (distances[i] == Int.MAX_VALUE)
-            println("There's no way from vertex number ${K + 1} to vertex number ${i + 1}")
+            println("There's no way from vertex number ${indexOfVertex + 1} to vertex number ${i + 1}")
         else
-            println("From ${K + 1} to ${i + 1}: ${distances[i]}")
+            println("From ${indexOfVertex + 1} to ${i + 1}: ${distances[i]}")
     }
 
     return distances
