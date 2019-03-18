@@ -1,3 +1,4 @@
+import java.util.PriorityQueue
 import kotlin.math.min
 
 const val MAX_BRANCH_LENGTH = 100
@@ -10,6 +11,13 @@ val Int?.length: Int
         NULL_BRANCH.length
     else
         toString().length
+
+data class ComparableVertex(val vertex: Int, val pathLength: Int): Comparable<ComparableVertex> {
+    override fun compareTo(other: ComparableVertex): Int {
+        if (this.pathLength == other.pathLength) return this.vertex - other.vertex
+        return this.pathLength - other.pathLength
+    }
+}
 
 fun arrayBeginningFrom1Of(size: Int, init: (Int) -> Int?): Array<Int?> = Array(size + 1, init)
 
@@ -60,20 +68,20 @@ fun statisticGraph(graph: SymMatrix) {
 
 fun algoDijkstra(graph: SymMatrix, start_vertex: Int): Array<Int?> {
     val length = arrayBeginningFrom1Of(graph.N) {if (it == start_vertex) 0 else null}
-    val heap = sortedSetOf<SortedVertex>()
-    heap.add(SortedVertex(start_vertex, 0))
-    while (!heap.isEmpty()) {
-        val v = heap.first().vertex
-        heap.remove(heap.first())
+    val queue = PriorityQueue<ComparableVertex>()
+    queue.add(ComparableVertex(start_vertex, 0))
+    while (!queue.isEmpty()) {
+        val v = queue.first().vertex
+        queue.remove(queue.first())
         for (to in graph.adjacentVertexes(v)) {
             if (length[to] == null) {
                 length[to] = length[v]!! + graph[v, to]!!
-                heap.add(SortedVertex(to, length[to]!!))
+                queue.add(ComparableVertex(to, length[to]!!))
             }
             else if (length[to]!! > length[v]!! + graph[v, to]!!) {
-                heap.remove(SortedVertex(to, length[to]!!))
+                queue.remove(ComparableVertex(to, length[to]!!))
                 length[to] = min(length[to]!!, length[v]!! + graph[v, to]!!)
-                heap.add(SortedVertex(to, length[to]!!))
+                queue.add(ComparableVertex(to, length[to]!!))
             }
         }
     }
