@@ -1,4 +1,8 @@
 const val MAX_DISTANCE = 10000000 // so-called infinity for the Dijkstra's and Bellman-Ford's algorithms
+var minElem = -1
+var maxElem = -1
+
+fun getRandom(numberNodes: Int) = (0 until numberNodes).random()
 
 fun createGraph(numberNodes: Int, numberEdges: Int): Array<Array<Int>>
 {
@@ -8,36 +12,32 @@ fun createGraph(numberNodes: Int, numberEdges: Int): Array<Array<Int>>
 
     for (i in numberEdges downTo 1)
     {
-        rowInd = (0 until numberNodes).random()
-        cellInd = (0 until numberNodes).random()
+        rowInd = getRandom(numberNodes)
+        cellInd = getRandom(numberNodes)
 
         while(graph[rowInd][cellInd] != 0 || rowInd == cellInd)
         {
-            rowInd = (0 until numberNodes).random()
-            cellInd = (0 until numberNodes).random()
+            rowInd = getRandom(numberNodes)
+            cellInd = getRandom(numberNodes)
         }
 
         graph[rowInd][cellInd] = (1..100).random() // to 100 because it is max value of one edge
         graph[cellInd][rowInd] = graph[rowInd][cellInd]
+
+        // It would be a long row if we did same as in 33 row
+        if ((minElem > graph[rowInd][cellInd] || minElem == -1)
+            && graph[rowInd][cellInd] != 0)
+        {
+            minElem = graph[rowInd][cellInd]
+        }
+        maxElem = if (maxElem < graph[rowInd][cellInd]) graph[rowInd][cellInd] else maxElem
     }
 
     return graph
 }
 
-fun getStats(numberNodes : Int, numberEdges : Int, graphRel: Array<Array<Int>>)
+fun getStats(numberNodes : Int, numberEdges : Int)
 {
-    var maxElem = -1
-    var minElem = -1
-
-    for(row in graphRel)
-    {
-        for(cell in row)
-        {
-            minElem = if ((minElem > cell || minElem == -1) && cell != 0) cell else minElem
-            maxElem = if (maxElem < cell) cell else maxElem
-        }
-    }
-
     println("Number of nodes: $numberNodes")
     println("Number of edges: $numberEdges")
     if (minElem == -1)
@@ -58,7 +58,7 @@ fun dijkstra(graphRel: Array<Array<Int>>, numberNodes: Int, initNode: Int): Arra
     val isChecked = Array(numberNodes) {false}
     var indexOfCurrentNode = 0
 
-    for (j in 0 until numberNodes-1)
+    for (j in 0 until numberNodes)
     {
         var currentMin = MAX_DISTANCE
 
@@ -125,10 +125,11 @@ fun main()
     val numberEdges = scan.nextInt()
     val k = scan.nextInt()
 
+
     val graphRel: Array<Array<Int>> = createGraph(numberNodes, numberEdges)
     val dijkstraRes = dijkstra(graphRel, numberNodes, k)
     val bellmanRes = bellmanFord(graphRel, numberNodes, k)
 
-    getStats(numberNodes, numberEdges, graphRel)
+    getStats(numberNodes, numberEdges)
     println(dijkstraRes contentEquals bellmanRes)
 }
