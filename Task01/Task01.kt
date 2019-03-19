@@ -1,40 +1,40 @@
-val scan = java.util.Scanner(System.`in`)
-
-const val INF = 1000001
+const val INFINITY = 1000001
+const val MAX_WEIGHT = 100
 
 fun addGraph(size: Int, numOfEdges: Int): Array<Array<Int>>{
 
     val matrix: Array<Array<Int>> = Array(size) {Array(size) {0}}
-    var i = 0
+    var counterOfCreatedEdges = 0
 
-    while(i != numOfEdges) {
-        val rnd1 = (0..(size - 1)).random()
-        val rnd2 = (0..(size - 1)).random()
-        val value = (1..99).random()
+    while(counterOfCreatedEdges != numOfEdges) {
+        val rnd1 = (0 until size).random()
+        val rnd2 = (0 until size).random()
+        val value = (1 until MAX_WEIGHT).random()
         if ((matrix[rnd1][rnd2] == 0) && (rnd1 != rnd2)) {
             matrix[rnd1][rnd2] = value
             matrix[rnd2][rnd1] = value
-            i++
+            counterOfCreatedEdges++
         }
     }
 
     return matrix
 }
 
+//if graph hasn't any edges, max and min weights of edges is zeros
 fun printInformationAboutGraph(matrix: Array<Array<Int>>){
 
     println("Num of vertices = ${matrix.size}")
 
     var numOfEdges = 0
-    for(i in 0..(matrix.size - 1)){
-        for(j in 0..(matrix.size - 1))
+    for(i in 0 until matrix.size){
+        for(j in (i + 1) until matrix.size)
             if(matrix[i][j] != 0)
                 numOfEdges++
     }
-    println("Num of edges = ${numOfEdges / 2}")
+    println("Num of edges = $numOfEdges")
 
     var maxWeight = 0
-    var minWeight = 101
+    var minWeight = INFINITY
     for(i in 0..(matrix.size - 1)){
         for(j in 0..(matrix.size - 1)){
             if(matrix[i][j] >= maxWeight)
@@ -45,15 +45,15 @@ fun printInformationAboutGraph(matrix: Array<Array<Int>>){
     }
     println("Max weight = $maxWeight")
 
-    if(minWeight == 101)
-        println(0)
+    if(minWeight == INFINITY)
+        println("Min weight = 0")
     else
         println("Min weight = $minWeight")
 }
 
 fun dijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>{
 
-    val lengths: Array<Int> = Array(matrix.size) {INF}
+    val lengths: Array<Int> = Array(matrix.size) {INFINITY}
     lengths[start] = 0
     val visited = Array(matrix.size) {false}
 
@@ -62,7 +62,7 @@ fun dijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>{
         for(j in 0..(matrix.size - 1))
             if(!visited[j] && (v == -1 || lengths[j] < lengths[v]))
                 v = j
-        if(lengths[v] == INF)
+        if(lengths[v] == INFINITY)
             break
         visited[v] = true
         for(j in 0..(matrix.size - 1)){
@@ -78,7 +78,7 @@ fun dijkstra(matrix: Array<Array<Int>>, start: Int): Array<Int>{
 
 fun fordBellman(matrix: Array<Array<Int>>, start: Int): Array<Int>{
 
-    val lengths: Array<Int> = Array(matrix.size) {INF}
+    val lengths: Array<Int> = Array(matrix.size) {INFINITY}
     lengths[start] = 0
 
     for(k in 1..(matrix.size - 1))
@@ -92,20 +92,15 @@ fun fordBellman(matrix: Array<Array<Int>>, start: Int): Array<Int>{
 
 fun areTheAlgorithmsEquivalent(matrix: Array<Array<Int>>, start: Int): Boolean{
 
-    val djkstr = dijkstra(matrix, start - 1)
-    val frdBllmn = fordBellman(matrix, start - 1)
-    var i = 0
+    val dijkstraResult = dijkstra(matrix, start)
+    val fordBellmanResult = fordBellman(matrix, start)
 
-    while(i != matrix.size - 1){
-        if(djkstr[i] != frdBllmn[i])
-            break
-        i++
-    }
-
-    return i == matrix.size - 1
+    return dijkstraResult contentEquals fordBellmanResult
 }
 
 fun main(args: Array<String>){
+
+    val scan = java.util.Scanner(System.`in`)
 
     val N: Int = scan.nextInt()
     val M = scan.nextInt()
@@ -113,5 +108,5 @@ fun main(args: Array<String>){
     val graph: Array<Array<Int>> = addGraph(N, M)
 
     printInformationAboutGraph(graph)
-    print(areTheAlgorithmsEquivalent(graph,k))
+    print(areTheAlgorithmsEquivalent(graph,k - 1))
 }
