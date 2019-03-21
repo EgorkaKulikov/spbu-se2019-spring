@@ -2,7 +2,7 @@ const val maxWeight = 100
 const val infinity = -1
 
 fun createGraph(numberOfNodes: Int, numberOfEdges: Int): Array<IntArray> {
-    var graphMatrix = Array(numberOfNodes) { IntArray(numberOfNodes) { 0 } }
+    val graphMatrix = Array(numberOfNodes) { IntArray(numberOfNodes) { 0 } }
 
     for (i in 0 until numberOfEdges) {
         var node1: Int
@@ -23,28 +23,32 @@ fun createGraph(numberOfNodes: Int, numberOfEdges: Int): Array<IntArray> {
 fun printStats(graphMatrix: Array<IntArray>) {
     var min = maxWeight
     var max = 0
+    val numberOfNodes = graphMatrix.size
 
-    for (i in 0 until graphMatrix.size) {
+    for (i in 0 until numberOfNodes) {
         for (j in 0 until i) {
-            if (graphMatrix[i][j] < min && graphMatrix[i][j] != 0)
+            if (graphMatrix[i][j] < min && graphMatrix[i][j] != 0) {
                 min = graphMatrix[i][j]
-            if (graphMatrix[i][j] > max)
+            }
+            if (graphMatrix[i][j] > max) {
                 max = graphMatrix[i][j]
+            }
         }
     }
 
-    println("Number of nodes: ${graphMatrix.size}")
+    println("Number of nodes: $numberOfNodes")
     println("Minimal edge weight value: $min\nMaximal edge weight value: $max")
 }
 
 fun dijkstra(graphMatrix: Array<IntArray>, nodeIndex: Int): IntArray {
-    var pathLengths = IntArray(graphMatrix.size) { infinity }
-    var isVisited = Array(graphMatrix.size) { false }
+    val numberOfNodes = graphMatrix.size
+    val pathLengths = IntArray(numberOfNodes) { infinity }
+    val isVisited = Array(numberOfNodes) { false }
     pathLengths[nodeIndex] = 0
 
-    for (i in 0 until graphMatrix.size) {
+    for (i in 0 until numberOfNodes) {
         var min = infinity
-        for (j in 0 until graphMatrix.size) {
+        for (j in 0 until numberOfNodes) {
             if (!isVisited[j] && (min == infinity || pathLengths[j] < pathLengths[min]))
                 min = j
         }
@@ -52,7 +56,7 @@ fun dijkstra(graphMatrix: Array<IntArray>, nodeIndex: Int): IntArray {
             break
         }
         isVisited[min] = true
-        for (j in 0 until graphMatrix.size) {
+        for (j in 0 until numberOfNodes) {
             if (graphMatrix[min][j] != 0
                 && pathLengths[min] + graphMatrix[min][j] < pathLengths[j]
             ) {
@@ -64,7 +68,7 @@ fun dijkstra(graphMatrix: Array<IntArray>, nodeIndex: Int): IntArray {
 }
 
 fun fordBellman(graphMatrix: Array<IntArray>, nodeIndex: Int): IntArray {
-    var pathLengths = IntArray(graphMatrix.size) { infinity }
+    val pathLengths = IntArray(graphMatrix.size) { infinity }
     pathLengths[nodeIndex] = 0
 
     for (i in 1 until graphMatrix.size) {
@@ -82,9 +86,11 @@ fun fordBellman(graphMatrix: Array<IntArray>, nodeIndex: Int): IntArray {
 
 fun main() {
     println("Input number of nodes..")
-    val numberOfNodes = readLine()!!.toInt()
+    var inputString = readLine() ?: throw Exception("Cannot read data!")
+    val numberOfNodes = inputString.toInt()
     println("Input number of edges..")
-    val numberOfEdges = readLine()!!.toInt()
+    inputString = readLine() ?: throw Exception("Cannot read data!")
+    val numberOfEdges = inputString.toInt()
 
     val graph = createGraph(numberOfNodes, numberOfEdges)
     printStats(graph)
@@ -93,8 +99,7 @@ fun main() {
     val nodeIndex = readLine()!!.toInt()
     if (dijkstra(graph, nodeIndex) contentEquals fordBellman(graph, nodeIndex)) {
         println("Algorithms provided identical results.")
-    }
-    else {
+    } else {
         println("Error! Algorithms provided different results.")
     }
 }
