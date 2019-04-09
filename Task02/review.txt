@@ -11,7 +11,7 @@ Label – метки, Opcodes.* - содержит названия инстру
 java.util.* - используется Stack<T>. 
 (Выше описано конкретное использование того или иного пакета в данном классе)
 
-public class  BrainfuckCompiler принимает на вход строку программы (переменная program) и название файла (переменная name).
+public class  BrainfuckCompiler принимает на вход строку программы (переменная program) и название файла с байт-кодом (переменная name).
 Функция generateByteArray() является “основой” класса, которая возвращает байт-код программы. 
 Для всех 8 команд Brainfuck’а написаны расширения класса MethodVisitor, где в каждом указаны соответствующие методы самого MethodVisitor с определенными инструкциями байт-кода.
 
@@ -42,7 +42,7 @@ private fun prepare(program: String): String {
         return program.replace("[^adehkKoOru]".toRegex(), "");
     }
 Стоило бы заменить на одну:
-private fun prepare(program: String): String = return program.replace("[^adehkKoOru]".toRegex(), "")
+private fun prepare(program: String): String = program.replace("[^adehkKoOru]".toRegex(), "")
 - Читая код, я не сразу понял назначение параметра класса BrainfuckCompiler name типа String (название файла, в который записывается байт-код исходной программы). 
 Следовало дать название свойству более подробное, тем более, что эта переменная используется в классе редко. Например, fileNameOfByteCode.
 - Наличие точки с запятой после перечисления импортов пакетов одной библиотеки (строка 6 BrainfuckCompiler.kt) и в функции prepare (строка 144 PetoohCompiler.kt) у оператора return.
