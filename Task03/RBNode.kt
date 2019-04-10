@@ -6,7 +6,7 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
     BalancingNode<K, V, RBNode<K, V>>() {
     override fun createNode(key: K, value: V): RBNode<K, V> = RBNode(key, value, Color.Red)
     override fun balancing() {
-        if (type == TypeSon.Root || parent!!.color == Color.Black)
+        if (color == Color.Black || type == TypeSon.Root || parent!!.color == Color.Black)
             return
         val father = parent!!
         val grandfather = father.parent!!
@@ -61,6 +61,5 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
             this.color = Color.Black
         }
     }
-    override fun toString(): String = "($key to $value, color: " +
-            "${if (color == Color.Black) "Black" else "Red"})"
+    override fun toString(): String = "($key to $value, color: $color)"
 }
