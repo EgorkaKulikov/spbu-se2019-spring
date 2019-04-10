@@ -47,4 +47,5 @@ class AVLNode<K: Comparable<K>, V>(override var key: K, override var value: V):
         rightSon.rotateLeft()
         rightSon.rotateRight()
     }
+    override fun toString(): String = "($key to $value, height: $height)"
 }
