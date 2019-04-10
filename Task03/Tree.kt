@@ -36,7 +36,7 @@ abstract class Tree<K: Comparable<K>, V, NT: Node<K, V, NT>>: Iterable<Node<K, V
                     path.push(node)
                     node = node.left
                 }
-                return path.isNotEmpty()
+                return ! path.empty()
             }
             else if (path.last().right != null) {
                 var node = path.last().right
@@ -53,7 +53,10 @@ abstract class Tree<K: Comparable<K>, V, NT: Node<K, V, NT>>: Iterable<Node<K, V
                     node = node.parent!!
                     path.pop()
                 }
-                return node.type == TypeSon.Root
+                if (node.type == TypeSon.Root)
+                    return false
+                path.pop()
+                return true
             }
         }
     })
