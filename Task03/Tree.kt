@@ -101,7 +101,6 @@ abstract class Tree<K: Comparable<K>, V, NT: Node<K, V, NT>>: Iterable<Node<K, V
             }
             else if (path.peek().right != null) {
                 var node = path.peek().right
-                path.push(node!!)
                 while (node != null) {
                     path.push(node)
                     node = node.left
