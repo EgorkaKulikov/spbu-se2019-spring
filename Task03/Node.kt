@@ -1,3 +1,5 @@
+import java.lang.Exception
+
 enum class TypeSon {
     LeftSon, RightSon, Root
 }
@@ -12,33 +14,71 @@ abstract class Node<K: Comparable<K>, V, NT: Node<K, V, NT>> {
                 return TypeSon.Root
             return if (parent!!.left == this) TypeSon.LeftSon else TypeSon.RightSon
         }
+    val brother: NT?
+        get() = when (type) {
+            TypeSon.LeftSon -> parent!!.right
+            TypeSon.RightSon -> parent!!.left
+            TypeSon.Root -> null
+        }
     abstract var key: K
     abstract var value: V
     abstract fun createNode(key: K, value: V): NT
-    open fun createSon(key: K, value: V, typeNewSon: TypeSon) {
+    fun createSon(key: K, value: V, typeNewSon: TypeSon) {
         setSon(createNode(key, value), typeNewSon)
     }
     fun setSon(newSon: NT?, typeNewSon: TypeSon) {
-        if (typeNewSon == TypeSon.LeftSon)
-            left = newSon
-        else
-            right = newSon
-        newSon?.parent = this as NT
+        when (typeNewSon) {
+            TypeSon.LeftSon -> {
+                if (left != null)
+                    left!!.parent = null
+                left = newSon
+            }
+            TypeSon.RightSon -> {
+                if (right != null)
+                    right!!.parent = null
+                right = newSon
+            }
+            TypeSon.Root -> throw Exception("Function setSon don't expect that" +
+                    "typeNewSon can be TypeSon.Root")
+        }
+        if (newSon != null) {
+            if (newSon.type == TypeSon.LeftSon)
+                newSon.parent!!.left = null
+            else if (newSon.type == TypeSon.RightSon)
+                newSon.parent!!.right = null
+            newSon.parent = this as NT
+        }
     }
     fun setFather(newFather: NT?, typeThisNode: TypeSon) {
-        if (typeThisNode == TypeSon.LeftSon)
-            newFather?.left = this as NT
-        else
-            newFather?.right = this as NT
+        if (newFather != null) {
+            when (typeThisNode) {
+                TypeSon.LeftSon -> {
+                    if (newFather.left != null)
+                        newFather.left!!.parent = null
+                    newFather.left = this as NT
+                }
+                TypeSon.RightSon -> {
+                    if (newFather.right != null)
+                        newFather.right!!.parent = null
+                    newFather.right = this as NT
+                }
+                TypeSon.Root -> throw Exception("Function setFather don't expect that" +
+                        "typeThisNode can be TypeSon.Root")
+            }
+        }
+        if (type == TypeSon.LeftSon)
+            parent!!.left = null
+        else if (type == TypeSon.RightSon)
+            parent!!.right = null
         parent = newFather
     }
-    fun findKey(key: K): TypeSon {
+    fun findKey(key: K): TypeSon =
         if (this.key == key)
-            return TypeSon.Root
-        if (this.key > key)
-            return TypeSon.LeftSon
-        return TypeSon.RightSon
-    }
+            TypeSon.Root
+        else if (this.key > key)
+            TypeSon.LeftSon
+        else
+            TypeSon.RightSon
     fun nextNode(key: K): NT? = when (findKey(key)) {
         TypeSon.Root -> null
         TypeSon.LeftSon -> left
