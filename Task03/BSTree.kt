@@ -9,5 +9,5 @@ class BSTree<K: Comparable<K>, V>(): Tree<K, V, BSNode<K, V>>() {
     override fun toString(): String = "BSTree: {${root?.subtreeToString() ?: ""}}"
 }
 
-fun <K: Comparable<K>, V>BSTreeOf(vararg elements: Pair<K, V>): BSTree<K, V> =
+fun <K: Comparable<K>, V>bsTreeOf(vararg elements: Pair<K, V>): BSTree<K, V> =
     BSTree(elements.size) {elements[it]}
