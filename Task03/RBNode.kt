@@ -6,31 +6,16 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
     BalancingNode<K, V, RBNode<K, V>>() {
     override fun createNode(key: K, value: V): RBNode<K, V> = RBNode(key, value, Color.Red)
     override fun balancing() {
-        if (color == Color.Black || type == TypeSon.Root || parent!!.color == Color.Black)
+        if (color == Color.Black || parent!!.color == Color.Black)
             return
         val father = parent!!
         val grandfather = father.parent!!
-        val uncle = if (father.type == TypeSon.LeftSon)
-            grandfather.right
-        else
-            grandfather.left
+        val uncle = father.brother
         if (uncle == null || uncle.color == Color.Black) {
-            if (father.type == TypeSon.LeftSon) {
-                if (this.type == TypeSon.RightSon) {
-                    rotateLeft()
-                    rotateRight()
-                }
-                else
-                    father.rotateRight()
-            }
-            else {
-                if (this.type == TypeSon.LeftSon) {
-                    rotateRight()
-                    rotateLeft()
-                }
-                else
-                    father.rotateLeft()
-            }
+            if (father.type == this.type)
+                father.rotate()
+            else
+                father.rotateBig()
         }
         else {
             father.color = Color.Black
