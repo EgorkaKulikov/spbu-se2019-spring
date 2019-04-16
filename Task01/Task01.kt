@@ -1,44 +1,45 @@
-val MAX_LENGTH = 101
-val MIN_LENGTH = 1
+val MAX_DISTANCE = 101
+val MIN_DISTANCE = 1
+val INF = MAX_DISTANCE * 1001
 
 
-fun Create(n: Int, m: Int): Array<Array<Int>> {
-    var rand1: Int
-    var rand2: Int
+fun createGraph(n: Int, m: Int): Array<Array<Int>> {
+    var randVrtx1: Int
+    var randVrtx2: Int
     val graph: Array<Array<Int>> = Array(n, { Array(n, {0}) })
-    var trigger = false
+    var edgeCreated = false
 
     if(n>1 && m>0) {
         for (i in 0 until m) {
-            while (trigger == false) {
-                rand1 = (0..(n - 2)).random()
-                rand2 = ((rand1 + 1)..(n - 1)).random()
+            while (edgeCreated == false) {
+                randVrtx1 = (0..(n - 2)).random()
+                randVrtx2 = ((randVrtx1 + 1)..(n - 1)).random()
 
-                if (graph[rand1][rand2] == 0) {
-                    graph[rand1][rand2] = (MIN_LENGTH..(MAX_LENGTH-1)).random()
-                    graph[rand2][rand1] = graph[rand1][rand2]
-                    trigger = true
+                if (graph[randVrtx1][randVrtx2] == 0) {
+                    graph[randVrtx1][randVrtx2] = (MIN_DISTANCE..(MAX_DISTANCE-1)).random()
+                    graph[randVrtx2][randVrtx1] = graph[randVrtx1][randVrtx2]
+                    edgeCreated = true
                 }
             }
-            trigger = false
+            edgeCreated = false
         }
     }
 
     return graph
 }
 
-fun Stats(n: Int, m: Int, graf: Array<Array<Int>>) {
-    var min = MAX_LENGTH
-    var max = MIN_LENGTH
+fun stats(n: Int, m: Int, graph: Array<Array<Int>>) {
+    var min = MAX_DISTANCE
+    var max = MIN_DISTANCE
 
     for (i in 0 until n) {
         for (j in i until n) {
-            if (graf[i][j] != 0) {
-                if (graf[i][j] < min) {
-                    min = graf[i][j]
+            if (graph[i][j] != 0) {
+                if (graph[i][j] < min) {
+                    min = graph[i][j]
                 }
-                if (graf[i][j] > max) {
-                    max = graf[i][j]
+                if (graph[i][j] > max) {
+                    max = graph[i][j]
                 }
             }
         }
@@ -57,20 +58,17 @@ fun Stats(n: Int, m: Int, graf: Array<Array<Int>>) {
 
 fun algoDijkstra(start: Int, graph: Array<Array<Int>>) : Array<Int>{
     val n = graph.size
-    val distance = Array(n){MAX_LENGTH*1001}
-    val off = Array(n){false}
+    val distance = Array(n){INF}
+    val used = Array(n){false}
     distance[start] = 0
     for (i in 0 until n) {
         var curVrtx = -1
         for (j in 0 until n) {
-            if (off[j] == false && (curVrtx == -1 || distance[j] < distance[curVrtx])) {
+            if (used[j] == false && (curVrtx == -1 || distance[j] < distance[curVrtx])) {
                     curVrtx = j
                 }
             }
-            if (distance[curVrtx] == MAX_LENGTH + 1) {
-                break
-            }
-            off[curVrtx] = true
+            used[curVrtx] = true
             for (j in 0 until n) {
                 if (graph[curVrtx][j] != 0) {
                     if(distance[j] > (distance[curVrtx] + graph[curVrtx][j])){
@@ -83,7 +81,7 @@ fun algoDijkstra(start: Int, graph: Array<Array<Int>>) : Array<Int>{
     }
 
 fun  algoFordBellman(start: Int, graph: Array<Array<Int>>) : Array<Int>{
-    val distance: Array<Int> = Array(graph.size){MAX_LENGTH*1001}
+    val distance: Array<Int> = Array(graph.size){INF}
     distance[start] = 0
     var stop: Boolean
 
@@ -114,8 +112,8 @@ fun main() {
         return
     }
 
-    val graph = Create(n, m)
-    Stats(n, m, graph)
+    val graph = createGraph(n, m)
+    stats(n, m, graph)
 
 
     println("Enter vertex")
