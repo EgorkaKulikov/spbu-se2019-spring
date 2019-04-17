@@ -1,19 +1,21 @@
 val MAX_DISTANCE = 101
 val MIN_DISTANCE = 1
-val INF = MAX_DISTANCE * 1001
+val MAX_NUM_VRTX = 1000
+val MAX_NUM_EDGE = 10000
+val INF = MAX_DISTANCE * MAX_NUM_VRTX
 
 
-fun createGraph(n: Int, m: Int): Array<Array<Int>> {
+fun createGraph(numVrtx: Int, numEdge: Int): Array<Array<Int>> {
     var randVrtx1: Int
     var randVrtx2: Int
-    val graph: Array<Array<Int>> = Array(n, { Array(n, {0}) })
+    val graph: Array<Array<Int>> = Array(numVrtx, { Array(numVrtx, {0}) })
     var edgeCreated = false
 
-    if(n>1 && m>0) {
-        for (i in 0 until m) {
+    if(numVrtx>1 && numEdge>0) {
+        for (i in 0 until numEdge) {
             while (edgeCreated == false) {
-                randVrtx1 = (0..(n - 2)).random()
-                randVrtx2 = ((randVrtx1 + 1)..(n - 1)).random()
+                randVrtx1 = (0..(numVrtx - 2)).random()
+                randVrtx2 = ((randVrtx1 + 1)..(numVrtx - 1)).random()
 
                 if (graph[randVrtx1][randVrtx2] == 0) {
                     graph[randVrtx1][randVrtx2] = (MIN_DISTANCE..(MAX_DISTANCE-1)).random()
@@ -28,12 +30,12 @@ fun createGraph(n: Int, m: Int): Array<Array<Int>> {
     return graph
 }
 
-fun stats(n: Int, m: Int, graph: Array<Array<Int>>) {
+fun stats(numVrtx: Int, numEdge: Int, graph: Array<Array<Int>>) {
     var min = MAX_DISTANCE
     var max = MIN_DISTANCE
 
-    for (i in 0 until n) {
-        for (j in i until n) {
+    for (i in 0 until numVrtx) {
+        for (j in i until numVrtx) {
             if (graph[i][j] != 0) {
                 if (graph[i][j] < min) {
                     min = graph[i][j]
@@ -46,9 +48,9 @@ fun stats(n: Int, m: Int, graph: Array<Array<Int>>) {
     }
 
     println("В графе:")
-    println("$n вершин")
-    if (m > 0) {
-        println("$m рёбер")
+    println("$numVrtx вершин")
+    if (numEdge > 0) {
+        println("$numEdge рёбер")
         println("$min минимальное ребро")
         println("$max максимальное ребро")
     } else {
@@ -67,35 +69,53 @@ fun algoDijkstra(start: Int, graph: Array<Array<Int>>) : Array<Int>{
             if (used[j] == false && (curVrtx == -1 || distance[j] < distance[curVrtx])) {
                     curVrtx = j
                 }
-            }
-            used[curVrtx] = true
-            for (j in 0 until n) {
-                if (graph[curVrtx][j] != 0) {
-                    if(distance[j] > (distance[curVrtx] + graph[curVrtx][j])){
-                        distance[j] = distance[curVrtx] + graph[curVrtx][j]
-                    }
+        }
+        if (distance[curVrtx] == INF) {
+            break
+        }
+        used[curVrtx] = true
+        for (j in 0 until n) {
+            if (graph[curVrtx][j] != 0) {
+                if(distance[j] > (distance[curVrtx] + graph[curVrtx][j])){
+                    distance[j] = distance[curVrtx] + graph[curVrtx][j]
                 }
             }
         }
-        return distance
+    }
+    return distance
+}
+
+fun  algoFordBellman(start: Int, numEdge: Int, graph: Array<Array<Int>>) : Array<Int>{
+    val distance: Array<Int> = Array(graph.size){INF}
+    data class Edge(val start: Int, val end: Int, val dist: Int)
+    val queue: Array<Edge> = Array(numEdge){Edge(0,0,0)}
+    distance[start] = 0
+    var stop : Boolean
+    var iter = 0
+
+    for(i in 0 until graph.size) {
+        for(j in i until graph.size) {
+            if(graph[i][j] != 0){
+                queue[iter] = Edge(i, j, graph[i][j])
+                iter++
+            }
+        }
     }
 
-fun  algoFordBellman(start: Int, graph: Array<Array<Int>>) : Array<Int>{
-    val distance: Array<Int> = Array(graph.size){INF}
-    distance[start] = 0
-    var stop: Boolean
-
     do{
-        stop = true
-        for(i in 0 until graph.size) {
-            for(j in 0 until graph.size){
-                if(graph[i][j] != 0 && distance[j] > distance[i] + graph[i][j]){
-                    distance[j] = distance[i] + graph[i][j]
-                    stop = false
-                }
+        stop = false
+        for(i in 0 until numEdge) {
+            if (distance[queue[i].end] > distance[queue[i].start] + queue[i].dist) {
+                distance[queue[i].end] = distance[queue[i].start] + queue[i].dist
+                stop = true
+            }
+            if (distance[queue[i].start] > distance[queue[i].end] + queue[i].dist) {
+                distance[queue[i].start] = distance[queue[i].end] + queue[i].dist
+                stop = true
             }
         }
-    }while(!stop)
+
+    }while(stop)
 
     return distance
 }
@@ -104,29 +124,34 @@ fun  algoFordBellman(start: Int, graph: Array<Array<Int>>) : Array<Int>{
 fun main() {
     println("Enter number of vertexes and number of edges")
     val data = readLine().toString()
-    val n = data.substringBefore(' ').toInt()
-    val m = data.substringAfter(' ').toInt()
+    val numVrtx = data.substringBefore(' ').toInt()
+    val numEdge = data.substringAfter(' ').toInt()
 
-    if (n>1000 || m>100000 || n<=0 || m<0){
+    if (numVrtx>MAX_NUM_VRTX || numEdge>MAX_NUM_EDGE || numVrtx<=0 || numEdge<0){
         println("Data is incorrect")
         return
     }
 
-    val graph = createGraph(n, m)
-    stats(n, m, graph)
+    val graph = createGraph(numVrtx, numEdge)
+    stats(numVrtx, numEdge, graph)
 
-
+    var k = 0
     println("Enter vertex")
-    var k = readLine()!!.toInt()
+    try {
+        k = readLine()!!.toInt()
+    }
+    catch (e: NumberFormatException){
+        println("Data is incorrect")
+    }
     k--
 
-    if (k<0 || k>=n){
+    if (k<0 || k>=numVrtx){
         println("Data is incorrect")
         return
     }
 
     val distDijkstra = algoDijkstra(k, graph)
-    val distFordBellman = algoFordBellman(k, graph)
+    val distFordBellman = algoFordBellman(k, numEdge, graph)
 
     if( distDijkstra contentEquals distFordBellman) {
         println("Algorithms are equal")
