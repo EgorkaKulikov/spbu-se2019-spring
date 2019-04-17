@@ -138,7 +138,7 @@ fun main() {
     var k = 0
     println("Enter vertex")
     try {
-        k = readLine()!!.toInt()
+        k = readLine()?.toInt() ?: -1
     }
     catch (e: NumberFormatException){
         println("Data is incorrect")
