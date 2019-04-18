@@ -47,14 +47,14 @@ fun stats(numVrtx: Int, numEdge: Int, graph: Array<Array<Int>>) {
         }
     }
 
-    println("В графе:")
-    println("$numVrtx вершин")
+    println("In the graph:")
+    println("$numVrtx vertexes")
     if (numEdge > 0) {
-        println("$numEdge рёбер")
-        println("$min минимальное ребро")
-        println("$max максимальное ребро")
+        println("$numEdge edges")
+        println("Minimal edge length is $min")
+        println("Maximum edge length is $max")
     } else {
-        println("Рёбер нет")
+        println("There are no edges")
     }
 }
 
@@ -88,7 +88,7 @@ fun algoDijkstra(start: Int, graph: Array<Array<Int>>) : Array<Int>{
 fun  algoFordBellman(start: Int, numEdge: Int, graph: Array<Array<Int>>) : Array<Int>{
     val distance: Array<Int> = Array(graph.size){INF}
     data class Edge(val start: Int, val end: Int, val dist: Int)
-    val queue: Array<Edge> = Array(numEdge){Edge(0,0,0)}
+    val listEdges: Array<Edge> = Array(numEdge){Edge(0,0,0)}
     distance[start] = 0
     var stop : Boolean
     var iter = 0
@@ -96,7 +96,7 @@ fun  algoFordBellman(start: Int, numEdge: Int, graph: Array<Array<Int>>) : Array
     for(i in 0 until graph.size) {
         for(j in i until graph.size) {
             if(graph[i][j] != 0){
-                queue[iter] = Edge(i, j, graph[i][j])
+                listEdges[iter] = Edge(i, j, graph[i][j])
                 iter++
             }
         }
@@ -105,12 +105,12 @@ fun  algoFordBellman(start: Int, numEdge: Int, graph: Array<Array<Int>>) : Array
     do{
         stop = false
         for(i in 0 until numEdge) {
-            if (distance[queue[i].end] > distance[queue[i].start] + queue[i].dist) {
-                distance[queue[i].end] = distance[queue[i].start] + queue[i].dist
+            if (distance[listEdges[i].end] > distance[listEdges[i].start] + listEdges[i].dist) {
+                distance[listEdges[i].end] = distance[listEdges[i].start] + listEdges[i].dist
                 stop = true
             }
-            if (distance[queue[i].start] > distance[queue[i].end] + queue[i].dist) {
-                distance[queue[i].start] = distance[queue[i].end] + queue[i].dist
+            if (distance[listEdges[i].start] > distance[listEdges[i].end] + listEdges[i].dist) {
+                distance[listEdges[i].start] = distance[listEdges[i].end] + listEdges[i].dist
                 stop = true
             }
         }
@@ -123,9 +123,16 @@ fun  algoFordBellman(start: Int, numEdge: Int, graph: Array<Array<Int>>) : Array
 
 fun main() {
     println("Enter number of vertexes and number of edges")
-    val data = readLine().toString()
-    val numVrtx = data.substringBefore(' ').toInt()
-    val numEdge = data.substringAfter(' ').toInt()
+    var numVrtx = 0
+    var numEdge = 0
+    try {
+        val data = readLine().toString()
+        numVrtx = data.substringBefore(' ').toInt()
+        numEdge = data.substringAfter(' ').toInt()
+    }
+    catch (e: NumberFormatException){
+        println("Data is incorrect")
+    }
 
     if (numVrtx>MAX_NUM_VRTX || numEdge>MAX_NUM_EDGE || numVrtx<=0 || numEdge<0){
         println("Data is incorrect")
