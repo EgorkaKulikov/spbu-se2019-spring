@@ -1,94 +1,69 @@
 Pull request #213
 
-Интерфейс CodeRunner - нечто, исполняющее некий код
-
-    [fun runCode(source: String, input: String): String]
-        Исполняет код из source с входными данными из input.
-        Возвращает результат выполнения кода из source.
-
-Класс BrainInterpreter - интерпретатор Brainfuck.
-
+Класс BrainInterpreter интерпретирует Brainfuck.
     Свойства:
-        [private var source] - сохранённый код.
-        [private var input] - сохранённые входные данные.
-        [private var jumpTable] - хранит соответствия между скобками.
+        - [source] - сохранённый код.
+        - [input] - сохранённые входные данные.
+        - [jumpTable] хранит соответствия между скобками.
+        - [memSize] - количество памяти, выделяемой для исполнения кода.
 
-        [private val memSize] - количество памяти, выделяемой для исполнения кода.
-            * Может быть константой
+    - [runCode(s, i)] сохраняет код и входные данные, обновляет [jumpTable] вызовом
+    [setupJumps] и вызывает [runCode()] для выполнения сохранённого кода.
 
-    [override public fun runCode(s: String, i: String): String]
-        Сохраняет код и входные данные, обновляет jumpTable с помощью setupJumps()
-        и вызывает runCode() для выполнения сохранённого кода.
-
-    [private fun setupJumps()]
-        Обновляет jumpTable с учётом сохранённого кода.
-
-    [public fun runCode(): String]
-        Исполняет сохраненный код с сохраненными входными данными.
-
-        * memory, хранящий память для исполнения кода, должен быть val
-
+    * В [runCode()] переменная memory, хранящая память для исполнения кода, должна быть val.
+    * [memSize] может быть константой.
     * Если подоразумевалось переиспользование кода из source (нет, если судить по одному
-      из коментариев), то runCode() должен принимать на вход новые данные. Если нет
-      - то BrainInterpreter может быть переделан в объект (в этом случае можно
-      убрать все свойства, а код из runCode() целиком перенести в runCode(s, i)).
+      из коментариев), то [runCode()] должен принимать на вход новые данные. Если нет -
+      [BrainInterpreter] может быть переделан в объект (в этом случае можно
+      убрать все свойства, оставив константу memSize, а код из runCode() целиком
+      перенести в runCode(s, i)).
 
-Класс BrainGenerator
-    Генерирует код для JVM из кода на Brainfuck
-                                             
+Класс BrainGenerator генерирует байткод для JVM из кода на Brainfuck
     Свойства:
-        [val className] - имя генерируемого класса
-        [val program] - код на Brainfuck
-        [private var b] - массив для хранения результата генерации
+        - [className] - имя генерируемого класса
+        - [program] - код на Brainfuck
+        - [b] - массив для хранения байткода c немного неудачным назаванием
 
-        * labelOpenStack и labelCloseStack используются только в локальных
-          функциях метода genInstructions и могут быть перенесены в него.
+        * [labelOpenStack] и [labelCloseStack] используются только в локальных
+          функциях метода [genInstructions] и могут быть перенесены в него.
 
-    [public fun generate()]
-        генерирует код для JVM
-
-    [public fun save()]
-        записывает код для JVM в файл
-
+    - [generate] создает класс из кода на Brainfuck. Создает [ClassWriter], объявляет класс
+    и метод [main] в нем и вызывает [genWrapper], в котором этот [main] создается. После
+    [main] объявляет метод [run] и вызывает [genInstructions], который записывает в [run]
+    переведенные с Brainfuck команды (под каждую команду на Brainfuck выделена локальная
+    функция, которая создаёт байткод для этой команды). В конце все созданное переводится
+    в массив байтов и сохраняется в b.
+    - [save] записывает b в файл
+    
     * Между вызовами generate() и save() ничего не происходит, их одновременная
       'публичность' бессмысленна.
     * BrainGenerator может быть переделан в объект, с public методом generate(name, code).
+    * [main] из созданного класса нигде не используется, только [run].
 
-Класс BrainRunner, как и BrainInterpreter, предназначен для выполнения Brainfuck.
-В отличие от него, использует сгенерированный байткод для JVM.
+Класс BrainRunner выполняет код на Brainfuck, используя сгенерированный байткод для JVM.
+    - [runCode] создаёт [BrainGenerator], генерирует байткод, сохраняет его в файл и
+    подгружает. Затем из загруженного класса достаётся [run] и запускается.
+    
+    * Может быть объектом.
 
-    [override fun runCode(source: String, input: String): String]
-        Генерирует байткод из source с помощью BrainGenerator, сохраняет его в файл,
-        затем подгружает и запускает.
+Класс PetoohRunner - выполняет код на Petooh
+    Свойства:
+        - [dictionary] хранит соответствия между командами на Petooh и Brainfuck
 
-    * Т.к. его свойства (которых нет) не зависият от чего-либо,
-      может быть переделан в объект.
-
-Класс PetoohRunner - выполненяет код на Petooh
-
-    [val dictionary] - хранит соответствия между командами на Petooh и Brainfuck
-
-    [fun toBrainfuck(s: String): String]
-        Переводит код на Petooh в код на Brainfuck.
-
-    [override fun runCode(source: String, input: String): String]
-        Переводит source c Petooh на Brainfuck, создает BrainRunner, который исполняет
-        полученный код.
-
+    - [toBrainfuck] переводит код на Petooh в код на Brainfuck.
+    - [runCode] использует [toBrainfuck], переводя source c Petooh на Brainfuck и создает
+    [BrainRunner], который исполняет полученный код.
+    
     * Т.к. dictionary не зависит ни от чего, PetoohRunner может быть объектом.
 
 Абстрактный класс TestRunner
+    - [getRunner] возвращает [CodeRunner] для последующего тестирования.
+    - [testCode] вызывает исполнение кода в [CodeRunner], полученного из [getRunner],
+      проверяет соответствие между полученным результатом и ожидаемым.
 
-    [abstract fun getRunner(): CodeRunner]
-        Возвращает CodeRunner для последующего тестирования.
-
-    [fun testCode(source: String, input: String, output: String)]
-        Исполняет код из source с входными данными из input и проверяет соответствие
-        между полученным результатом и output.
-
-    * Т.к. ни в одном из наследных классов getRunner() не создает новых объектов,
-      при желании можно заменить getRunner() на [abstract val runner] и переопределять
-      его в наследниках.
+    * Т.к. ни в одном из наследных классов [getRunner] не создает новых объектов,
+      при желании можно заменить [getRunner] на [abstract val runner] и переопределять
+      его в наследниках. Это будет смотреться чуть красивее.
 
 TestPetooh - тесты для PetoohRunner.
 TestBrainfuckRunner - тесты для исполнителей Brainfuck.
