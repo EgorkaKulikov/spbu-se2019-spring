@@ -1,1 +1,124 @@
+Pull request #213
 
+Интерфейс CodeRunner - нечто, исполняющее некий код
+
+    [fun runCode(source: String, input: String): String]
+        Исполняет код из source с входными данными из input.
+        Возвращает результат выполнения кода из source.
+
+Класс BrainInterpreter - интерпретатор Brainfuck.
+
+    Свойства:
+        [private var source] - сохранённый код.
+        [private var input] - сохранённые входные данные.
+        [private var jumpTable] - хранит соответствия между скобками.
+
+        [private val memSize] - количество памяти, выделяемой для исполнения кода.
+            * Может быть константой
+
+    [override public fun runCode(s: String, i: String): String]
+        Сохраняет код и входные данные, обновляет jumpTable с помощью setupJumps()
+        и вызывает runCode() для выполнения сохранённого кода.
+
+    [private fun setupJumps()]
+        Обновляет jumpTable с учётом сохранённого кода.
+
+    [public fun runCode(): String]
+        Исполняет сохраненный код с сохраненными входными данными.
+
+        * memory, хранящий память для исполнения кода, должен быть val
+
+    * Если подоразумевалось переиспользование кода из source (нет, если судить по одному
+      из коментариев), то runCode() должен принимать на вход новые данные. Если нет
+      - то BrainInterpreter может быть переделан в объект (в этом случае можно
+      убрать все свойства, а код из runCode() целиком перенести в runCode(s, i)).
+
+Класс BrainGenerator
+    Генерирует код для JVM из кода на Brainfuck
+                                             
+    Свойства:
+        [val className] - имя генерируемого класса
+        [val program] - код на Brainfuck
+        [private var b] - массив для хранения результата генерации
+
+        * labelOpenStack и labelCloseStack используются только в локальных
+          функциях метода genInstructions и могут быть перенесены в него.
+
+    [public fun generate()]
+        генерирует код для JVM
+
+    [public fun save()]
+        записывает код для JVM в файл
+
+    * Между вызовами generate() и save() ничего не происходит, их одновременная
+      'публичность' бессмысленна.
+    * BrainGenerator может быть переделан в объект, с public методом generate(name, code).
+
+Класс BrainRunner, как и BrainInterpreter, предназначен для выполнения Brainfuck.
+В отличие от него, использует сгенерированный байткод для JVM.
+
+    [override fun runCode(source: String, input: String): String]
+        Генерирует байткод из source с помощью BrainGenerator, сохраняет его в файл,
+        затем подгружает и запускает.
+
+    * Т.к. его свойства (которых нет) не зависият от чего-либо,
+      может быть переделан в объект.
+
+Класс PetoohRunner - выполненяет код на Petooh
+
+    [val dictionary] - хранит соответствия между командами на Petooh и Brainfuck
+
+    [fun toBrainfuck(s: String): String]
+        Переводит код на Petooh в код на Brainfuck.
+
+    [override fun runCode(source: String, input: String): String]
+        Переводит source c Petooh на Brainfuck, создает BrainRunner, который исполняет
+        полученный код.
+
+    * Т.к. dictionary не зависит ни от чего, PetoohRunner может быть объектом.
+
+Абстрактный класс TestRunner
+
+    [abstract fun getRunner(): CodeRunner]
+        Возвращает CodeRunner для последующего тестирования.
+
+    [fun testCode(source: String, input: String, output: String)]
+        Исполняет код из source с входными данными из input и проверяет соответствие
+        между полученным результатом и output.
+
+    * Т.к. ни в одном из наследных классов getRunner() не создает новых объектов,
+      при желании можно заменить getRunner() на [abstract val runner] и переопределять
+      его в наследниках.
+
+TestPetooh - тесты для PetoohRunner.
+TestBrainfuckRunner - тесты для исполнителей Brainfuck.
+TestBrainfuckGenerator - использует тесты из TestBrainfuckRunner для BrainRunner.
+TestBrainfuckInterpreter - использует тесты из TestBrainfuckRunner для BrainInterpreter.
+
+Коментарии:
+
+-----
+https://github.com/practice271/assignments/pull/213#discussion_r45652710
+https://github.com/practice271/assignments/pull/213#discussion_r46422039
+
+Коментарии об отсутствующих модификаторах доступа. Не хватает коментария о том, что
+в коде встречаются public функции как с модификатором, так и без.
+-----
+https://github.com/practice271/assignments/pull/213#discussion_r45652725
+https://github.com/practice271/assignments/pull/213#discussion_r45653063
+
+Коментарии о лишних ветках else вполне уместны. Было исправлено только в указанных местах.
+-----
+https://github.com/practice271/assignments/pull/213#discussion_r45652767
+
+Здесь возникает вопрос: "Правда ли, что runCode() из BrainInterpreter не должен
+вызываться снаружи и, если нет, для чего он существует?"
+-----
+https://github.com/practice271/assignments/pull/213#discussion_r45653057
+
+Этот коментарий можно было бы дополнить вопросом о проверке скобок.
+-----
+https://github.com/practice271/assignments/pull/213#discussion_r46422275
+
+Коментарий о магических константах. Было исправлено только в указанном месте.
+-----
