@@ -1,4 +1,4 @@
-class NodeIterator<V>(
+class TreeIterator<V>(
         begin: Node<*, V>
 ): Iterator<V> {
     private var current = mostLeftOf(begin)
