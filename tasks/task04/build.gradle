@@ -8,10 +8,8 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation "junit:junit:4.12"
 }
 
 sourceSets {
     main.kotlin.srcDirs = ["source"]
-    test.kotlin.srcDirs = ["tests"]
 }
