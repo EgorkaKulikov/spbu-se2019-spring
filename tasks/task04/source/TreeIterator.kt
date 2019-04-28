@@ -1,6 +1,5 @@
-class TreeIterator<V>(
-        begin: Node<*, V>
-): Iterator<V> {
+class TreeIterator<V>(begin: Node<*, V>) : Iterator<V> {
+
     private var current = mostLeftOf(begin)
     private var hasNext = true
 
@@ -24,6 +23,7 @@ class TreeIterator<V>(
 
         if (right != null) {
             current = mostLeftOf(right)
+            return value
         } else {
             var parent = current.parent
 
