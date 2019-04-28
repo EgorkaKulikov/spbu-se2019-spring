@@ -23,7 +23,6 @@ class TreeIterator<V>(begin: Node<*, V>) : Iterator<V> {
 
         if (right != null) {
             current = mostLeftOf(right)
-            return value
         } else {
             var parent = current.parent
 
