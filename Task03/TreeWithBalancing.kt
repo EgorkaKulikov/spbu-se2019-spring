@@ -1,5 +1,5 @@
-abstract class BalancingTree<K: Comparable<K>, V, NT: BalancingNode<K, V, NT>>: Tree<K, V, NT>() {
-    abstract fun deleteNode(path: MutableList<NT>)
+abstract class TreeWithBalancing<K: Comparable<K>, V, NT: NodeWithBalancing<K, V, NT>>: Tree<K, V, NT>() {
+    protected abstract fun deleteNode(path: MutableList<NT>)
     override fun setWithInfo(key: K, value: V?): InfoAboutNode {
         if (root == null) {
             if (value == null)
