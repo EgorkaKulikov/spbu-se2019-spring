@@ -1,11 +1,12 @@
 enum class Color {
-    Black, Red
+    Black,
+    Red,
 }
 
-class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, var color: Color):
-    BalancingNode<K, V, RBNode<K, V>>() {
-    override fun createNode(key: K, value: V): RBNode<K, V> = RBNode(key, value, Color.Red)
-    override fun balancing() {
+class RedBlackNode<K: Comparable<K>, V>(override val key: K, override var value: V, var color: Color):
+    NodeWithBalancing<K, V, RedBlackNode<K, V>>() {
+    protected override fun createNode(key: K, value: V): RedBlackNode<K, V> = RedBlackNode(key, value, Color.Red)
+    public override fun balancing() {
         if (color == Color.Black || parent!!.color == Color.Black)
             return
         val father = parent!!
@@ -15,7 +16,7 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
             if (father.type == this.type)
                 father.rotate()
             else
-                father.rotateBig()
+                father.bigRotate()
         }
         else {
             father.color = Color.Black
@@ -24,7 +25,7 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
                 grandfather.color = Color.Red
         }
     }
-    override fun rotateLeft() {
+    protected override fun rotateLeft() {
         super.rotateLeft()
         if (left!!.color == Color.Red) {
             left!!.color = this.color
@@ -35,7 +36,7 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
             this.color = Color.Black
         }
     }
-    override fun rotateRight() {
+    protected override fun rotateRight() {
         super.rotateRight()
         if (right!!.color == Color.Red) {
             right!!.color = this.color
@@ -46,5 +47,12 @@ class RBNode<K: Comparable<K>, V>(override var key: K, override var value: V, va
             this.color = Color.Black
         }
     }
-    override fun toString(): String = "($key to $value, color: $color)"
+    public override fun copy() = RedBlackNode(key, value, color)
+    override fun equals(other: Any?): Boolean =
+        (other is RedBlackNode<*, *> &&
+                other.left == left &&
+                other.right == right &&
+                other.key == key &&
+                other.value == value &&
+                other.color == color)
 }
