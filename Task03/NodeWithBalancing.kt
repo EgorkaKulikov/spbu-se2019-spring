@@ -1,5 +1,5 @@
-abstract class BalancingNode<K: Comparable<K>, V, NT: BalancingNode<K, V, NT>>: Node<K, V, NT>() {
-    abstract fun balancing()
+abstract class NodeWithBalancing<K: Comparable<K>, V, NT: NodeWithBalancing<K, V, NT>>: Node<K, V, NT>() {
+    public abstract fun balancing()
     protected open fun rotateLeft() {
         val father = parent!!
         val leftSon = left
@@ -14,27 +14,27 @@ abstract class BalancingNode<K: Comparable<K>, V, NT: BalancingNode<K, V, NT>>: 
         father.setSon(rightSon, TypeSon.LeftSon)
         this.setSon(father, TypeSon.RightSon)
     }
-    fun rotate() {
+    public fun rotate() {
         when (type) {
             TypeSon.LeftSon -> rotateRight()
             TypeSon.RightSon -> rotateLeft()
             TypeSon.Root -> {}
         }
     }
-    private fun rotateLeftBig() {
+    private fun bigRotateLeft() {
         val leftSon = left!!
         leftSon.rotateRight()
         leftSon.rotateLeft()
     }
-    private fun rotateRightBig() {
+    private fun bigRotateRight() {
         val rightSon = right!!
         rightSon.rotateLeft()
         rightSon.rotateRight()
     }
-    fun rotateBig() {
+    public fun bigRotate() {
         when (type) {
-            TypeSon.LeftSon -> rotateRightBig()
-            TypeSon.RightSon -> rotateLeftBig()
+            TypeSon.LeftSon -> bigRotateRight()
+            TypeSon.RightSon -> bigRotateLeft()
             TypeSon.Root -> {}
         }
     }
