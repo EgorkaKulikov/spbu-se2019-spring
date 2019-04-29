@@ -1,14 +1,14 @@
-class RBTree<K: Comparable<K>, V>(): BalancingTree<K, V, RBNode<K, V>>() {
+class RedBlackTree<K: Comparable<K>, V>(): TreeWithBalancing<K, V, RedBlackNode<K, V>>() {
     constructor(size: Int, init: (Int) -> Pair<K, V>): this() {
         insert(size, init)
     }
-    constructor(root: RBNode<K, V>): this() {
+    constructor(root: RedBlackNode<K, V>): this() {
         this.root = root
     }
-    override fun createRoot(key: K, value: V): RBNode<K, V> = RBNode(key, value, Color.Black)
-    override fun deleteNode(path: MutableList<RBNode<K, V>>) {
+    protected override fun createRoot(key: K, value: V): RedBlackNode<K, V> = RedBlackNode(key, value, Color.Black)
+    protected override fun deleteNode(path: MutableList<RedBlackNode<K, V>>) {
         var node = path.last()
-        var nodeWithNextKey: RBNode<K, V>
+        var nodeWithNextKey: RedBlackNode<K, V>
         while (node.left != null || node.right != null) {
             if (node.right == null) {
                 node.left!!.color = Color.Black
@@ -20,8 +20,7 @@ class RBTree<K: Comparable<K>, V>(): BalancingTree<K, V, RBNode<K, V>>() {
             nodeWithNextKey = node.right!!
             while (nodeWithNextKey.left != null)
                 nodeWithNextKey = nodeWithNextKey.left!!
-            node.key = nodeWithNextKey.key
-            node.value = nodeWithNextKey.value
+            nodeWithNextKey.copy().moveOnNewPlace(node)
             node = nodeWithNextKey
         }
         if (node.type == TypeSon.Root) {
@@ -57,7 +56,7 @@ class RBTree<K: Comparable<K>, V>(): BalancingTree<K, V, RBNode<K, V>>() {
                 brother.left
             if (brotherNephew != null && brotherNephew.color == Color.Red) {
                 brotherNephew.color = Color.Black
-                brother.rotateBig()
+                brother.bigRotate()
                 balancingFinish = true
             }
             else if (brotherSon != null && brotherSon.color == Color.Red) {
@@ -80,8 +79,9 @@ class RBTree<K: Comparable<K>, V>(): BalancingTree<K, V, RBNode<K, V>>() {
             root = root!!.parent
         root!!.color = Color.Black
     }
-    override fun toString(): String = "RBTree: {${root?.subtreeToString() ?: ""}}"
+    override fun equals(other: Any?): Boolean =
+        (other is RedBlackTree<*, *> && other.root == root)
 }
 
-fun <K: Comparable<K>, V>rbTreeOf(vararg elements: Pair<K, V>): RBTree<K, V> =
-    RBTree(elements.size) {elements[it]}
+fun <K: Comparable<K>, V>redBlackTreeOf(vararg elements: Pair<K, V>): RedBlackTree<K, V> =
+    RedBlackTree(elements.size) {elements[it]}
