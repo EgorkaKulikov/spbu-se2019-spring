@@ -1,7 +1,9 @@
 import java.lang.Exception
 
 enum class TypeSon {
-    LeftSon, RightSon, Root
+    LeftSon,
+    RightSon,
+    Root,
 }
 
 abstract class Node<K: Comparable<K>, V, NT: Node<K, V, NT>> {
@@ -20,9 +22,9 @@ abstract class Node<K: Comparable<K>, V, NT: Node<K, V, NT>> {
             TypeSon.RightSon -> parent!!.left
             TypeSon.Root -> null
         }
-    abstract var key: K
+    abstract val key: K
     abstract var value: V
-    abstract fun createNode(key: K, value: V): NT
+    protected abstract fun createNode(key: K, value: V): NT
     fun createSon(key: K, value: V, typeNewSon: TypeSon) {
         setSon(createNode(key, value), typeNewSon)
     }
@@ -72,6 +74,11 @@ abstract class Node<K: Comparable<K>, V, NT: Node<K, V, NT>> {
             parent!!.right = null
         parent = newFather
     }
+    fun moveOnNewPlace(newPlace: NT) {
+        setFather(newPlace.parent, newPlace.type)
+        setSon(newPlace.left, TypeSon.LeftSon)
+        setSon(newPlace.right, TypeSon.RightSon)
+    }
     fun findKey(key: K): TypeSon =
         if (this.key == key)
             TypeSon.Root
@@ -84,12 +91,11 @@ abstract class Node<K: Comparable<K>, V, NT: Node<K, V, NT>> {
         TypeSon.LeftSon -> left
         TypeSon.RightSon -> right
     }
-    override fun toString(): String = "($key to $value)"
-    fun subtreeToString(): String = "$this" +
-                (if (left != null)
-                    " left: {${left!!.subtreeToString()}}"
-                else "") +
-                (if (right != null)
-                    " right: {${right!!.subtreeToString()}}"
-                else "")
+    open fun addLeftSon(key: K, value: V) {
+        createSon(key, value, TypeSon.LeftSon)
+    }
+    open fun addRightSon(key: K, value: V) {
+        createSon(key, value, TypeSon.RightSon)
+    }
+    abstract fun copy(): NT
 }
