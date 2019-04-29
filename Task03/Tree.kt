@@ -1,4 +1,3 @@
-import java.lang.Exception
 import java.util.Stack
 
 enum class InfoAboutNode {
@@ -42,49 +41,47 @@ abstract class Tree<K: Comparable<K>, V, NT: Node<K, V, NT>>: Iterable<Node<K, V
         if (node.key != key)
             return InfoAboutNode.NodeNotFounded
         if (node.left == null && node.right == null) {
-            when (node.type) {
-                TypeSon.LeftSon -> node.parent!!.left = null
-                TypeSon.RightSon -> node.parent!!.right = null
-                TypeSon.Root -> root = null
-            }
+            if (node.type == TypeSon.Root)
+                root = null
+            else
+                node.parent!!.setSon(null, node.type)
             return InfoAboutNode.NodeDelete
         }
         if (node.right == null) {
             if (node.type == TypeSon.Root)
                 root = node.left!!
-            node.left!!.setFather(node.parent, node.type)
+            else
+                node.left!!.setFather(node.parent, node.type)
             return InfoAboutNode.NodeDelete
         }
         var nodeWithNextKey = node.right!!
         while (nodeWithNextKey.left != null)
             nodeWithNextKey = nodeWithNextKey.left!!
-        node.key = nodeWithNextKey.key
-        node.value = nodeWithNextKey.value
         nodeWithNextKey.parent!!.setSon(nodeWithNextKey.right, nodeWithNextKey.type)
+        nodeWithNextKey.moveOnNewPlace(node)
         return InfoAboutNode.NodeDelete
     }
     operator fun set(key: K, value: V?) {
         setWithInfo(key, value)
     }
-    fun insert(size: Int, init: (Int) -> Pair<K, V>) {
+    public fun insert(size: Int, init: (Int) -> Pair<K, V>) {
         for (i in 0 until size) {
-            when (setWithInfo(init(i).first, init(i).second)) {
-                InfoAboutNode.NodeUpdate -> throw Exception("Function insert don't update nodes in tree")
-                InfoAboutNode.NodeDelete -> throw Exception("Function insert don't delete nodes in tree")
-                else -> {}
-            }
+            if (init(i).second == null)
+                throw Exception("Value \"null\" is the initial value for all keys")
+            if (setWithInfo(init(i).first, init(i).second) == InfoAboutNode.NodeUpdate)
+                throw Exception("Function insert don't update nodes in tree")
         }
     }
-    fun insert(vararg elements: Pair<K, V>) {
+    public fun insert(vararg elements: Pair<K, V>) {
         insert(elements.size) {elements[it]}
     }
-    fun erase(size: Int, init: (Int) -> K) {
+    public fun erase(size: Int, init: (Int) -> K) {
         for (i in 0 until size) {
             if (setWithInfo(init(i), null) == InfoAboutNode.NodeNotFounded)
                 throw Exception("Function erase can't delete absent node")
         }
     }
-    fun erase(vararg elements: K) {
+    public fun erase(vararg elements: K) {
         erase(elements.size) {elements[it]}
     }
     override fun iterator(): Iterator<NT> = (object: Iterator<NT> {
