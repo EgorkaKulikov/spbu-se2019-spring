@@ -20,6 +20,12 @@ internal class NodeBalancer<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>
             else
                 ancestor.right = newNode
         }
+
+        // Redefining heights for AVLNode
+        if (node is AVLNode<*, *> && newNode is AVLNode<*, *>) {
+            node.updateHeight()
+            newNode.updateHeight()
+        }
     }
 
     fun rightRotate(node: NodeType) {
@@ -41,6 +47,12 @@ internal class NodeBalancer<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>
                 ancestor.left = newNode
             else
                 ancestor.right = newNode
+        }
+
+        // Redefining heights for AVLNode
+        if (node is AVLNode<*, *> && newNode is AVLNode<*, *>) {
+            node.updateHeight()
+            newNode.updateHeight()
         }
     }
 

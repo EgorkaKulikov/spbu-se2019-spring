@@ -2,7 +2,7 @@ class RedBlackTree<K: Comparable<K>, V>:
         Tree<K, V, RedBlackNode<K, V>>() {
 
     override operator fun set(key: K, value: V) {
-        val newNode = RedBlackNode(key, value, 'r')
+        val newNode = RedBlackNode(key, value, Color.Red)
         insert(newNode)
         fixColors(newNode)
     }
@@ -12,18 +12,18 @@ class RedBlackTree<K: Comparable<K>, V>:
         var current = node
 
         if (current == root) {
-            current.color = 'b'
+            current.color = Color.Black
             return
         }
 
-        while (current.parent?.color == 'r') {
+        while (current.parent?.color == Color.Red) {
             if (current.grandparent?.left == current.parent) {
                 // In case our parent is left son
-                if (current.uncle?.color == 'r') {
+                if (current.uncle?.color == Color.Red) {
                     // Uncle is red
-                    current.parent?.color = 'b'
-                    current.uncle?.color = 'b'
-                    current.grandparent?.color = 'r'
+                    current.parent?.color = Color.Black
+                    current.uncle?.color = Color.Black
+                    current.grandparent?.color = Color.Red
                     current = current.grandparent!!
                 }
                 else {
@@ -32,18 +32,18 @@ class RedBlackTree<K: Comparable<K>, V>:
                         current = current.parent!!
                         current.leftRotate()
                     }
-                    current.parent?.color = 'b'
-                    current.grandparent?.color = 'r'
+                    current.parent?.color = Color.Black
+                    current.grandparent?.color = Color.Red
                     current.grandparent?.rightRotate()
                 }
             }
             else {
                 // In case our parent is right son
-                if (current.uncle?.color == 'r') {
+                if (current.uncle?.color == Color.Red) {
                     // Uncle is red
-                    current.parent?.color = 'b'
-                    current.uncle?.color = 'b'
-                    current.grandparent?.color = 'r'
+                    current.parent?.color = Color.Black
+                    current.uncle?.color = Color.Black
+                    current.grandparent?.color = Color.Red
                     current = current.grandparent!!
                 }
                 else {
@@ -52,8 +52,8 @@ class RedBlackTree<K: Comparable<K>, V>:
                         current = current.parent!!
                         current.rightRotate()
                     }
-                    current.parent?.color = 'b'
-                    current.grandparent?.color = 'r'
+                    current.parent?.color = Color.Black
+                    current.grandparent?.color = Color.Red
                     current.grandparent?.leftRotate()
                 }
             }
@@ -61,7 +61,12 @@ class RedBlackTree<K: Comparable<K>, V>:
 
         while (root?.parent != null)
             root = root?.parent
-        root?.color = 'b'
+        root?.color = Color.Black
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return (other is RedBlackTree<*, *>
+                && this.root == other.root)
     }
 
 }

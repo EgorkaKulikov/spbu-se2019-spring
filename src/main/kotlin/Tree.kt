@@ -10,21 +10,20 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>> : Itera
 
     open operator fun set(key: K, value: V) {}
 
-    fun maxKey(): K? {
-        return getMaxNode(root)?.key
-    }
-
-    fun minKey(): K? {
-        return getMinNode(root)?.key
-    }
-
     override fun iterator(): Iterator<NodeType> {
         return TreeIterator(this)
     }
 
+    val keys: Array<out Any>?
+        get() {
+            val result = arrayListOf<K>()
+            this.forEach { result.add(it.key) }
+            return result.toArray()
+        }
 
 
-    protected open var root: NodeType? = null
+
+    internal open var root: NodeType? = null
 
     protected fun insert(node: NodeType) {
         val parentNode = searchForParent(node.key)

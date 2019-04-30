@@ -6,4 +6,9 @@ class BinarySearchTree<K: Comparable<K>, V> :
         insert(newNode)
     }
 
+    override fun equals(other: Any?): Boolean {
+        return (other is BinarySearchTree<*, *>
+                && this.root == other.root)
+    }
+
 }
