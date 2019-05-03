@@ -4,7 +4,7 @@ import Tree
 
 class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<Pair<K, V>> {
 
-    var root: Node<K, V>? = null
+    internal var root: Node<K, V>? = null
 
     override fun find(key: K): Pair<K, V>? {
 

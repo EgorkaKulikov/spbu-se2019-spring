@@ -1,6 +1,6 @@
 package RedBlackTree
 
-class Node<K : Comparable<K>, V>(
+internal class Node<K : Comparable<K>, V>(
         var key: K,
         var value: V,
         var parent: Node<K, V>? = null,
