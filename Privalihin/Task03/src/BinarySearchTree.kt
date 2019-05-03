@@ -1,18 +1,31 @@
 open class BinarySearchTree<T, K : Comparable<K>> {
-    public open inner class Node(_value: T, _key: K, _parent: Node?) {
+    public open inner class Node(var value: T, var key: K, var parent: Node?) {
         var left: Node? = null
         var right: Node? = null
-        var parent: Node? = _parent
-        var value = _value
-        val key = _key
+
+        open fun print(indentation: Int, side: Int) {
+            this.left?.print(indentation + 1, -1)
+
+            for (i in 1..indentation) {
+                print(" ")
+            }
+
+            when(side) {
+                -1 -> print("/")
+                1 -> print("\\")
+            }
+            println("$key $value")
+
+            this.right?.print(indentation + 1, 1)
+        }
     }
 
     var size = 0
         protected set
 
-    protected open var root: Node? = null
+    protected var root: Node? = null
 
-    public open fun find(key: K): T? {
+    open fun find(key: K): T? {
         var curNode: Node? = this.root
 
         while (curNode != null) {
@@ -30,7 +43,7 @@ open class BinarySearchTree<T, K : Comparable<K>> {
         return Node(value, key, parent)
     }
 
-    public open fun insert(value: T, key: K): Node {
+    open fun insert(value: T, key: K): Node {
 
         if (this.root == null) {
             this.root = createNode(value, key, null)
@@ -41,31 +54,37 @@ open class BinarySearchTree<T, K : Comparable<K>> {
         var curNode = this.root!!
 
         while (true) {
-            if (curNode.key == key) {
-                curNode.value = value
-                return curNode
-            }
-
-            if (curNode.key > key) {
-                if (curNode.left == null) {
-                    curNode.left = createNode(value, key, curNode)
-                    curNode.left!!.parent = curNode
-                    size++
-                    return curNode.left!!
+            when {
+                (curNode.key == key) -> {
+                    curNode.value = value
+                    return curNode
                 }
 
-                curNode = curNode.left!!
-            } else {
-                if (curNode.right == null) {
-                    curNode.right = createNode(value, key, curNode)
-                    size++
-                    curNode.right!!.parent = curNode
-                    return curNode.right!!
-                }
+                (curNode.key > key) -> {
+                    if (curNode.left == null) {
+                        curNode.left = createNode(value, key, curNode)
+                        curNode.left!!.parent = curNode
+                        size++
+                        return curNode.left!!
+                    }
 
-                curNode = curNode.right!!
+                    curNode = curNode.left!!
+                }
+                (curNode.key < key) -> {
+                    if (curNode.right == null) {
+                        curNode.right = createNode(value, key, curNode)
+                        size++
+                        curNode.right!!.parent = curNode
+                        return curNode.right!!
+                    }
+
+                    curNode = curNode.right!!
+                }
             }
         }
+    }
 
+    open fun print() {
+        root?.print(0, 0)
     }
 }

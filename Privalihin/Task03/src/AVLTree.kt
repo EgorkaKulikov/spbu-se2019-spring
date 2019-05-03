@@ -3,18 +3,33 @@ import kotlin.math.max
 import kotlin.math.min
 
 class AVLTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
-    public inner class AVLNode(_value: T, _key: K, _parent: Node?) : Node(_value, _key, _parent) {
-        var flag = 0
+    inner class AVLNode(_value: T, _key: K, _parent: Node?) : Node(_value, _key, _parent) {
+        var subtreeSizeDifference = 0
 
+        override fun print(indentation: Int, side: Int) {
+            this.left?.print(indentation + 1, -1)
+
+            for (i in 1..indentation) {
+                print(" ")
+            }
+
+            when(side) {
+                -1 -> print("/")
+                1 -> print("\\")
+            }
+            println("$key $value $subtreeSizeDifference")
+
+            this.right?.print(indentation + 1, 1)
+        }
     }
 
-    protected override fun createNode(value: T, key: K, parent: Node?): Node {
+    override fun createNode(value: T, key: K, parent: Node?): Node {
         return AVLNode(value, key, parent)
     }
 
     override fun insert(value: T, key: K): Node {
         val oldSize = size
-        val inserted = super<BalancedSearchTree>.insert(value, key)
+        val inserted = super.insert(value, key)
 
         if (size == oldSize) {
             return inserted
@@ -26,38 +41,38 @@ class AVLTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
             val dad = curNode.parent as AVLNode
 
             if (dad.left == curNode) {
-                dad.flag++
+                dad.subtreeSizeDifference++
             }
             else {
-                dad.flag--
+                dad.subtreeSizeDifference--
             }
 
-            if (dad.flag == 0) {
+            if (dad.subtreeSizeDifference == 0) {
                 break
             }
 
-            if (abs(dad.flag) > 1) {
+            if (abs(dad.subtreeSizeDifference) > 1) {
                 if (curNode == dad.left) {
                     if (son == curNode.right) {
                         curNode.rotateLeft()
-                        curNode.flag += min(0, son.flag) - 1
-                        son.flag += max(0, curNode.flag) + 1
+                        curNode.subtreeSizeDifference += min(0, son.subtreeSizeDifference) - 1
+                        son.subtreeSizeDifference += max(0, curNode.subtreeSizeDifference) + 1
                     }
 
                     dad.rotateRight()
-                    dad.flag += min(0, curNode.flag) - 1
-                    curNode.flag += max(0, dad.flag) + 1
+                    dad.subtreeSizeDifference += min(0, curNode.subtreeSizeDifference) - 1
+                    curNode.subtreeSizeDifference += max(0, dad.subtreeSizeDifference) + 1
                 }
                 else {
                     if (son == curNode.left) {
                         curNode.rotateRight()
-                        curNode.flag += max(0, son.flag) + 1
-                        son.flag += min(0, curNode.flag) - 1
+                        curNode.subtreeSizeDifference += max(0, son.subtreeSizeDifference) + 1
+                        son.subtreeSizeDifference += min(0, curNode.subtreeSizeDifference) - 1
                     }
 
-                    dad.rotateRight()
-                    dad.flag += max(0, curNode.flag) + 1
-                    curNode.flag += min(0, dad.flag) - 1
+                    dad.rotateLeft()
+                    dad.subtreeSizeDifference += max(0, curNode.subtreeSizeDifference) + 1
+                    curNode.subtreeSizeDifference += min(0, dad.subtreeSizeDifference) - 1
                 }
 
                 break
@@ -70,17 +85,7 @@ class AVLTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
         return inserted
     }
 
-    public fun AVLNode.print() {
-        print("(")
-        this.left?.let { (this.left as AVLNode).print() }
-        print(")")
-        print("<$key $value $flag>")
-        print("(")
-        this.right?.let { (this.right as AVLNode).print() }
-        print(")")
-    }
-
-    public fun print() {
-        (root as AVLNode).print()
+    override fun print() {
+        (root as AVLNode).print(0, 0)
     }
 }
