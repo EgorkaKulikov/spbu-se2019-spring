@@ -65,6 +65,11 @@ internal class TestRedBlackTree {
             for (data in testInput) {
                 assertEquals(Pair(data, data), Tree.find(data))
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -186,9 +191,13 @@ internal class TestRedBlackTree {
                 Tree.insert(data, data)
             }
 
-            for (data in testInput) {
-                assertEquals(Pair(data, data), Tree.find(data))
+            for (x in testInput) {
+                assertEquals(Tree.find(x), Pair(x, x))
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
 
         }
 
@@ -210,6 +219,10 @@ internal class TestRedBlackTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -228,6 +241,10 @@ internal class TestRedBlackTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -240,11 +257,15 @@ internal class TestRedBlackTree {
 
             val testInput: MutableList<Int> = MutableList(testInputLength) { testInputLength - it }
 
-            for (x in testInput) {
-                Tree.insert(x, x)
+            for (data in testInput) {
+                Tree.insert(data, data)
                 maxBlackHeight = -1
                 assertTrue(checkStructure())
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
 
         }
 
@@ -413,6 +434,10 @@ internal class TestRedBlackTree {
                 assertNotNull(Tree.find(testInput[i]))
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -439,6 +464,10 @@ internal class TestRedBlackTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -463,6 +492,10 @@ internal class TestRedBlackTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -486,6 +519,10 @@ internal class TestRedBlackTree {
                 maxBlackHeight = -1
                 assertTrue(checkStructure())
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
 
         }
 
@@ -518,8 +555,67 @@ internal class TestRedBlackTree {
 
             for (i in Tree) {
                 ++cur
-                assertEquals(i, Pair(cur, cur))
+                assertEquals(Pair(cur, cur), i)
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
+        }
+
+    }
+
+    @DisplayName("Iterate tree in direct order")
+    @Test
+    fun testIterateDirectOrder() {
+
+        for (testInputLength in 1..1000) {
+
+            val testInput: MutableList<Int> = MutableList(testInputLength) { it + 1 }
+
+            for (data in testInput) {
+                Tree.insert(data, data)
+            }
+
+            var cur = 0
+
+            for (i in Tree) {
+                ++cur
+                assertEquals(Pair(cur, cur), i)
+            }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
+        }
+
+    }
+
+    @DisplayName("Iterate tree in reverse order")
+    @Test
+    fun testIterateReverseOrder() {
+
+        for (testInputLength in 1..1000) {
+
+            val testInput: MutableList<Int> = MutableList(testInputLength) { testInputLength - it }
+
+            for (data in testInput) {
+                Tree.insert(data, data)
+            }
+
+            var cur = 0
+
+            for (i in Tree) {
+                ++cur
+                assertEquals(Pair(cur, cur), i)
+            }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }

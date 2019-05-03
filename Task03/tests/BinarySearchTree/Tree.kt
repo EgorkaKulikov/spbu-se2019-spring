@@ -50,6 +50,11 @@ internal class TestBinarySearchTree {
             for (data in testInput) {
                 assertEquals(Pair(data, data), Tree.find(data))
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -175,6 +180,10 @@ internal class TestBinarySearchTree {
                 assertEquals(Tree.find(x), Pair(x, x))
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -194,6 +203,10 @@ internal class TestBinarySearchTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -211,6 +224,10 @@ internal class TestBinarySearchTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -227,6 +244,10 @@ internal class TestBinarySearchTree {
                 Tree.insert(data, data)
                 assertTrue(checkStructure())
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
 
         }
 
@@ -395,6 +416,10 @@ internal class TestBinarySearchTree {
                 assertNotNull(Tree.find(testInput[i]))
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -420,6 +445,10 @@ internal class TestBinarySearchTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -443,6 +472,10 @@ internal class TestBinarySearchTree {
                 assertTrue(checkStructure())
             }
 
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
@@ -465,6 +498,10 @@ internal class TestBinarySearchTree {
                 Tree.delete(testInput[i])
                 assertTrue(checkStructure())
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
 
         }
 
@@ -499,6 +536,65 @@ internal class TestBinarySearchTree {
                 ++cur
                 assertEquals(Pair(cur, cur), i)
             }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
+        }
+
+    }
+
+    @DisplayName("Iterate tree in direct order")
+    @Test
+    fun testIterateDirectOrder() {
+
+        for (testInputLength in 1..1000) {
+
+            val testInput: MutableList<Int> = MutableList(testInputLength) { it + 1 }
+
+            for (data in testInput) {
+                Tree.insert(data, data)
+            }
+
+            var cur = 0
+
+            for (i in Tree) {
+                ++cur
+                assertEquals(Pair(cur, cur), i)
+            }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
+        }
+
+    }
+
+    @DisplayName("Iterate tree in reverse order")
+    @Test
+    fun testIterateReverseOrder() {
+
+        for (testInputLength in 1..1000) {
+
+            val testInput: MutableList<Int> = MutableList(testInputLength) { testInputLength - it }
+
+            for (data in testInput) {
+                Tree.insert(data, data)
+            }
+
+            var cur = 0
+
+            for (i in Tree) {
+                ++cur
+                assertEquals(Pair(cur, cur), i)
+            }
+
+            Tree.root?.left?.parent = null
+            Tree.root?.right?.parent = null
+            Tree.root = null
+
         }
 
     }
