@@ -177,6 +177,20 @@ internal class TestRedBlackTree {
 
     }
 
+    @DisplayName("Double insert check")
+    @Test
+    fun testDoubleInsert() {
+
+        Tree.insert(1, 1)
+        Tree.insert(1, 1)
+
+        assertEquals(Tree.root!!.key, 1)
+        assertTrue(Tree.root!!.parent == null)
+        assertTrue(Tree.root!!.left == null)
+        assertTrue(Tree.root!!.right == null)
+
+    }
+
     @DisplayName("Insert check")
     @Test
     fun testInsert() {

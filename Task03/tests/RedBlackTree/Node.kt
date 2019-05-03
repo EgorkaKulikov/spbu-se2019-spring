@@ -27,6 +27,28 @@ internal class TestRedBlackTreeNode {
 
     }
 
+    @DisplayName("Self hashCode")
+    @Test
+    fun testSelfHashCode() {
+
+        val node = Node(0, 0)
+
+        assertEquals(node.hashCode(), node.hashCode())
+
+    }
+
+    @DisplayName("Different hashCode")
+    @Test
+    fun testDifferentHashCode() {
+
+        val node = Node(0, 0)
+
+        val other = Node(1, 1)
+
+        assertNotEquals(node, other)
+
+    }
+
     @DisplayName("Simple equality")
     @Test
     fun testSimpleEquals() {
