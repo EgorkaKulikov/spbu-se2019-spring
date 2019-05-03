@@ -9,6 +9,22 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
         constructor(_value: T, _key: K, _parent: Node): this(_value, _key) {
             parent = _parent
         }
+
+        fun print(indentation: Int) {
+            this.left?.print(indentation + 1)
+
+            for (i in 1..indentation) {
+                print(" ")
+            }
+
+            println("$key $value")
+
+            this.right?.print(indentation + 1)
+        }
+    }
+
+    fun print() {
+        root?.print(0)
     }
 
     private var root: Node? = null
@@ -26,30 +42,27 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
 
         override fun next(): T {
             if (curNode == null) {
-                return null!!
+                throw IndexOutOfBoundsException()
             }
 
             var current = curNode!!
             val returnValue = current.value
 
             if (current.right != null) {
-                curNode = current.right
+                curNode = leftMost(current.right)
             }
             else {
-                var prev = current
 
-                while (current.parent != null
-                        && current.parent!!.right == current) {
-                    prev = current
+                while (current.parent != null) {
+                    if (current.parent!!.left == current) {
+                        curNode = current.parent
+                        return returnValue
+                    }
+
                     current = current.parent!!
                 }
 
-                if (current.parent == null && current.right == prev) {
-                    curNode = null
-                }
-                else {
-                    curNode = leftMost(current.right)
-                }
+                curNode = null
             }
 
             return returnValue
