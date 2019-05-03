@@ -1,4 +1,4 @@
-abstract class BalancedSearchTree<T, K : Comparable<K>> : BinarySearchTree<T, K>() {
+abstract class BalancedSearchTree<K : Comparable<K>, V> : BinarySearchTree<K, V>() {
 
     protected fun Node.grandparent(): Node? {
         return this.parent?.parent

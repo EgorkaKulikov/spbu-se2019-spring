@@ -2,8 +2,8 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class AVLTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
-    inner class AVLNode(_value: T, _key: K, _parent: Node?) : Node(_value, _key, _parent) {
+class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
+    inner class AVLNode(_key: K, _value: V, _parent: Node?) : Node(_key, _value, _parent) {
         var subtreeSizeDifference = 0
 
         override fun print(indentation: Int, side: Int) {
@@ -23,13 +23,13 @@ class AVLTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
         }
     }
 
-    override fun createNode(value: T, key: K, parent: Node?): Node {
-        return AVLNode(value, key, parent)
+    override fun createNode(key: K, value: V, parent: Node?): Node {
+        return AVLNode(key, value, parent)
     }
 
-    override fun insert(value: T, key: K): Node {
+    override fun insert(key: K, value: V): Node {
         val oldSize = size
-        val inserted = super.insert(value, key)
+        val inserted = super.insert(key, value)
 
         if (size == oldSize) {
             return inserted

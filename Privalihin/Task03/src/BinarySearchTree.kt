@@ -1,5 +1,5 @@
-open class BinarySearchTree<T, K : Comparable<K>> {
-    public open inner class Node(var value: T, var key: K, var parent: Node?) {
+open class BinarySearchTree<K : Comparable<K>, V> {
+    public open inner class Node(var key: K, var value: V, var parent: Node?) {
         var left: Node? = null
         var right: Node? = null
 
@@ -25,7 +25,7 @@ open class BinarySearchTree<T, K : Comparable<K>> {
 
     protected var root: Node? = null
 
-    open fun find(key: K): T? {
+    open fun find(key: K): V? {
         var curNode: Node? = this.root
 
         while (curNode != null) {
@@ -39,14 +39,14 @@ open class BinarySearchTree<T, K : Comparable<K>> {
         return null
     }
 
-    protected open fun createNode(value: T, key: K, parent: Node?): Node {
-        return Node(value, key, parent)
+    protected open fun createNode(key: K, value: V, parent: Node?): Node {
+        return Node(key, value, parent)
     }
 
-    open fun insert(value: T, key: K): Node {
+    open fun insert(key: K, value: V): Node {
 
         if (this.root == null) {
-            this.root = createNode(value, key, null)
+            this.root = createNode(key, value, null)
             size++
             return this.root!!
         }
@@ -62,8 +62,7 @@ open class BinarySearchTree<T, K : Comparable<K>> {
 
                 (curNode.key > key) -> {
                     if (curNode.left == null) {
-                        curNode.left = createNode(value, key, curNode)
-                        curNode.left!!.parent = curNode
+                        curNode.left = createNode(key, value, curNode)
                         size++
                         return curNode.left!!
                     }
@@ -72,9 +71,8 @@ open class BinarySearchTree<T, K : Comparable<K>> {
                 }
                 (curNode.key < key) -> {
                     if (curNode.right == null) {
-                        curNode.right = createNode(value, key, curNode)
+                        curNode.right = createNode(key, value, curNode)
                         size++
-                        curNode.right!!.parent = curNode
                         return curNode.right!!
                     }
 

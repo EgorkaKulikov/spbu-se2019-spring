@@ -1,5 +1,5 @@
-class RBTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
-    inner class RBNode(_value: T, _key: K, _parent: Node?) : Node(_value, _key, _parent) {
+class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
+    inner class RBNode(_key: K, _value: V, _parent: Node?) : Node(_key, _value, _parent) {
 
         var color = Color.RED
 
@@ -20,12 +20,12 @@ class RBTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
         }
     }
 
-    override fun createNode(value: T, key: K, parent: Node?): Node {
-        return RBNode(value, key, parent)
+    override fun createNode(key: K, value: V, parent: Node?): Node {
+        return RBNode(key, value, parent)
     }
 
-    override fun insert(value: T, key: K): Node {
-        var node = super.insert(value, key) as RBNode
+    override fun insert(key: K, value: V): Node {
+        var node = super.insert(key, value) as RBNode
         val inserted = node
         while (node.parent != null) {
             val dad = node.parent as RBNode
