@@ -1,12 +1,12 @@
 class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
-    inner class Node(var value : T, var key : K, var parent : Node?) {
+    inner class Node(var key : K, var value : T,  var parent : Node?) {
         var left : Node? = null
         var right : Node? = null
     }
 
     private var root : Node? = null
 
-    private fun createNode(value : T, key: K, parent: Node?) : Node {
+    private fun createNode(key: K, value : T, parent: Node?) : Node {
         return Node(value, key, parent)
     }
 
@@ -28,7 +28,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
         var currNode = this.root
 
         if (currNode == null) {
-            currNode = createNode(value, key, null)
+            currNode = createNode(key, value, null)
             return currNode
         }
 
@@ -36,7 +36,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
             when {
                 currNode.key > key -> {
                     if (currNode.left == null) {
-                        val insertedNode = createNode(value, key, currNode)
+                        val insertedNode = createNode(key, value, currNode)
                         currNode.left = insertedNode
                         return insertedNode
                     }
@@ -46,7 +46,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
                 }
                 currNode.key < key -> {
                     if (currNode.right == null) {
-                        val insertedNode = createNode(value, key, currNode)
+                        val insertedNode = createNode(key, value, currNode)
                         currNode.right = insertedNode
                         return insertedNode
                     }
@@ -109,8 +109,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
             return currNode != null
         }
     }
-
-    // Returns object of iterator
+    
     override fun iterator(): Iterator<T>{
         return SearchTreeIterator()
     }
