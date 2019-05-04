@@ -1,5 +1,5 @@
 class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
-    inner class Node(var key : K, var value : T,  var parent : Node?) {
+    inner class Node(var key : K, var value : T, var parent : Node?) {
         var left : Node? = null
         var right : Node? = null
     }
@@ -24,7 +24,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
         return null
     }
 
-    fun insert(value : T, key: K): Node{
+    fun insert(key: K, value : T): Node{
         var currNode = this.root
 
         if (currNode == null) {
