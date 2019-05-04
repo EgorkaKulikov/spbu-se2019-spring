@@ -1,15 +1,14 @@
 package zipviewer
 
-/*
-Weird constants are from .ZIP File Format Specification.
-https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
-*/
-
 
 import java.io.File
 import kotlin.system.exitProcess
 
 
+/*
+	Weird constants are from .ZIP File Format Specification.
+	https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+*/
 data class zipfile(val zipname: String)
 {	
 	public fun name() = filename
@@ -26,31 +25,23 @@ data class zipfile(val zipname: String)
 			&& bitHasNext == true 
 			&& bitNext == false)
 		{
+			bitNext = true
+
 			when(bytesToLong(4))
 			{
-				0x04034B50L -> 
-				{
-					bitNext = true
-					return true
-				}
-				0x02014B50L -> 
-				{
-					bitHasNext = false
-					bitNext = true
-					return false
-				}
-				0x05064B50L -> 
-				{
-					bitHasNext = false
-					bitNext = true
-					return false
-				}
+				0x04034B50L -> bitHasNext = true
+				
+				0x02014B50L,
+				0x05064B50L -> bitHasNext = false
+				
 				else ->
 				{
 					println("Incorrect data.")
 					exitProcess(3)
 				}
 			}
+
+			return bitHasNext
 		}
 		else if (bitNext == true)
 		{

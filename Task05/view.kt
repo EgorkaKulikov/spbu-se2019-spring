@@ -1,6 +1,10 @@
 package zipviewer
 
 
+/*
+	"All slashes MUST be forward slashes '/'"
+	4.4.17.1 of .ZIP File Format Specification
+*/
 const val slash = '/'
 const val indent = "    "
 
@@ -69,10 +73,9 @@ fun size(zip: zipfile, name: String)
 
 
 /*
-Using MS-DOS date & time format.
-http://www.vsft.com/hal/dostime.htm
+	Using MS-DOS date & time format.
+	http://www.vsft.com/hal/dostime.htm
 */
-
 fun time(zip: zipfile, name: String)
 {
 	var existing = false
