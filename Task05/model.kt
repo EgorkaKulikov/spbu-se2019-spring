@@ -9,7 +9,7 @@ import kotlin.system.exitProcess
 	Weird constants are from .ZIP File Format Specification.
 	https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
 */
-data class zipfile(val zipname: String)
+data class Zipfile(val zipname: String)
 {	
 	public fun name() = filename
 	

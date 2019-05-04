@@ -9,7 +9,7 @@ const val slash = '/'
 const val indent = "    "
 
 
-fun tree(zip: zipfile)
+fun tree(zip: Zipfile)
 {
 	var dirname = ""
 	var offset = 0
@@ -43,7 +43,7 @@ fun tree(zip: zipfile)
 }
 
 
-fun size(zip: zipfile, name: String)
+fun size(zip: Zipfile, name: String)
 {
 	var summarySize = 0L
 	var existing = false
@@ -76,7 +76,7 @@ fun size(zip: zipfile, name: String)
 	Using MS-DOS date & time format.
 	http://www.vsft.com/hal/dostime.htm
 */
-fun time(zip: zipfile, name: String)
+fun time(zip: Zipfile, name: String)
 {
 	var existing = false
 

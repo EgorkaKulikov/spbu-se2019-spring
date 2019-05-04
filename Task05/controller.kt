@@ -26,7 +26,7 @@ fun main(args: Array<String>)
 		exitProcess(2)
 	}
 	
-	val opened = zipfile(zipname)
+	val opened = Zipfile(zipname)
 	
 	when (args[0])
 	{
