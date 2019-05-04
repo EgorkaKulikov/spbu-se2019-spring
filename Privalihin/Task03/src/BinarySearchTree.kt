@@ -1,10 +1,12 @@
+import com.sun.org.apache.xpath.internal.operations.Bool
+
 open class BinarySearchTree<K : Comparable<K>, V> {
     public open inner class Node(var key: K, var value: V, var parent: Node?) {
         var left: Node? = null
         var right: Node? = null
 
         open fun print(indentation: Int, side: Int) {
-            this.left?.print(indentation + 1, -1)
+            this.right?.print(indentation + 1, -1)
 
             for (i in 1..indentation) {
                 print(" ")
@@ -16,7 +18,27 @@ open class BinarySearchTree<K : Comparable<K>, V> {
             }
             println("$key $value")
 
-            this.right?.print(indentation + 1, 1)
+            this.left?.print(indentation + 1, 1)
+        }
+
+        fun verifySearch(): Boolean {
+            return ((this.left == null) || (this.left!!.key <= this.key
+                                            && this.left!!.verifySearch()))
+                    && ((this.right == null) || (this.key <= this.right!!.key
+                                            && this.right!!.verifySearch()))
+        }
+
+        fun verifyParents(): Boolean {
+            var result = true
+            this.left?.let { result = result
+                    && this.left!!.parent == this
+                    && this.left!!.verifyParents() }
+
+            this.right?.let { result = result
+                    && this.right!!.parent == this
+                    && this.right!!.verifyParents() }
+
+            return result
         }
     }
 
@@ -84,5 +106,13 @@ open class BinarySearchTree<K : Comparable<K>, V> {
 
     open fun print() {
         root?.print(0, 0)
+    }
+
+    fun isBinarySearchTree(): Boolean {
+        return root == null || root!!.verifySearch()
+    }
+
+    fun parentsCorrectness(): Boolean {
+        return root == null || (root!!.parent == null && root!!.verifyParents())
     }
 }

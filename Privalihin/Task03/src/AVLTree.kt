@@ -1,13 +1,19 @@
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
     inner class AVLNode(_key: K, _value: V, _parent: Node?) : Node(_key, _value, _parent) {
-        var subtreeSizeDifference = 0
+        var height = 1
+
+        fun updateHeight() {
+            var tmp = 0
+            this.right?.let { tmp = (this.right as AVLNode).height }
+            this.left?.let { tmp = max(tmp, (this.left as AVLNode).height) }
+            height = tmp + 1
+        }
 
         override fun print(indentation: Int, side: Int) {
-            this.left?.print(indentation + 1, -1)
+            this.right?.print(indentation + 1, -1)
 
             for (i in 1..indentation) {
                 print(" ")
@@ -17,9 +23,34 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
                 -1 -> print("/")
                 1 -> print("\\")
             }
-            println("$key $value $subtreeSizeDifference")
+            println("$key $value $height")
 
-            this.right?.print(indentation + 1, 1)
+            this.left?.print(indentation + 1, 1)
+        }
+
+        fun verifyAVL(): Pair<Boolean, Int> {
+            var leftCorrectness = true
+            var leftHeight = 0
+
+            if (this.left != null) {
+                val tmp = (this.left as AVLNode).verifyAVL()
+                leftCorrectness = tmp.first
+                leftHeight = tmp.second
+            }
+
+            var rightCorrectness = true
+            var rightHeight = 0
+
+            if (this.right != null) {
+                val tmp = (this.right as AVLNode).verifyAVL()
+                rightCorrectness = tmp.first
+                rightHeight = tmp.second
+            }
+
+            return Pair(leftCorrectness
+                    && rightCorrectness
+                    && abs(rightHeight - leftHeight) < 2
+                    , max(rightHeight, leftHeight) + 1)
         }
     }
 
@@ -31,61 +62,69 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         val oldSize = size
         val inserted = super.insert(key, value)
 
-        if (size == oldSize) {
+        if (size == oldSize || size == 1) {
             return inserted
         }
 
         var curNode = inserted as AVLNode
+        curNode.parent?.let { (curNode.parent as AVLNode).updateHeight() }
         var son = curNode
+
         while (curNode.parent != null) {
             val dad = curNode.parent as AVLNode
+            dad.updateHeight()
+            val subtreeHeightDifference = abs(
+                    (if (dad.right != null) (dad.right as AVLNode).height else 0)
+                            - (if (dad.left != null) (dad.left as AVLNode).height else 0))
 
-            if (dad.left == curNode) {
-                dad.subtreeSizeDifference++
-            }
-            else {
-                dad.subtreeSizeDifference--
-            }
+            var next = dad
+            var nextSon = curNode
 
-            if (dad.subtreeSizeDifference == 0) {
-                break
-            }
-
-            if (abs(dad.subtreeSizeDifference) > 1) {
+            if (subtreeHeightDifference > 1) {
                 if (curNode == dad.left) {
+                    next = curNode
+                    nextSon = son
+
                     if (son == curNode.right) {
                         curNode.rotateLeft()
-                        curNode.subtreeSizeDifference += min(0, son.subtreeSizeDifference) - 1
-                        son.subtreeSizeDifference += max(0, curNode.subtreeSizeDifference) + 1
+                        next = son
+                        nextSon = curNode
                     }
 
                     dad.rotateRight()
-                    dad.subtreeSizeDifference += min(0, curNode.subtreeSizeDifference) - 1
-                    curNode.subtreeSizeDifference += max(0, dad.subtreeSizeDifference) + 1
+                    dad.updateHeight()
+                    curNode.updateHeight()
+                    son.updateHeight()
                 }
                 else {
+                    next = curNode
+                    nextSon = son
+
                     if (son == curNode.left) {
                         curNode.rotateRight()
-                        curNode.subtreeSizeDifference += max(0, son.subtreeSizeDifference) + 1
-                        son.subtreeSizeDifference += min(0, curNode.subtreeSizeDifference) - 1
+                        next = son
+                        nextSon = curNode
                     }
 
                     dad.rotateLeft()
-                    dad.subtreeSizeDifference += max(0, curNode.subtreeSizeDifference) + 1
-                    curNode.subtreeSizeDifference += min(0, dad.subtreeSizeDifference) - 1
+                    dad.updateHeight()
+                    curNode.updateHeight()
+                    son.updateHeight()
                 }
-
-                break
             }
 
-            son = curNode
-            curNode = dad
+            son = nextSon
+            curNode = next
         }
 
         return inserted
     }
 
     override fun print() {
-        (root as AVLNode).print(0, 0)
+        root?.let { (root as AVLNode).print(0, 0) }
+    }
+
+    fun isAVLTree(): Boolean {
+        return root == null || (root as AVLNode).verifyAVL().first
     }
 }

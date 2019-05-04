@@ -4,7 +4,7 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         var color = Color.RED
 
         override fun print(indentation: Int, side: Int) {
-            this.left?.print(indentation + 1, -1)
+            this.right?.print(indentation + 1, -1)
 
             for (i in 1..indentation) {
                 print(" ")
@@ -16,7 +16,41 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
             }
             println("$key $value $color")
 
-            this.right?.print(indentation + 1, 1)
+            this.left?.print(indentation + 1, 1)
+        }
+
+        fun verifyRB() : Pair<Boolean, Int> {
+            if (this.color == Color.RED) {
+                if ((this.left != null
+                                && (this.left as RBNode).color == Color.RED)
+                        || (this.right != null
+                                && (this.right as RBNode).color == Color.RED)) {
+                    return Pair(false, 0)
+                }
+            }
+
+            var leftCorrectness = true
+            var leftBlackHeight = 1
+
+            if (this.left != null) {
+                val tmp = (this.left as RBNode).verifyRB()
+                leftCorrectness = tmp.first
+                leftBlackHeight = tmp.second
+            }
+
+            var rightCorrectness = true
+            var rightBlackHeight = 1
+
+            if (this.right != null) {
+                val tmp = (this.right as RBNode).verifyRB()
+                rightCorrectness = tmp.first
+                rightBlackHeight = tmp.second
+            }
+
+            return Pair(leftCorrectness
+                            && rightCorrectness
+                            && rightBlackHeight == leftBlackHeight
+                        , leftBlackHeight + if (this.color == Color.BLACK) 1 else 0)
         }
     }
 
@@ -78,6 +112,16 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
     }
 
     override fun print() {
-        (root as RBNode).print(0, 0)
+        root?.let { (root as RBNode).print(0, 0) }
+    }
+
+    fun isRBTree(): Boolean {
+        if (root == null) {
+            return true
+        }
+        else {
+            val rbRoot = root as RBNode
+            return rbRoot.color == Color.BLACK && rbRoot.verifyRB().first
+        }
     }
 }
