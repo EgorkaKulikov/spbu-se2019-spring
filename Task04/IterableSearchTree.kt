@@ -7,7 +7,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
     private var root : Node? = null
 
     private fun createNode(key: K, value : T, parent: Node?) : Node {
-        return Node(value, key, parent)
+        return Node(key, value, parent)
     }
 
     fun find(key: K): T? {
@@ -109,7 +109,7 @@ class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
             return currNode != null
         }
     }
-    
+
     override fun iterator(): Iterator<T>{
         return SearchTreeIterator()
     }
