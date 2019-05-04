@@ -182,9 +182,10 @@ internal class TestRedBlackTree {
     fun testDoubleInsert() {
 
         Tree.insert(1, 1)
-        Tree.insert(1, 1)
+        Tree.insert(1, 2)
 
         assertEquals(Tree.root!!.key, 1)
+        assertEquals(Tree.root!!.value, 2)
         assertTrue(Tree.root!!.parent == null)
         assertTrue(Tree.root!!.left == null)
         assertTrue(Tree.root!!.right == null)
