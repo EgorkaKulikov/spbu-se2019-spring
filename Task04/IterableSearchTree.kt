@@ -1,4 +1,4 @@
-class IterableSearchTree<T, K: Comparable<K>>: Iterable<T> {
+class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
     inner class Node(var key : K, var value : T, var parent : Node?) {
         var left : Node? = null
         var right : Node? = null
