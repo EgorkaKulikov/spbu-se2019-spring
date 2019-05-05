@@ -25,12 +25,14 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
     }
 
     fun insert(key: K, value : T): Node{
-        var currNode = this.root
 
-        if (currNode == null) {
-            currNode = createNode(key, value, null)
-            return currNode
+
+        if (this.root == null) {
+            this.root = createNode(key, value, null)
+            return this.root!!
         }
+
+        var currNode = this.root
 
         while (currNode!!.key != key) {
             when {
