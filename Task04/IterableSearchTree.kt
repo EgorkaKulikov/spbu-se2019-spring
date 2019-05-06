@@ -11,7 +11,7 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
     }
 
     fun find(key: K): T? {
-        var currNode = this.root
+        var currNode = root
 
         while(currNode != null) {
             when {
@@ -26,15 +26,14 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
 
     fun insert(key: K, value : T): Node{
 
-
-        if (this.root == null) {
-            this.root = createNode(key, value, null)
-            return this.root!!
+        if (root == null) {
+            root = createNode(key, value, null)
+            return root
         }
 
-        var currNode = this.root
+        var currNode = root!! //We checked it's not null
 
-        while (currNode!!.key != key) {
+        while (true) {
             when {
                 currNode.key > key -> {
                     if (currNode.left == null) {
@@ -43,7 +42,7 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
                         return insertedNode
                     }
                     else {
-                        currNode = currNode.left
+                        currNode = currNode.left!! //We checked it's not null
                     }
                 }
                 currNode.key < key -> {
@@ -53,14 +52,15 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
                         return insertedNode
                     }
                     else {
-                        currNode = currNode.right
+                        currNode = currNode.right!! //We checked it's not null
                     }
+                }
+                currNode.key == key -> {
+                    currNode.value = value
+                    return currNode
                 }
             }
         }
-
-        currNode.value = value
-        return currNode
 
     }
     private fun findMinNode(startNode: Node?): Node?{
@@ -81,7 +81,7 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
         override fun next(): T {
 
             var nextNode = currNode
-            // We sure about safe currNode because it checks in hasNext()
+            // We are sure about safe currNode because it checks in hasNext()
             // Even if we have empty tree findMinNode(root) will return
             // null to the first node and it will be checked in hasNext()
             val value = currNode!!.value
@@ -90,7 +90,7 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
                 nextNode = findMinNode(nextNode.right)
             } else {
                 while(nextNode?.parent != null){
-                    if (nextNode.parent?.right == nextNode){
+                    if (nextNode.parent?.left == nextNode){
                         nextNode = nextNode.parent
                     } else {
                         break
