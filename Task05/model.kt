@@ -93,6 +93,8 @@ data class Zipfile(val zipname: String)
 
   private val zip = File(zipname).inputStream()
 
+  public fun closeStream() = zip.close()
+
   private fun size() = zip.available()
 
   private var filename = ""

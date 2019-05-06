@@ -34,4 +34,6 @@ fun main(args: Array<String>)
     "size" -> size(opened, args[2])
     "time" -> time(opened, args[2])
   }
+  
+  opened.closeStream()
 }
