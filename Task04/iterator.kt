@@ -6,22 +6,22 @@ class IterableSearchTree<T, K : Comparable<K>>: Iterable<T> {
 
         private fun createNodesList(): LinkedList<Node> {
             val nodesList = LinkedList<Node>()
-            val visited = LinkedList<Node>()
+            val queue = LinkedList<Node>()
             val tempRoot = root ?: return nodesList
 
-            visited.add(tempRoot)
+            queue.add(tempRoot)
 
-            while (visited.isNotEmpty()) {
-                val currentNode = visited.remove()
+            while (queue.isNotEmpty()) {
+                val currentNode = queue.remove()
                 nodesList.add(currentNode)
 
                 val tempLeft = currentNode.left //local copy to perform null checks
                 if (tempLeft != null) {
-                    visited.add(tempLeft)
+                    queue.add(tempLeft)
                 }
                 val tempRight = currentNode.right //local copy to perform null checks
                 if (tempRight != null) {
-                    visited.add(tempRight)
+                    queue.add(tempRight)
                 }
             }
 
