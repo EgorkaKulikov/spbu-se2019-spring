@@ -65,7 +65,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
         return Node(key, value, parent)
     }
 
-    open fun insert(key: K, value: V): Node {
+    protected open fun innerInsert(key: K, value: V): Node {
 
         if (this.root == null) {
             this.root = createNode(key, value, null)
@@ -102,6 +102,10 @@ open class BinarySearchTree<K : Comparable<K>, V> {
                 }
             }
         }
+    }
+
+    fun insert(key: K, value: V) {
+        innerInsert(key, value)
     }
 
     open fun print() {

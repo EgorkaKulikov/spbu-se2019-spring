@@ -58,9 +58,9 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         return AVLNode(key, value, parent)
     }
 
-    override fun insert(key: K, value: V): Node {
+    override fun innerInsert(key: K, value: V): Node {
         val oldSize = size
-        val inserted = super.insert(key, value)
+        val inserted = super.innerInsert(key, value)
 
         if (size == oldSize || size == 1) {
             return inserted

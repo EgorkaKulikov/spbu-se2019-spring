@@ -58,8 +58,8 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         return RBNode(key, value, parent)
     }
 
-    override fun insert(key: K, value: V): Node {
-        var node = super.insert(key, value) as RBNode
+    override fun innerInsert(key: K, value: V): Node {
+        var node = super.innerInsert(key, value) as RBNode
         val inserted = node
         while (node.parent != null) {
             val dad = node.parent as RBNode
