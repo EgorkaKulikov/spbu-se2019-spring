@@ -40,12 +40,12 @@ fun BitSet.toByteArray(cnt: Int): ByteArray {
 
 fun Byte.toBitSet(): BitSet {
 
-    var cur = this.toLong()
+    var cur = this.toInt()
 
     val res = BitSet()
 
     for (i in 0..7) {
-        if (cur % 2 == 1L) {
+        if (cur % 2 == 1) {
             res.set(i, true)
         } else {
             res.set(i, false)

@@ -113,6 +113,26 @@ class HammingCode(private val data: ByteArray = ByteArray(0) { it.toByte() }, va
 
             bitDecodedWord.flip(errorPosition)
 
+            var checker = 0
+
+            for (i in 1..controlBitsPlaces.lastIndex) {
+
+                val cur = BitSet()
+
+                cur.or(controlSequences[i])
+
+                cur.and(bitDecodedWord)
+
+                if (cur.count(true) % 2 == 1) {
+                    checker += (1 shl (i - 1))
+                }
+
+            }
+
+            if (checker != 0) {
+                bitDecodedWord.flip(errorPosition)
+            }
+
             var decodedWordPointer = 0
 
             val decodedWord = BitSet()
