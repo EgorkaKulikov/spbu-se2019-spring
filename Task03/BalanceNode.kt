@@ -2,6 +2,8 @@ abstract class BalanceNode<K: Comparable<K>, V, NT: BalanceNode<K, V, NT>>: Node
     public abstract fun balancing()
 
     public open fun leftRotate() {
+        if (type == SonType.Root)
+            throw Exception("For the root of the rotate cannot be")
         val father = parent!!
         val leftSon = left
         this.setFather(father.parent, father.type)
@@ -10,6 +12,8 @@ abstract class BalanceNode<K: Comparable<K>, V, NT: BalanceNode<K, V, NT>>: Node
     }
 
     public open fun rightRotate() {
+        if (type == SonType.Root)
+            throw Exception("For the root of the rotate cannot be")
         val father = parent!!
         val rightSon = right
         this.setFather(father.parent, father.type)
@@ -26,12 +30,16 @@ abstract class BalanceNode<K: Comparable<K>, V, NT: BalanceNode<K, V, NT>>: Node
     }
 
     public fun bigLeftRotate() {
+        if (left == null)
+            throw Exception("The left son must exist")
         val leftSon = left!!
         leftSon.rightRotate()
         leftSon.leftRotate()
     }
 
     public fun bigRightRotate() {
+        if (left == null)
+            throw Exception("The right son must exist")
         val rightSon = right!!
         rightSon.leftRotate()
         rightSon.rightRotate()
