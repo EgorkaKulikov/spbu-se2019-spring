@@ -44,12 +44,12 @@ class IterableSearchTree<T, K : Comparable<K>>: Iterable<T> {
         return SearchTreeIterator()
     }
 
-    public open inner class Node(var value: T, var key: K, open var parent: Node?) {
+    private open inner class Node(var value: T, var key: K, open var parent: Node?) {
         open var left: Node? = null
         open var right: Node? = null
     }
 
-    protected var root: Node? = null
+    private var root: Node? = null
 
     public fun find(key: K): T? {
         var currentNode: Node? = this.root
@@ -65,13 +65,13 @@ class IterableSearchTree<T, K : Comparable<K>>: Iterable<T> {
         return null
     }
 
-    public fun insert(key: K, value: T): Node {
+    public fun insert(key: K, value: T){
         var tempRoot = this.root //local copy to perform null checks
 
         if (tempRoot == null) {
             tempRoot = Node(value, key, null)
             this.root = tempRoot
-            return tempRoot
+            return
         }
 
         var currentNode: Node = tempRoot
@@ -99,7 +99,5 @@ class IterableSearchTree<T, K : Comparable<K>>: Iterable<T> {
                 currentNode.value = value
             }
         }
-
-        return currentNode
     }
 }
