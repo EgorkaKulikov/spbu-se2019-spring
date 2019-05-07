@@ -44,9 +44,9 @@ class IterableSearchTree<T, K : Comparable<K>>: Iterable<T> {
         return SearchTreeIterator()
     }
 
-    private open inner class Node(var value: T, var key: K, open var parent: Node?) {
-        open var left: Node? = null
-        open var right: Node? = null
+    private inner class Node(var value: T, var key: K, var parent: Node?) {
+        var left: Node? = null
+        var right: Node? = null
     }
 
     private var root: Node? = null
