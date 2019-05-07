@@ -1,18 +1,21 @@
-class RedBlackTree<K: Comparable<K>, V>(): TreeWithBalancing<K, V, RedBlackNode<K, V>>() {
+class RedBlackTree<K: Comparable<K>, V>(): BalanceTree<K, V, RedBlackNode<K, V>>() {
     constructor(size: Int, init: (Int) -> Pair<K, V>): this() {
         insert(size, init)
     }
+
     constructor(root: RedBlackNode<K, V>): this() {
         this.root = root
     }
+
     protected override fun createRoot(key: K, value: V): RedBlackNode<K, V> = RedBlackNode(key, value, Color.Black)
+
     protected override fun deleteNode(path: MutableList<RedBlackNode<K, V>>) {
         var node = path.last()
         var nodeWithNextKey: RedBlackNode<K, V>
         while (node.left != null || node.right != null) {
             if (node.right == null) {
                 node.left!!.color = Color.Black
-                if (node.type == TypeSon.Root)
+                if (node.type == SonType.Root)
                     root = node.left!!
                 node.left!!.setFather(node.parent, node.type)
                 return
@@ -20,10 +23,10 @@ class RedBlackTree<K: Comparable<K>, V>(): TreeWithBalancing<K, V, RedBlackNode<
             nodeWithNextKey = node.right!!
             while (nodeWithNextKey.left != null)
                 nodeWithNextKey = nodeWithNextKey.left!!
-            nodeWithNextKey.copy().moveOnNewPlace(node)
+            nodeWithNextKey.copy().moveOn(node)
             node = nodeWithNextKey
         }
-        if (node.type == TypeSon.Root) {
+        if (node.type == SonType.Root) {
             root = null
             return
         }
@@ -36,21 +39,21 @@ class RedBlackTree<K: Comparable<K>, V>(): TreeWithBalancing<K, V, RedBlackNode<
         father.setSon(null, node.type)
         var balancingFinish = false
         while ( ! balancingFinish) {
-            if (father.type == TypeSon.Root)
+            if (father.type == SonType.Root)
                 father.color = Color.Red
             if (brother.color == Color.Red) {
                 val grandfather = brother
-                brother = if (brother.type == TypeSon.LeftSon)
+                brother = if (brother.type == SonType.LeftSon)
                     brother.right!!
                 else
                     brother.left!!
                 grandfather.rotate()
             }
-            val brotherSon = if (brother.type == TypeSon.LeftSon)
+            val brotherSon = if (brother.type == SonType.LeftSon)
                 brother.left
             else
                 brother.right
-            val brotherNephew = if (brother.type == TypeSon.LeftSon)
+            val brotherNephew = if (brother.type == SonType.LeftSon)
                 brother.right
             else
                 brother.left
@@ -75,10 +78,11 @@ class RedBlackTree<K: Comparable<K>, V>(): TreeWithBalancing<K, V, RedBlackNode<
                 father = father.parent!!
             }
         }
-        while (root!!.type != TypeSon.Root)
+        while (root!!.type != SonType.Root)
             root = root!!.parent
         root!!.color = Color.Black
     }
+
     override fun equals(other: Any?): Boolean =
         (other is RedBlackTree<*, *> && other.root == root)
 }
