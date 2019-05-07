@@ -1,8 +1,9 @@
 import kotlin.math.max
 
 class AVLNode<K: Comparable<K>, V>(override val key: K, override var value: V):
-    NodeWithBalancing<K, V, AVLNode<K, V>>() {
+    BalanceNode<K, V, AVLNode<K, V>>() {
     protected override fun createNode(key: K, value: V): AVLNode<K, V> = AVLNode(key, value)
+
     public override fun balancing() {
         updateHeight()
         // перебалансировка происходит тогда и только тогда, когда
@@ -22,24 +23,31 @@ class AVLNode<K: Comparable<K>, V>(override val key: K, override var value: V):
             }
         }
     }
+
     var height: Int = 1
-        private set(value) { field = value }
-    private fun updateHeight() {
+        private set
+
+    public fun updateHeight() {
         height = max(left?.height ?: 0, right?.height ?: 0) + 1
     }
+
     private val deltaHeight: Int
         get() = (left?.height ?: 0) - (right?.height ?: 0)
-    protected override fun rotateLeft() {
-        super.rotateLeft()
+
+    public override fun leftRotate() {
+        super.leftRotate()
         left!!.updateHeight()
         this.updateHeight()
     }
-    protected override fun rotateRight() {
-        super.rotateRight()
+
+    public override fun rightRotate() {
+        super.rightRotate()
         right!!.updateHeight()
         this.updateHeight()
     }
+
     public override fun copy() = AVLNode(key, value)
+
     override fun equals(other: Any?): Boolean =
         (other is AVLNode<*, *> &&
                 other.left == left &&
