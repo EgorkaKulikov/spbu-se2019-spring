@@ -14,11 +14,11 @@ class RBNode<K : Comparable<K>, V>(
 
         curRight.parent = this.parent
         when (this) {
-            this.parent?.left -> this.parent?.left = curRight
-            else -> this.parent?.right = curRight
+            parent?.left -> parent?.left = curRight
+            else -> parent?.right = curRight
         }
         curRight.left = this
-        this.parent = curRight
+        parent = curRight
     }
 
     fun rotateRight(){
@@ -28,16 +28,16 @@ class RBNode<K : Comparable<K>, V>(
 
         curLeft.parent = this.parent
         when (this) {
-            this.parent?.left -> this.parent?.left = curLeft
-            else -> this.parent?.right = curLeft
+            parent?.left -> parent?.left = curLeft
+            else -> parent?.right = curLeft
         }
         curLeft.right = this
-        this.parent = curLeft
+        parent = curLeft
     }
 
-    fun uncle() : RBNode<K, V>? = when (this.parent){
-            this.parent?.parent?.left -> this.parent?.parent?.right
-            this.parent?.parent?.right -> this.parent?.parent?.left
+    fun uncle() : RBNode<K, V>? = when (parent){
+            parent?.parent?.left -> parent?.parent?.right
+            parent?.parent?.right -> parent?.parent?.left
             else -> null
     }
 }
