@@ -45,4 +45,5 @@ class RBTreeTest {
         assert(tree.isRBTree())
         assert(tree.isBinarySearchTree())
     }
+
 }
