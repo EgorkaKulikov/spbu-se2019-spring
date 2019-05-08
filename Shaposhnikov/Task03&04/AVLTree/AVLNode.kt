@@ -37,10 +37,7 @@ class AVLNode<K : Comparable<K>, V>(
             else -> parent?.right = curLeft
         }
         curLeft.right = this
-        parent = curLeftОпять забываешь, что потом тестировщики пришлют тебе вот такой эксепшен из логов и попросят быстренько починить. Не пожалеешь ли ты, что не написал "Right child for node ... does not exist"?
-
-
-
+        parent = curLeft
         this.height = max(this.left?.height ?: 0, this.right?.height ?: 0) + 1
         curLeft.height = max(curLeft.left?.height ?: 0, curLeft.right?.height ?: 0) + 1
     }
