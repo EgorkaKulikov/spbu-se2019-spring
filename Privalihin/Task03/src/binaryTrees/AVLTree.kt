@@ -1,11 +1,13 @@
+package binaryTrees
+
 import kotlin.math.abs
 import kotlin.math.max
 
 class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
-    inner class AVLNode(_key: K, _value: V, _parent: Node?) : Node(_key, _value, _parent) {
-        var height = 1
+    inner class AVLNode(_key: K, _value: V, _parent: Node?) : BalancedNode(_key, _value, _parent) {
+        internal var height = 1
 
-        fun updateHeight() {
+        internal fun updateHeight() {
             var tmp = 0
             this.right?.let { tmp = (this.right as AVLNode).height }
             this.left?.let { tmp = max(tmp, (this.left as AVLNode).height) }
@@ -28,7 +30,7 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
             this.left?.print(indentation + 1, 1)
         }
 
-        fun verifyAVL(): Pair<Boolean, Int> {
+        internal fun verifyAVL(): Pair<Boolean, Int> {
             var leftCorrectness = true
             var leftHeight = 0
 
@@ -124,7 +126,7 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         root?.let { (root as AVLNode).print(0, 0) }
     }
 
-    fun isAVLTree(): Boolean {
+    internal fun isAVLTree(): Boolean {
         return root == null || (root as AVLNode).verifyAVL().first
     }
 }

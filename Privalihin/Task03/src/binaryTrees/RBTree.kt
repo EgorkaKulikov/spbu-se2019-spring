@@ -1,7 +1,9 @@
-class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
-    inner class RBNode(_key: K, _value: V, _parent: Node?) : Node(_key, _value, _parent) {
+package binaryTrees
 
-        var color = Color.RED
+class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
+    inner class RBNode(_key: K, _value: V, _parent: Node?) : BalancedNode(_key, _value, _parent) {
+
+        internal var color = Color.RED
 
         override fun print(indentation: Int, side: Int) {
             this.right?.print(indentation + 1, -1)
@@ -19,7 +21,7 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
             this.left?.print(indentation + 1, 1)
         }
 
-        fun verifyRB() : Pair<Boolean, Int> {
+        internal fun verifyRB() : Pair<Boolean, Int> {
             if (this.color == Color.RED) {
                 if ((this.left != null
                                 && (this.left as RBNode).color == Color.RED)
@@ -115,7 +117,7 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         root?.let { (root as RBNode).print(0, 0) }
     }
 
-    fun isRBTree(): Boolean {
+    internal fun isRBTree(): Boolean {
         if (root == null) {
             return true
         }

@@ -1,9 +1,9 @@
-import com.sun.org.apache.xpath.internal.operations.Bool
+package binaryTrees
 
 open class BinarySearchTree<K : Comparable<K>, V> {
-    public open inner class Node(var key: K, var value: V, var parent: Node?) {
-        var left: Node? = null
-        var right: Node? = null
+    public open inner class Node(internal var key: K, internal var value: V, internal var parent: Node?) {
+        internal var left: Node? = null
+        internal var right: Node? = null
 
         open fun print(indentation: Int, side: Int) {
             this.right?.print(indentation + 1, -1)
@@ -21,14 +21,14 @@ open class BinarySearchTree<K : Comparable<K>, V> {
             this.left?.print(indentation + 1, 1)
         }
 
-        fun verifySearch(): Boolean {
+        internal fun verifySearch(): Boolean {
             return ((this.left == null) || (this.left!!.key <= this.key
                                             && this.left!!.verifySearch()))
                     && ((this.right == null) || (this.key <= this.right!!.key
                                             && this.right!!.verifySearch()))
         }
 
-        fun verifyParents(): Boolean {
+        internal fun verifyParents(): Boolean {
             var result = true
             this.left?.let { result = result
                     && this.left!!.parent == this
@@ -47,7 +47,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
 
     protected var root: Node? = null
 
-    open fun find(key: K): V? {
+    fun find(key: K): V? {
         var curNode: Node? = this.root
 
         while (curNode != null) {
@@ -65,7 +65,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
         return Node(key, value, parent)
     }
 
-    protected open fun innerInsert(key: K, value: V): Node {
+    internal open fun innerInsert(key: K, value: V): Node {
 
         if (this.root == null) {
             this.root = createNode(key, value, null)
@@ -112,11 +112,11 @@ open class BinarySearchTree<K : Comparable<K>, V> {
         root?.print(0, 0)
     }
 
-    fun isBinarySearchTree(): Boolean {
+    internal fun isBinarySearchTree(): Boolean {
         return root == null || root!!.verifySearch()
     }
 
-    fun parentsCorrectness(): Boolean {
+    internal fun parentsCorrectness(): Boolean {
         return root == null || (root!!.parent == null && root!!.verifyParents())
     }
 }
