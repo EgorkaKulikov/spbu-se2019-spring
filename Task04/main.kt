@@ -16,7 +16,7 @@ class IterableTree<K: Comparable<K>, V>: Iterable<V> {
             when {
                 current.key == key -> return current.value
                 current.key > key -> current = current.left
-                current.key < key -> current = current.right
+                else -> current = current.right
             }
         }
         return null
