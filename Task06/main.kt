@@ -30,6 +30,7 @@ fun main(args: Array<String>)
 
   for (i in 1 until args.size)
   {
+    val filebmp = filename.dropLast(4)
     val damage = args[i].toIntOrNull()
     
     if (damage == null)
@@ -38,16 +39,16 @@ fun main(args: Array<String>)
     }
     else
     {
-      val noised = filename.plus("dmg${args[i]}")
+      val noised = filebmp.plus("dmg${args[i]}")
 
       noise(encrypted, noised, damage)
 
-      val decrypted = filename.plus("dec${args[i]}")
+      val decrypted = filebmp.plus("dec${args[i]}")
 
       decrypt(noised, decrypted)
 
-      val repared = filename.plus("rep${args[i]}")
-      val crushed = filename.plus("crs${args[i]}")
+      val repared = filebmp.plus("rep${args[i]}.bmp")
+      val crushed = filebmp.plus("crs${args[i]}.bmp")
 
       decode(filename, noised, crushed)
       decode(filename, decrypted, repared)
