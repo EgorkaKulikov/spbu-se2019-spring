@@ -88,4 +88,57 @@ class BinarySearchTreeTest {
         assertEquals(root, leftSon.parent)
         assertEquals(root, leftSon.parent)
     }
+
+    @Test
+    fun sizeDifferenceAfterInsertionRightNodeTest(){
+        val tree = BinarySearchTree<Int, Int>()
+        var index = 0
+
+        repeat(Random.Default.nextInt(1, 10)){
+            index = Random.Default.nextInt()
+            tree.insert(index, index+1)
+        }
+
+        val sizeBefore = tree.size
+        tree.insert(index + 1, index)
+
+        assertEquals(sizeBefore + 1, tree.size)
+    }
+
+    @Test
+    fun sizeDifferenceAfterInsertionLeftNodeTest(){
+        val tree = BinarySearchTree<Int, Int>()
+        var index = 0
+
+        repeat(Random.Default.nextInt(1, 10)){
+            index = Random.Default.nextInt()
+            tree.insert(index, index+1)
+        }
+
+        val sizeBefore = tree.size
+        tree.insert(index - 1, index)
+
+        assertEquals(sizeBefore + 1, tree.size)
+    }
+
+    @Test
+    fun sizeDifferenceBeforeAndAfterInsertionExistingKeyTest(){
+        val tree = BinarySearchTree<Int, Int>()
+
+        for (i in 1..5){
+            tree.insert(i, i+3)
+        }
+
+        val sizeBefore = tree.size
+        tree.insert(4, 4)
+
+        assertEquals(sizeBefore, tree.size)
+    }
+
+    @Test
+    fun sizeOfEmptyTreeTest(){
+        val tree = BinarySearchTree<Int, Int>()
+
+        assertEquals(tree.size, 0)
+    }
 }
