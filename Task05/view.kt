@@ -72,10 +72,6 @@ fun size(zip: Zipfile, name: String)
 }
 
 
-/*
-  Using MS-DOS date & time format.
-  http://www.vsft.com/hal/dostime.htm
-*/
 fun time(zip: Zipfile, name: String)
 {
   var existing = false
@@ -89,16 +85,14 @@ fun time(zip: Zipfile, name: String)
       || filename.contentEquals(name))
     {
       existing = true
-      val date = zip.date()
-      val time = zip.time()
       
-      val year = 1980 + (date and 0xFE00) / 0x200
-      val month = (date and 0x1E0) / 0x20
-      val day = (date and 0x1F)
-      
-      val hour = time / 0x800
-      val minute = (time and 0x7E0) / 0x20
-      val second = (time and 0x1F) * 2
+      val year = zip.year()
+      val month = zip.month()
+      val day = zip.day()
+
+      val hour = zip.hour()
+      val minute = zip.minute()
+      val second = zip.second()
       
       print("'$filename' was lastly edited ")
       println("$day.$month.$year at $hour:$minute:$second.")

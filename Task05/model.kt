@@ -12,11 +12,7 @@ import kotlin.system.exitProcess
 data class Zipfile(val zipname: String)
 { 
   public fun name() = filename
-  
-  public fun time() = time
-
-  public fun date() = date
-
+ 
   public fun filesize() = filesize
 
   public fun hasNext() : Boolean
@@ -91,9 +87,25 @@ data class Zipfile(val zipname: String)
   }
 
 
-  private val zip = File(zipname).inputStream()
+/*
+  Using MS-DOS date & time format.
+  http://www.vsft.com/hal/dostime.htm
+*/
+  public fun year() = 1980 + (date and 0xFE00) / 0x200
+
+  public fun month() = (date and 0x1E0) / 0x20
+
+  public fun day() = (date and 0x1F)
+
+  public fun hour() = time / 0x800
+
+  public fun minute() = (time and 0x7E0) / 0x20
+
+  public fun second() = (time and 0x1F) * 2
 
   public fun closeStream() = zip.close()
+
+  private val zip = File(zipname).inputStream()
 
   private fun size() = zip.available()
 
