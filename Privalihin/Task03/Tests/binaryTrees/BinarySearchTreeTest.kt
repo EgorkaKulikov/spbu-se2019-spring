@@ -90,33 +90,25 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun sizeDifferenceAfterInsertionRightNodeTest(){
+    fun sizeDifferenceAfterInsertionRightNodeTest() {
         val tree = BinarySearchTree<Int, Int>()
-        var index = 0
 
-        repeat(Random.Default.nextInt(1, 10)){
-            index = Random.Default.nextInt()
-            tree.insert(index, index+1)
-        }
+        tree.insert(2, 3)
 
         val sizeBefore = tree.size
-        tree.insert(index + 1, index)
+        tree.insert(6, 6)
 
         assertEquals(sizeBefore + 1, tree.size)
     }
 
     @Test
-    fun sizeDifferenceAfterInsertionLeftNodeTest(){
+    fun sizeDifferenceAfterInsertionLeftNodeTest() {
         val tree = BinarySearchTree<Int, Int>()
-        var index = 0
 
-        repeat(Random.Default.nextInt(1, 10)){
-            index = Random.Default.nextInt()
-            tree.insert(index, index+1)
-        }
+        tree.insert(3, 5)
 
         val sizeBefore = tree.size
-        tree.insert(index - 1, index)
+        tree.insert(2, 4)
 
         assertEquals(sizeBefore + 1, tree.size)
     }
