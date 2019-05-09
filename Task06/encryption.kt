@@ -172,13 +172,13 @@ fun noise(input: String, output: String, damage: Int)
     {
       if (Random.nextInt(0, 100) < damage)
       {
-        if (buf and log == 1.toUInt())
+        if (buf and log == 0.toUInt())
         {
-          buf -= log
+          buf += log
         }
         else
         {
-          buf += log
+          buf -= log
         }
       }
 

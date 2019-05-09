@@ -24,6 +24,10 @@ fun main(args: Array<String>)
     exitProcess(2)
   }
 
+  val encrypted = filename.plus("enc")
+
+  encrypt(filename, encrypted)
+
   for (i in 1 until args.size)
   {
     val damage = args[i].toIntOrNull()
@@ -34,10 +38,6 @@ fun main(args: Array<String>)
     }
     else
     {
-      val encrypted = filename.plus("enc")
-
-      encrypt(filename, encrypted)
-
       val noised = filename.plus("dmg${args[i]}")
 
       noise(encrypted, noised, damage)
@@ -51,6 +51,11 @@ fun main(args: Array<String>)
 
       decode(filename, noised, crushed)
       decode(filename, decrypted, repared)
+
+      File(noised).delete()
+      File(decrypted).delete()
     }
   }
+  
+  File(encrypted).delete()
 }
