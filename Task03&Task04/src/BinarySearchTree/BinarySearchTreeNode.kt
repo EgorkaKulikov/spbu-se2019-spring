@@ -10,8 +10,7 @@ class BinarySearchTreeNode<Key, Data> (var key: Key, var data: Data)
 
         if (other is BinarySearchTreeNode<*, *>?) {
 
-            if (other == null)
-                return false
+            if (other == null) return false
 
             if (this.key == other.key &&
                 this.data == other.data &&
@@ -19,13 +18,14 @@ class BinarySearchTreeNode<Key, Data> (var key: Key, var data: Data)
                 this.rightChild?.key == other.rightChild?.key &&
                 this.leftChild?.data == other.leftChild?.data &&
                 this.rightChild?.data == other.rightChild?.data &&
-                this.parent?.key == other.parent?.key) {
-                return true
-            }
+                this.parent?.key == other.parent?.key) return true
 
             return false
+
         }
 
         return false
+
     }
+
 }

@@ -12,11 +12,9 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
         var currentNode: BinarySearchTreeNode<Key, Data>? = root
 
         while(currentNode != null) {
-
             if (currentNode.key == key) {
                 return Pair(currentNode.key, currentNode.data)
             }
-
             when {
                 currentNode.key > key -> currentNode = currentNode.leftChild
                 currentNode.key < key -> currentNode = currentNode.rightChild
@@ -24,6 +22,7 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
         }
 
         return null
+
     }
 
     override fun insert(key: Key, data: Data) {
@@ -38,9 +37,7 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
         var currentNode: BinarySearchTreeNode<Key, Data>? = root
 
         while (currentNode != null) {
-
             if (currentNode.key > newNode.key) {
-
                 if (currentNode.leftChild == null) {
                     currentNode.leftChild = newNode
                     newNode.parent = currentNode
@@ -48,7 +45,6 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
                 } else {
                     currentNode = currentNode.leftChild
                 }
-
             } else  if (currentNode.key < newNode.key)  {
 
                 if (currentNode.rightChild == null) {
@@ -58,12 +54,9 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
                 } else {
                     currentNode = currentNode.rightChild
                 }
-
             } else if (currentNode.key == newNode.key) {
-
                 currentNode.data = newNode.data
                 return
-
             }
         }
 
@@ -75,9 +68,7 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
 
         var nextNode: BinarySearchTreeNode<Key, Data>? = root
 
-        while(nextNode?.leftChild != null) {
-            nextNode = nextNode.leftChild
-        }
+        while(nextNode?.leftChild != null) nextNode = nextNode.leftChild
 
         return (object : Iterator<Pair<Key, Data>> {
 
@@ -90,22 +81,18 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
                     while (nextNode?.leftChild != null) {
                         nextNode = nextNode?.leftChild
                     }
-
                     return Pair(nextN!!.key, nextN.data)
                 }
 
                 while (true) {
-
                     if (nextNode?.parent == null) {
                         nextNode = null
                         return Pair(nextN!!.key, nextN.data)
                     }
-
                     if (nextNode?.parent?.leftChild == nextNode) {
                         nextNode = nextNode?.parent
                         return Pair(nextN!!.key, nextN.data)
                     }
-
                     nextNode = nextNode?.parent
                 }
             }
@@ -113,7 +100,9 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
             override fun hasNext(): Boolean {
                 return nextNode != null
             }
+
         })
+
     }
 
 }

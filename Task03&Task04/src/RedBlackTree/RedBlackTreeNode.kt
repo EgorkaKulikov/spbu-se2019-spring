@@ -14,8 +14,7 @@ class RedBlackTreeNode<Key, Data>(var key: Key, var data: Data,
     override fun equals(other: Any?): Boolean {
 
         if (other is RedBlackTreeNode<*, *>?) {
-            if (other == null)
-                return false
+            if (other == null) return false
 
             if (this.key == other.key &&
                 this.data == other.data &&
@@ -25,15 +24,14 @@ class RedBlackTreeNode<Key, Data>(var key: Key, var data: Data,
                 this.leftChild?.data == other.leftChild?.data &&
                 this.rightChild?.data == other.rightChild?.data &&
                 this.parent?.key == other.parent?.key &&
-                this.parent?.color == other.parent?.color) {
-
-                return true
-            }
+                this.parent?.color == other.parent?.color) return true
 
             return false
+
         }
 
         return false
+
     }
 
     internal fun leftRotate() {

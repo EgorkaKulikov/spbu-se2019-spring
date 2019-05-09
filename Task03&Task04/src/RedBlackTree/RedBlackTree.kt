@@ -23,6 +23,7 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
                     return
                 }
             }
+
         }
 
         if (parent == null) {
@@ -37,6 +38,7 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
             parent.rightChild = RedBlackTreeNode(key, data, parent)
             balance(parent.rightChild)
         }
+
     }
 
     private fun balance(node: RedBlackTreeNode<Key, Data>?){
@@ -55,54 +57,47 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
                 val uncleNode = currentNode.parent?.parent?.rightChild
 
                 if (uncleNode?.color == Color.RED) {
-
                     uncleNode.color = Color.BLACK
                     currentNode.parent?.color = Color.BLACK
                     currentNode.parent?.parent?.color = Color.RED
                     currentNode = currentNode.parent?.parent!!
-
                 } else {
-
                     if (currentNode == currentNode.parent?.rightChild) {
                         currentNode = currentNode.parent!!
                         currentNode.leftRotate()
                     }
-
                     currentNode.parent?.color = Color.BLACK
                     currentNode.parent?.parent?.color = Color.RED
                     currentNode.parent?.parent?.rightRotate()
-
                 }
+
             } else {
 
                 val uncleNode = currentNode.parent?.parent?.leftChild
 
                 if (uncleNode?.color == Color.RED) {
-
                     uncleNode.color = Color.BLACK
                     currentNode.parent?.color = Color.BLACK
                     currentNode.parent?.parent?.color = Color.RED
                     currentNode = currentNode.parent?.parent ?: break
-
                 } else {
-
                     if(currentNode == currentNode.parent?.leftChild) {
                         currentNode = currentNode.parent!!
                         currentNode.rightRotate()
                     }
-
                     currentNode.parent?.color = Color.BLACK
                     currentNode.parent?.parent?.color = Color.RED
                     currentNode.parent?.parent?.leftRotate()
-
                 }
+
             }
+
         }
 
-        while (root?.parent != null)
-            root = root?.parent
+        while (root?.parent != null) root = root?.parent
 
         root?.color = Color.BLACK
+
     }
 
     override fun find(key: Key) : Pair<Key, Data>? {
@@ -113,11 +108,11 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
             if (currentNode.key == key) {
                 return Pair(currentNode.key, currentNode.data)
                 }
-
             currentNode = if(currentNode.key > key) currentNode.leftChild else currentNode.rightChild
         }
 
         return null
+
     }
 
     override fun iterator(): Iterator<Pair<Key, Data>> {
@@ -129,7 +124,7 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
         }
 
         return (object : Iterator<Pair<Key, Data>> {
-            
+
             override fun next(): Pair<Key, Data> {
 
                 val nextN: RedBlackTreeNode<Key, Data>? = nextNode
@@ -163,6 +158,7 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
             }
 
         })
+
     }
 
 }

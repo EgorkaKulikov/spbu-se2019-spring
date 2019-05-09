@@ -7,10 +7,10 @@ class AVLTreeNode<Key: Comparable<Key>, Data>(var key: Key, var data: Data, var 
     var rightChild: AVLTreeNode<Key, Data>? = null
 
     override fun equals(other: Any?): Boolean {
+
         if (other is AVLTreeNode<*, *>?) {
 
-            if (other == null)
-                return false
+            if (other == null) return false
 
             if (this.key == other.key &&
                 this.data == other.data &&
@@ -20,18 +20,17 @@ class AVLTreeNode<Key: Comparable<Key>, Data>(var key: Key, var data: Data, var 
                 this.leftChild?.data == other.leftChild?.data &&
                 this.rightChild?.data == other.rightChild?.data &&
                 this.parent?.key == other.parent?.key &&
-                this.parent?.height == other.parent?.height) {
-
-                return true
-            }
+                this.parent?.height == other.parent?.height) return true
 
             return false
         }
 
         return false
+
     }
 
     fun leftRotate() {
+
         val rightChild = this.rightChild ?: return
 
         this.rightChild = rightChild.leftChild
@@ -47,9 +46,11 @@ class AVLTreeNode<Key: Comparable<Key>, Data>(var key: Key, var data: Data, var 
 
         this.updateHeight()
         rightChild.updateHeight()
+
     }
 
     fun rightRotate() {
+
         val leftChild = this.leftChild ?: return
 
         this.leftChild = leftChild.rightChild
@@ -65,22 +66,29 @@ class AVLTreeNode<Key: Comparable<Key>, Data>(var key: Key, var data: Data, var 
 
         this.updateHeight()
         leftChild.updateHeight()
+
     }
 
     fun bigLeftRotate() {
+
         this.rightChild?.rightRotate()
         this.leftRotate()
+
     }
 
     fun bigRightRotate() {
 
         this.leftChild?.leftRotate()
         this.rightRotate()
+
     }
 
     internal fun updateHeight() {
+
         height = kotlin.math.max(leftChild?.height ?: 0, rightChild?.height ?: 0) + 1
+
     }
 
-    fun getHeight(node: AVLTreeNode<Key, Data>?): Int = node?.height ?: 0
+    internal fun getHeight(node: AVLTreeNode<Key, Data>?): Int = node?.height ?: 0
+
 }
