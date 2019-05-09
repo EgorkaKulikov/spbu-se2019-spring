@@ -21,7 +21,7 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         }
 
         public fun balanceWithLeftRotate() {
-            val localRightNode = (this.right as AVLNode?) ?: return
+            val localRightNode = (this.right as AVLNode?) ?: return //local copy to avoid using !!
             when (localRightNode.heightDiff)
             {
                 -1 -> {
@@ -35,7 +35,7 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         }
 
         public fun balanceWithRightRotate() {
-            val localLeftNode = (this.left as AVLNode?) ?: return
+            val localLeftNode = (this.left as AVLNode?) ?: return //local copy to avoid using !!
             when (localLeftNode.heightDiff)
             {
                 1 -> {
