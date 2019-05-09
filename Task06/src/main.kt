@@ -42,24 +42,22 @@ fun encode(data: Int): Int {
 
 fun decode(data: Int, alteredData: Int): Int {
 
-    if (data == alteredData)
-        return data
+    if (data == alteredData) return data
 
     var alteredBit = 0
-    val dataWithControlBits = encode(data)
-    var alteredDataWithControlBits = encode(alteredData)
+    val encodedData = encode(data)
+    var encodedAlteredData = encode(alteredData)
 
     for (i in listOf(1, 2, 4, 8, 16)) {
-        if ((dataWithControlBits and (1 shl i)) != (alteredDataWithControlBits and (1 shl i))) {
+        if ((encodedData and (1 shl i)) != (encodedAlteredData and (1 shl i))) {
             alteredBit += i
-            alteredDataWithControlBits = alteredDataWithControlBits xor (1 shl i)
+            encodedAlteredData = encodedAlteredData xor (1 shl i)
         }
     }
 
-    alteredDataWithControlBits = alteredDataWithControlBits xor (1 shl alteredBit)
+    encodedAlteredData = encodedAlteredData xor (1 shl alteredBit)
 
-    if (alteredDataWithControlBits != dataWithControlBits)
-        return alteredData
+    if (encodedAlteredData != encodedData) return alteredData
 
     return data
 
@@ -92,21 +90,22 @@ fun main() {
 
     val data = ByteArray(size = fileSize - headerSize) { i -> fileData[i + headerSize] }
 
-    var fixedByteData = ByteArray(0)
+    for (percent in listOf(5, 10, 15)) {
 
-    for ( percent in listOf(5, 10, 15)) {
         val alteredData = alterBits(data, percent)
 
-        val fileNameWithAlteredData = "src/AlteredPicture_${percent}_percent.bmp"
-        val fileWithAlteredData = File(fileNameWithAlteredData)
+        val fileNameAlteredData = "src/AlteredPicture_${percent}_percent.bmp"
+        val fileAlteredData = File(fileNameAlteredData)
 
-        fileWithAlteredData.createNewFile()
+        fileAlteredData.createNewFile()
 
         var resultAlteredData = ByteArray(0)
 
         resultAlteredData += header
         resultAlteredData += alteredData
-        fileWithAlteredData.writeBytes(resultAlteredData)
+        fileAlteredData.writeBytes(resultAlteredData)
+
+        var fixedByteData = ByteArray(0)
 
         for (i in 0 until data.size step 2) {
 
@@ -127,35 +126,17 @@ fun main() {
 
         }
 
-        val fileNameWithFixedData = "src/FixedPicture_${percent}_percent.bmp"
-        val fileWithFixedData = File(fileNameWithFixedData)
+        val fileNameFixedData = "src/FixedPicture_${percent}_percent.bmp"
+        val fileFixedData = File(fileNameFixedData)
 
-        fileWithFixedData.createNewFile()
+        fileFixedData.createNewFile()
 
         var resultFixedData = ByteArray(0)
 
         resultFixedData += header
         resultFixedData += fixedByteData
-        fileWithFixedData.writeBytes(resultFixedData)
+        fileFixedData.writeBytes(resultFixedData)
+
     }
-   /* var diff = 0
-
-    for (i in resultAlteredData.indices) {
-        if (fileData[i] != resultAlteredData[i]) {
-            ++diff
-        }
-    }
-
-    println("Difference between Picture and AlteredPicture is: $diff")
-
-    diff = 0
-
-    for (i in resultFixedData.indices) {
-        if (fileData[i] != resultFixedData[i]) {
-            ++diff
-        }
-    }
-
-    println("Difference between Picture and FixedPicture is: $diff")*/
 
 }
