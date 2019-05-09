@@ -14,11 +14,11 @@ class AVLTree<Key: Comparable<Key>, Data>: Tree<Key, Data>, Iterable<Pair<Key, D
             if (currentNode.key == key) {
                 return Pair(currentNode.key, currentNode.data)
             }
-
             currentNode = if (currentNode.key > key) currentNode.leftChild else currentNode.rightChild
         }
 
         return null
+
     }
 
     override fun insert(key: Key, data: Data) {
@@ -27,9 +27,7 @@ class AVLTree<Key: Comparable<Key>, Data>: Tree<Key, Data>, Iterable<Pair<Key, D
         var currentNode: AVLTreeNode<Key, Data>? = root
 
         while(currentNode != null) {
-
             parent = currentNode
-
             when {
                 key < currentNode.key -> currentNode = currentNode.leftChild
                 key > currentNode.key -> currentNode =  currentNode.rightChild
@@ -59,28 +57,21 @@ class AVLTree<Key: Comparable<Key>, Data>: Tree<Key, Data>, Iterable<Pair<Key, D
         node.updateHeight()
 
         if (node.getHeight(node.rightChild) - node.getHeight(node.leftChild) == 2) {
-
-            if(node.getHeight(node.rightChild!!.rightChild) >= node.getHeight(node.rightChild!!.leftChild)) {
+            if (node.getHeight(node.rightChild!!.rightChild) >= node.getHeight(node.rightChild!!.leftChild)) {
                 node.leftRotate()
             } else {
                 node.bigLeftRotate()
             }
-
         } else if (node.getHeight(node.rightChild) - node.getHeight(node.leftChild) == -2) {
-
             if (node.getHeight(node.leftChild!!.leftChild) >= node.getHeight(node.leftChild!!.rightChild)) {
                 node.rightRotate()
             } else {
                 node.bigRightRotate()
             }
-
         }
 
-        if (node.parent != null) {
-            balance(node.parent!!)
-        } else {
-            root = node
-        }
+        if (node.parent != null) balance(node.parent!!) else root = node
+
     }
 
     override fun iterator(): Iterator<Pair<Key, Data>> {
@@ -110,12 +101,10 @@ class AVLTree<Key: Comparable<Key>, Data>: Tree<Key, Data>, Iterable<Pair<Key, D
                         nextNode = null
                         return Pair(nextN!!.key, nextN.data)
                     }
-
                     if (nextNode?.parent?.leftChild == nextNode) {
                         nextNode = nextNode?.parent
                         return Pair(nextN!!.key, nextN.data)
                     }
-
                     nextNode = nextNode?.parent
                 }
             }
@@ -125,7 +114,7 @@ class AVLTree<Key: Comparable<Key>, Data>: Tree<Key, Data>, Iterable<Pair<Key, D
             }
 
         })
+
     }
 
 }
-
