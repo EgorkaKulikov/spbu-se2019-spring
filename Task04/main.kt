@@ -80,63 +80,82 @@ class Tree<K: Comparable<K>, V>: Iterable<Node<K, V>?>
 
   inner class TreeIterator(): Iterator<Node<K, V>?>
   {
-    override public fun next(): Node<K, V>? = next
+    override public fun hasNext(): Boolean
+    {
+      if (hasNext == false && next == null)
+      {
+        initNext()
+        
+        return hasNext
+      }
+      else if (hasNext == true)
+      {
+        return true
+      }
+      else 
+      {
+        findNext()
+        hasNext = (next != null)
+        
+        return hasNext
+      }
+    }
+  
+    override public fun next(): Node<K, V>?
+    {
+      hasNext = false
+     
+      return next
+    }
 
     private var next: Node<K, V>? = null
 
-    override public fun hasNext(): Boolean = hasNext
-
     private var hasNext: Boolean = false
-      get()
+
+    private fun initNext()
+    {
+      next = root
+      getLeft()
+      hasNext = next != null
+    }
+
+    private fun findNext()
+    {
+      if (next?.right != null)
       {
-        if (next == null)
-        {
-          if (root == null)
-          {
-            next = null
+        next = next?.right
+        getLeft()
+      }
+      else if (next == next?.parent?.left)
+      {
+        next = next?.parent
+      }
+      else if (next == next?.parent?.right)
+      {
+        getRight()
+      }
+      else
+      {
+        next = null
+      }
+    } 
 
-            return false
-          }
-          else
-          {
-            next = root
-
-            while (next?.left != null)
-            {
-              next = next?.left
-            }
-            
-            return true
-          }
-        }
-        else if (next?.right != null)
-        {
-          next = next?.right
-
-          while (next?.left != null)
-          {
-            next = next?.left
-          }
-        }
-        else if (next == next?.parent?.left)
-        {
-          next = next?.parent
-        }
-        else if (next == next?.parent?.right)
-        {
-          while (next == next?.parent?.right)
-          {
-            next = next?.parent
-          }
-
-          next = next?.parent
-        }
-        else
-        {
-          next = null
-        }
-
-        return (next != null)
+    private fun getLeft()
+    {
+      while (next?.left != null)
+      {
+        next = next?.left
       }
     }
+
+    private fun getRight()
+    {
+      while (next == next?.parent?.right)
+      {
+        next = next?.parent
+      }
+
+      next = next?.parent
+    }
+  }
 }
