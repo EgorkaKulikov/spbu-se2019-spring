@@ -92,7 +92,6 @@ class HammingDataWord(var value: UInt, var length: Int) {
             this.setBit(controlBitNumber, 1u)
         else
             this.setBit(controlBitNumber, 0u)
-
     }
 
     //returns true if bit is 1
