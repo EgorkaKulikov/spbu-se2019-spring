@@ -1,5 +1,10 @@
 import java.util.zip.*
 
+var IS_PRINTED : Boolean = true
+var NEXT_ENTRY : ZipEntry? = null
+//these two global vars are designed to not miss any entries
+//when recursive [printFolder] closes
+
 fun  findFile(zip : PKZip, fileName : String){
     val input = zip.getZipInput()
     var file: ZipEntry
@@ -59,31 +64,40 @@ fun getFolder(zip : PKZip, folderName : String){
 }
 
 fun printZip(zip : PKZip){
-    var entry : ZipEntry
     val input = zip.getZipInput()
     var offset : String
     while(true){
         offset = ""
-        entry = input.nextEntry ?: break
-        if (!entry.isDirectory)
-            println(entry.name.substringAfterLast('/'))
+        if(IS_PRINTED) NEXT_ENTRY = input.nextEntry ?: break
+        IS_PRINTED = false
+        if (!(NEXT_ENTRY?.isDirectory ?: return)) {
+            println(NEXT_ENTRY!!.name.substringAfterLast('/'))
+            IS_PRINTED = true
+        }
         else {
-            println("${(entry.name.dropLast(1)).substringAfterLast('/')}:")
-            printDirectory(input, entry.name, offset)
+            println("${(NEXT_ENTRY!!.name.dropLast(1)).substringAfterLast('/')}:")
+            printFolder(input, NEXT_ENTRY!!.name, offset)
         }
     }
 }
 
-private fun printDirectory(input : ZipInputStream, directory : String, offset : String){
+private fun printFolder(input : ZipInputStream
+                           , directory : String
+                           , offset : String){
     val newOffset = "    $offset\\"
-    var nextEntry = input.nextEntry ?: return
-    while(nextEntry.name.contains(directory)){
-        if (!nextEntry.isDirectory)
-            println("$newOffset${nextEntry.name.substringAfterLast('/')}")
-        else {
-            println("$newOffset${(nextEntry.name.dropLast(1)).substringAfterLast('/')}:")
-            printDirectory(input, nextEntry.name, newOffset)
+    NEXT_ENTRY = input.nextEntry ?: return
+    while(NEXT_ENTRY?.name?.startsWith(directory) ?: return){
+        if(!NEXT_ENTRY!!.isDirectory) {
+            println("$newOffset${NEXT_ENTRY!!.name.substringAfterLast('/')}")
+            IS_PRINTED = true
         }
-        nextEntry = input.nextEntry ?: return
+        else {
+            println("$newOffset${(NEXT_ENTRY!!.name.dropLast(1)).substringAfterLast('/')}:")
+            IS_PRINTED = true
+            printFolder(input, NEXT_ENTRY!!.name, newOffset)
+        }
+        if(IS_PRINTED)
+            NEXT_ENTRY = input.nextEntry ?: return
+        IS_PRINTED = false
     }
 }
