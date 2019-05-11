@@ -25,6 +25,7 @@ fun findFolder(zipFile: ZipFile, folderName: String) {
     }
 
    printFindFolder(folderName, folderSize)
+
 }
 
 fun findFile(zipFile: ZipFile, fileName: String) {
@@ -35,10 +36,11 @@ fun findFile(zipFile: ZipFile, fileName: String) {
     {
         val zipEntry = enumeration.nextElement() as ZipEntry
         val name = zipEntry.name
-        if (fileName in name) {
+        if (fileName in name && !zipEntry.isDirectory) {
             printFindFile(zipEntry.timeLocal)
             return
         }
     }
     println("There's no such file: $fileName")
+
 }
