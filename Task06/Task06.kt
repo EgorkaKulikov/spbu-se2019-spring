@@ -8,7 +8,7 @@ import java.io.File
 // 000000011111111000000 = 16320
 // 000000000000000111111 = 63
 
-val transformationMatrixStrings = arrayListOf(1398101, 838860, 246723, 16320, 63) //transformation matrix strings presented in decimal
+val transformationMatrixStrings = arrayListOf(1398101, 838860, 246723, 16320, 63) 
 val listOfParityBitsIndexes = listOf(1, 2, 4, 8, 16)
 const val wordLength = 21
 const val headerSize = 54
@@ -20,7 +20,6 @@ fun bitsCount(n: Int): Int {
         num = num.and(num - 1)
         count++
     }
-
     return count
 }
 
@@ -108,7 +107,7 @@ fun main() {
             val dataBlock = if (i + 1 < pictureSize)
                 pictureData[i].toInt().and(0xFF).shl(8) + pictureData[i + 1].toInt().and(0xFF)
             else
-                pictureData[i].toInt().and(0xFF).shl(8).shl(8)
+                pictureData[i].toInt().and(0xFF).shl(8)
 
             val encodedDataBlock = encode(dataBlock)
             val corruptedEncodedDataBlock = corrupt(encodedDataBlock, percent)
