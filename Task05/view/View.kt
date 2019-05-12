@@ -5,10 +5,11 @@ import presenter.Presenter
 
 @kotlin.ExperimentalUnsignedTypes
 internal object View {
-    private val pathJava = "D:\\Java\\jdk-11.0.2\\bin\\java.exe"
-    private val pathIntelliJ = "D:\\IntelliJ IDEA Community Edition 2018.3.5"
-    private val pathProduction = "D:\\Сергей\\программы\\Kotlin\\Task05\\out\\production\\Task05"
-    private val pathKotlinLib = "C:\\Users\\Sergei\\.IdeaIC2018.3\\config\\plugins\\Kotlin\\kotlinc\\lib"
+    private val pathJava = "..."
+    private val pathIntelliJ = "..."
+    private val pathProduction = "..."
+    private val pathKotlinLib = "..."
+    // аналогично main.kt
     var maxAmountDisplayedObjectsInFolder = 10
         private set
     var maxHeightDisplayedTreeFolder = 3
