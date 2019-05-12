@@ -13,7 +13,7 @@ fun findFolder(zipFile: ZipFile, folderName: String) {
         val zipEntry = enumeration.nextElement() as ZipEntry
         val name = zipEntry.name
         val size = zipEntry.size
-        if ("/$folderName/" in name) {
+        if ("$folderName/" in name) {
             folderSize += size
             folderExist = true
         }
