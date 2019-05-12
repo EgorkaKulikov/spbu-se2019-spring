@@ -1,6 +1,6 @@
 package zipinfo
 
-import java.util.zip.ZipFile
+import java.util.zip.*
 
 fun main(args : Array<String>) {
 
