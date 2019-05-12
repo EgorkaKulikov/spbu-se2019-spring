@@ -93,22 +93,22 @@ class IterableTree<K: Comparable<K>, V>: Iterable<V> {
         override fun next(): V {
             if (!hasNext()) {
                 throw Exception("There's no more elements!")
-            } else {
-                val value = currentNode!!.value
-                if (currentNode?.right != null) {
-                    currentNode = findLeastKeyFrom(currentNode?.right)
-                } else {
-                    while (currentNode?.parent != null) {
-                        if(currentNode?.parent.left == currentNode) {
-                            currentNode = currentNode?.parent
-                            return value
-                        }
-                        currentNode = currentNode?.parent
-                    }
-                    currentNode = null
-                }
-                return value
             }
+
+            val value = currentNode!!.value
+            if (currentNode?.right != null) {
+                currentNode = findLeastKeyFrom(currentNode?.right)
+            } else {
+                while (currentNode?.parent != null) {
+                    if(currentNode?.parent.left == currentNode) {
+                        currentNode = currentNode?.parent
+                        return value
+                    }
+                    currentNode = currentNode?.parent
+                }
+                currentNode = null
+            }
+            return value
         }
     }
 
