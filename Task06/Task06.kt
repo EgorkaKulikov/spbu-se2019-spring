@@ -187,7 +187,7 @@ fun decodeFix(data: UByteArray) : UByteArray{
     return arrayData
 }
 
-fun shakal(data: UByteArray, numberOfBits: Int){
+fun defile(data: UByteArray, numberOfBits: Int){
     for (i in 1..numberOfBits) {
         val randomByte = (BMP_HEADER+1..data.size-1).random()
         val randomBit = (0..7).random()
@@ -207,17 +207,17 @@ fun main(){
     val encodedData = encode(data)
 
     var copyEncoded = encodedData.copyOf()
-    shakal(copyEncoded, (copyEncoded.size*0.05*8).toInt())
+    defile(copyEncoded, (copyEncoded.size*0.05*8).toInt())
     picture5percentDmg.writeBytes(decodeNoFix(copyEncoded).toByteArray())
     picture5percentFix.writeBytes(decodeFix(copyEncoded).toByteArray())
 
     copyEncoded = encodedData.copyOf()
-    shakal(copyEncoded, (copyEncoded.size*0.1*8).toInt())
+    defile(copyEncoded, (copyEncoded.size*0.1*8).toInt())
     picture10percentDmg.writeBytes(decodeNoFix(copyEncoded).toByteArray())
     picture10percentFix.writeBytes(decodeFix(copyEncoded).toByteArray())
 
     copyEncoded = encodedData.copyOf()
-    shakal(copyEncoded, (copyEncoded.size*0.15*8).toInt())
+    defile(copyEncoded, (copyEncoded.size*0.15*8).toInt())
     picture15percentDmg.writeBytes(decodeNoFix(copyEncoded).toByteArray())
     picture15percentFix.writeBytes(decodeFix(copyEncoded).toByteArray())
 }
