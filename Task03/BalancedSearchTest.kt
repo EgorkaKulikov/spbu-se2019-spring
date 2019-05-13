@@ -1,6 +1,6 @@
 package trees
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class BalancedSearchTreeTest {
@@ -13,8 +13,9 @@ class BalancedSearchTreeTest {
         node1.right = node2
 
         node1.rotateLeft()
-        Assertions.assertEquals(node2.left, node1)
-        Assertions.assertEquals(node1.parent, node2)
+
+        assertEquals(node2.left, node1)
+        assertEquals(node1.parent, node2)
     }
 
     @Test
@@ -26,8 +27,9 @@ class BalancedSearchTreeTest {
         node2.left = node1
 
         node2.rotateRight()
-        Assertions.assertEquals(node1.right, node2)
-        Assertions.assertEquals(node2.parent, node1)
+
+        assertEquals(node1.right, node2)
+        assertEquals(node2.parent, node1)
     }
 
     @Test
@@ -41,10 +43,9 @@ class BalancedSearchTreeTest {
         parent.left = node1
 
         node1.rotateLeft()
-        Assertions.assertEquals(node2.left, node1)
-        Assertions.assertEquals(node1.parent, node2)
-        Assertions.assertEquals(parent.left, node2)
-        Assertions.assertEquals(parent, node2.parent)
+
+        assertEquals(parent.left, node2)
+        assertEquals(parent, node2.parent)
     }
 
     @Test
@@ -58,10 +59,9 @@ class BalancedSearchTreeTest {
         parent.left = node2
 
         node2.rotateRight()
-        Assertions.assertEquals(node1.right, node2)
-        Assertions.assertEquals(node2.parent, node1)
-        Assertions.assertEquals(parent.left, node1)
-        Assertions.assertEquals(parent, node1.parent)
+
+        assertEquals(parent.left, node1)
+        assertEquals(parent, node1.parent)
     }
 
     @Test
@@ -75,10 +75,9 @@ class BalancedSearchTreeTest {
         parent.right = node1
 
         node1.rotateLeft()
-        Assertions.assertEquals(node2.left, node1)
-        Assertions.assertEquals(node1.parent, node2)
-        Assertions.assertEquals(parent.right, node2)
-        Assertions.assertEquals(parent, node2.parent)
+
+        assertEquals(parent.right, node2)
+        assertEquals(parent, node2.parent)
     }
 
     @Test
@@ -92,10 +91,9 @@ class BalancedSearchTreeTest {
         parent.right = node2
 
         node2.rotateRight()
-        Assertions.assertEquals(node1.right, node2)
-        Assertions.assertEquals(node2.parent, node1)
-        Assertions.assertEquals(parent.right, node1)
-        Assertions.assertEquals(parent, node1.parent)
+
+        assertEquals(parent.right, node1)
+        assertEquals(parent, node1.parent)
     }
 
     @Test
@@ -109,10 +107,9 @@ class BalancedSearchTreeTest {
         node1.left = leftChild
 
         node1.rotateLeft()
-        Assertions.assertEquals(node2.left, node1)
-        Assertions.assertEquals(node1.parent, node2)
-        Assertions.assertEquals(leftChild, node1.left)
-        Assertions.assertEquals(leftChild.parent, node1)
+
+        assertEquals(leftChild, node1.left)
+        assertEquals(leftChild.parent, node1)
     }
 
     @Test
@@ -126,10 +123,9 @@ class BalancedSearchTreeTest {
         node2.left = node1
 
         node2.rotateRight()
-        Assertions.assertEquals(node1.right, node2)
-        Assertions.assertEquals(node2.parent, node1)
-        Assertions.assertEquals(rightChild, node2.right)
-        Assertions.assertEquals(rightChild.parent, node2)
+
+        assertEquals(rightChild, node2.right)
+        assertEquals(rightChild.parent, node2)
     }
 
     @Test
@@ -145,10 +141,10 @@ class BalancedSearchTreeTest {
         node2.left = grandChildLeft
 
         node1.rotateLeft()
-        Assertions.assertEquals(node2.left, node1)
-        Assertions.assertEquals(node1.parent, node2)
-        Assertions.assertEquals(grandChildRight, node2.right)
-        Assertions.assertEquals(grandChildLeft, node1.right)
+
+        assertEquals(grandChildRight, node2.right)
+        assertEquals(grandChildLeft, node1.right)
+        assertEquals(node1, grandChildLeft.parent)
     }
 
     @Test
@@ -164,11 +160,9 @@ class BalancedSearchTreeTest {
         node1.left = grandChildLeft
 
         node2.rotateRight()
-        Assertions.assertEquals(node1.right, node2)
-        Assertions.assertEquals(node2.parent, node1)
-        Assertions.assertEquals(grandChildLeft, node1.left)
-        Assertions.assertEquals(grandChildRight, node2.left)
+
+        assertEquals(grandChildLeft, node1.left)
+        assertEquals(grandChildRight, node2.left)
+        assertEquals(node2, grandChildRight.parent)
     }
-
-
 }
