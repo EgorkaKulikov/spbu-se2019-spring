@@ -13,32 +13,32 @@ class AVLTree<K: Comparable<K>, V> : BalancedSearchTree<K, V>() {
 
         internal var heightDifference = 0
             private set
-            get() = abs(((left as AVLNode?)?.height ?: 0) -
+            get() = abs(((left as AVLNode?)?.height ?: 0) - 
                         ((right as AVLNode?)?.height ?: 0))
 
         internal fun verifyAVL(): Pair<Boolean, Int> {
-            var leftCorrectness = true
+            var isLeftCorrect = true
             var leftHeight = 0
 
             if (this.left != null) {
                 val tmp = (this.left as AVLNode).verifyAVL()
-                leftCorrectness = tmp.first
+                isLeftCorrect = tmp.first
                 leftHeight = tmp.second
             }
 
-            var rightCorrectness = true
+            var isRightCorrect = true
             var rightHeight = 0
 
             if (this.right != null) {
                 val tmp = (this.right as AVLNode).verifyAVL()
-                rightCorrectness = tmp.first
+                isRightCorrect = tmp.first
                 rightHeight = tmp.second
             }
 
-            return Pair(leftCorrectness
-                    && rightCorrectness
+            return Pair(isLeftCorrect
+                    && isRightCorrect
                     && abs(rightHeight - leftHeight) < 2
-                , max(rightHeight, leftHeight) + 1)
+                    , max(rightHeight, leftHeight) + 1)
         }
     }
 

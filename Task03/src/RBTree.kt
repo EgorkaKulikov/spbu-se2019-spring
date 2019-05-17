@@ -1,6 +1,6 @@
 package binaryTrees
 
-enum class Color {
+internal enum class Color {
     BLACK, RED
 }
 
@@ -40,7 +40,7 @@ class RBTree<K: Comparable<K>, V> : BalancedSearchTree<K, V>() {
             return Pair(leftCorrectness
                     && rightCorrectness
                     && rightBlackHeight == leftBlackHeight
-                , leftBlackHeight + if (this.color == Color.BLACK) 1 else 0)
+                    , leftBlackHeight + if (this.color == Color.BLACK) 1 else 0)
         }
     }
 
@@ -72,27 +72,25 @@ class RBTree<K: Comparable<K>, V> : BalancedSearchTree<K, V>() {
             uncle.color = Color.BLACK
             granddad!!.color = Color.RED
             balance(granddad)
-        } else {
-            when {
-                insertedNode.isLeftSon() && dad.isLeftSon() -> {
-                    granddad!!.rotateRight()
-                    swapColors(dad, granddad)
-                }
+        } else when {
+            insertedNode.isLeftSon() && dad.isLeftSon() -> {
+                granddad!!.rotateRight()
+                swapColors(dad, granddad)
+            }
 
-                insertedNode.isLeftSon() && dad.isRightSon() -> {
-                    dad.rotateRight()
-                    balance(dad)
-                }
+            insertedNode.isLeftSon() && dad.isRightSon() -> {
+                dad.rotateRight()
+                balance(dad)
+            }
 
-                insertedNode.isRightSon() && dad.isLeftSon() -> {
-                    dad.rotateLeft()
-                    balance(dad)
-                }
+            insertedNode.isRightSon() && dad.isLeftSon() -> {
+                dad.rotateLeft()
+                balance(dad)
+            }
 
-                insertedNode.isRightSon() && dad.isRightSon() -> {
-                    granddad!!.rotateLeft()
-                    swapColors(dad, granddad)
-                }
+            insertedNode.isRightSon() && dad.isRightSon() -> {
+                granddad!!.rotateLeft()
+                swapColors(dad, granddad)
             }
         }
     }

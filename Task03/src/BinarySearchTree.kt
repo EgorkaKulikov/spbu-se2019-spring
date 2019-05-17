@@ -6,19 +6,15 @@ open class BinarySearchTree<K: Comparable<K>, V> {
         internal var left: Node? = null
         internal var right: Node? = null
 
-        internal fun isLeftSon(): Boolean {
-            return parent?.left == this
-        }
+        internal fun isLeftSon(): Boolean = parent?.left == this
 
-        internal fun isRightSon(): Boolean {
-            return parent?.right == this
-        }
+        internal fun isRightSon(): Boolean = parent?.right == this
 
         internal fun verifySearch(): Boolean {
             return ((this.left == null) || (this.left!!.key < this.key
-                                            && this.left!!.verifySearch()))
+                    && this.left!!.verifySearch()))
                     && ((this.right == null) || (this.right!!.key > this.key
-                                            && this.right!!.verifySearch()))
+                    && this.right!!.verifySearch()))
         }
 
         internal fun verifyParents(): Boolean {
@@ -49,7 +45,7 @@ open class BinarySearchTree<K: Comparable<K>, V> {
     internal fun isBinarySearchTree() = root == null || root!!.verifySearch()
 
     internal fun parentsCorrectness() = root == null
-                                    || (root!!.parent == null && root!!.verifyParents())
+            || (root!!.parent == null && root!!.verifyParents())
 
     fun find(key: K) : V? {
         var current = root

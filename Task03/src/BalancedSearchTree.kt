@@ -3,12 +3,10 @@ package binaryTrees
 abstract class BalancedSearchTree<K: Comparable<K>, V> : BinarySearchTree<K, V>() {
 
     open inner class BalancedNode(key: K, value: V, parent: Node?) : Node(key, value, parent) {
-        internal fun getBrother(): Node? {
-            when {
-                this.parent == null -> return null
-                isLeftSon() -> return parent?.right
-                else -> return parent?.left
-            }
+        private fun getBrother(): Node? = when {
+            this.parent == null -> null
+            isLeftSon() -> parent?.right
+            else -> parent?.left
         }
 
         internal fun getUncle() = (parent as BalancedNode?)?.getBrother()
