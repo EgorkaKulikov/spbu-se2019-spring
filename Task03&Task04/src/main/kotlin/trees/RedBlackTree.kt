@@ -1,5 +1,5 @@
 class RedBlackTree<K: Comparable<K>, V>:
-        Tree<K, V, RedBlackNode<K, V>>() {
+        AbstractBinarySearchTree<K, V, RedBlackNode<K, V>>() {
 
     override operator fun set(key: K, value: V) {
         val newNode = RedBlackNode(key, value, Color.Red)

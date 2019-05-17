@@ -1,4 +1,5 @@
-abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>> : Iterable<NodeType> {
+abstract class AbstractBinarySearchTree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>:
+        Iterable<NodeType> {
 
     operator fun get(key: K): V? {
         val parentNode = searchForParent(key) ?: return root?.value
@@ -11,7 +12,7 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>> : Itera
     open operator fun set(key: K, value: V) {}
 
     override fun iterator(): Iterator<NodeType> {
-        return TreeIterator(this)
+        return TreeIterator()
     }
 
     val keys: Array<out Any>?
@@ -71,17 +72,16 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>> : Itera
         return getMaxNode(currentNode.right)
     }
 
-    private inner class TreeIterator(private val tree: Tree<K, V, NodeType>) : Iterator<NodeType> {
+    private inner class TreeIterator : Iterator<NodeType> {
 
-        private val leftBoundary = tree.getMinNode(root)
-        private val rightBoundary = tree.getMaxNode(root)
+        private val leftBoundary = getMinNode(root)
+        private val rightBoundary = getMaxNode(root)
         private var currentNode = leftBoundary
-
 
         override fun next(): NodeType {
             var nextNode: NodeType?
             if (currentNode?.right != null) {
-                nextNode = tree.getMinNode(currentNode?.right)!!
+                nextNode = getMinNode(currentNode?.right)!!
             }
             else {
                 nextNode = currentNode
@@ -92,9 +92,8 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>> : Itera
             }
             val prevNode = currentNode
             currentNode = nextNode
-            return prevNode!!
+            return prevNode ?: throw NoSuchElementException("Empty tree")
         }
-
 
         override fun hasNext(): Boolean {
             return if (rightBoundary != null && currentNode != null)
@@ -102,6 +101,6 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>> : Itera
             else
                 false
         }
-
     }
+
 }

@@ -33,22 +33,19 @@ class AVLNode<K: Comparable<K>, V>(key: K, value: V) :
                 && value == other.value)
     }
 
-    // Using Strategy pattern
-    private val balancer = NodeBalancer<K, V, AVLNode<K, V>>()
-
     internal fun leftRotate() {
-        balancer.leftRotate(this)
+        NodeRotator.leftRotate(this)
     }
 
     internal fun rightRotate() {
-        balancer.rightRotate(this)
+        NodeRotator.rightRotate(this)
     }
 
     internal fun bigLeftRotate() {
-        balancer.bigLeftRotate(this)
+        NodeRotator.bigLeftRotate(this)
     }
 
     internal fun bigRightRotate() {
-        balancer.bigRightRotate(this)
+        NodeRotator.bigRightRotate(this)
     }
 }

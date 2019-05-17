@@ -29,14 +29,11 @@ class RedBlackNode<K: Comparable<K>, V>(key: K, value: V, var color: Color) :
         newSon.parent = this
     }
 
-    // Using Strategy pattern
-    private val balancer = NodeBalancer<K, V, RedBlackNode<K, V>>()
-
     internal fun leftRotate() {
-        balancer.leftRotate(this)
+        NodeRotator.leftRotate(this)
     }
 
     internal fun rightRotate() {
-        balancer.rightRotate(this)
+        NodeRotator.rightRotate(this)
     }
 }

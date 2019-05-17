@@ -1,5 +1,5 @@
 class AVLTree<K: Comparable<K>, V>:
-        Tree<K, V, AVLNode<K, V>>() {
+        AbstractBinarySearchTree<K, V, AVLNode<K, V>>() {
 
     override operator fun set(key: K, value: V) {
         val newNode = AVLNode(key, value)

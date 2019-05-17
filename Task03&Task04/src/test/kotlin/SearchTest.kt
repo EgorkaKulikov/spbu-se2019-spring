@@ -25,7 +25,7 @@ class BinarySearchTreeSearchTest {
     @Test
     fun searchForAll() {
         for (key in expectedAnswers.keys)
-            assertEquals(actualTree[key], expectedAnswers[key])
+            assertEquals(expectedAnswers[key], actualTree[key])
     }
 
     @Test
