@@ -25,10 +25,10 @@ class BinarySearchTreeTests {
         }
 
         for (i in 1..5) {
-            assertEquals(tree.find(i), i * i)
+            assertEquals(i * i, tree.find(i))
         }
 
-        assertEquals(tree.find(6), null)
+        assertEquals(null, tree.find(6))
     }
 
     @Test
@@ -54,7 +54,7 @@ class BinarySearchTreeTests {
         }
 
         tree.insert(3, 10)
-        assertEquals(tree.find(3), 10)
+        assertEquals(10, tree.find(3))
     }
 
     @Test
@@ -130,6 +130,6 @@ class BinarySearchTreeTests {
     fun sizeOfEmptyTreeTest(){
         val tree = BinarySearchTree<Int, Int>()
 
-        assertEquals(tree.size, 0)
+        assertEquals(0, tree.size)
     }
 }
