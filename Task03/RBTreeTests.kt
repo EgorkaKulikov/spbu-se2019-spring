@@ -24,10 +24,10 @@ class RBTreeTest {
         }
 
         for (i in 1..5) {
-            assertEquals(tree.find(i), i * i)
+            assertEquals(i * i, tree.find(i))
         }
 
-        assertEquals(tree.find(6), null)
+        assertEquals(null, tree.find(6))
     }
 
     @Test

@@ -44,7 +44,7 @@ class  AVLTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
         return AVLNode(key, value, parent)
     }
 
-    override fun balance(node: Node){
+    override fun balance(node: Node) {
         var insertedNode = node as AVLNode
 
         if (insertedNode == this.root) {
@@ -57,7 +57,7 @@ class  AVLTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
 
             unbalancedNode.updateHeight()
             unbalancedNode.diffBetweenSubtrees = (leftSubtree?.height ?: 0) - (rightSubtree?.height ?: 0)
-            if (abs(unbalancedNode.diffBetweenSubtrees) == 2){
+            if (abs(unbalancedNode.diffBetweenSubtrees) == 2) {
                 when(unbalancedNode.diffBetweenSubtrees) {
                     //It means right Subtree has height 2 + (left Subtree's).height
                     -2 -> {

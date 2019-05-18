@@ -35,10 +35,10 @@ abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>
             this.right = rightNode?.left
 
             val parentOfCurrNode: Node? = this.parent
-            if (parentOfCurrNode == null){
+            if (parentOfCurrNode == null) {
                 root = rightNode
             } else {
-                if (parentOfCurrNode?.left == this){
+                if (parentOfCurrNode?.left == this) {
                     parentOfCurrNode.left = rightNode
                 } else {
                     parentOfCurrNode!!.right = rightNode
@@ -64,10 +64,10 @@ abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>
             this.left = leftNode?.right
 
             val parentOfCurrNode: Node? = this.parent
-            if (parentOfCurrNode == null){
+            if (parentOfCurrNode == null) {
                 root = leftNode
             } else {
-                if (parentOfCurrNode?.left == this){
+                if (parentOfCurrNode?.left == this) {
                     parentOfCurrNode.left = leftNode
                 } else {
                     parentOfCurrNode!!.right = leftNode
@@ -83,7 +83,7 @@ abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>
 
     protected abstract fun balance(node: Node)
 
-    override fun innerInsert(key: K, value: T): Node{
+    override fun innerInsert(key: K, value: T): Node {
         val sizeBeforeIns = size
         val insertedNode = super.innerInsert(key, value)
 

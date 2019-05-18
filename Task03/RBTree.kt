@@ -1,6 +1,6 @@
 package trees
 
-enum class Color{
+internal enum class Color {
     RED,
     BLACK;
 }
@@ -60,18 +60,18 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
 
         //In this circle we are sure about existing grandparent
         //because parent has red color so it isn't root
-        while ((currNode.parent as RBNode?)?.color == Color.RED){
+        while ((currNode.parent as RBNode?)?.color == Color.RED) {
             val uncle = currNode.getUncle() as RBNode?
             var grandparent = currNode.getGrandparent() as RBNode
 
-            if (currNode.parent == grandparent.left){
-                if (uncle != null && uncle?.color != Color.BLACK){
+            if (currNode.parent == grandparent.left) {
+                if (uncle != null && uncle?.color != Color.BLACK) {
                     (currNode.parent as RBNode).color = Color.BLACK
                     uncle.color = Color.BLACK
                     grandparent.color = Color.RED
                     currNode = grandparent
                 } else {
-                    if (currNode == currNode.parent?.right){
+                    if (currNode == currNode.parent?.right) {
                         currNode = currNode.parent as RBNode
                         currNode.rotateLeft()
                         grandparent = currNode.getGrandparent() as RBNode
@@ -81,13 +81,13 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
                     grandparent.rotateRight()
                 }
             } else {
-                if (uncle != null && uncle?.color != Color.BLACK){
+                if (uncle != null && uncle?.color != Color.BLACK) {
                     (currNode.parent as RBNode).color = Color.BLACK
                     uncle.color = Color.BLACK
                     grandparent.color = Color.RED
                     currNode = grandparent
                 } else {
-                    if (currNode == currNode.parent?.left){
+                    if (currNode == currNode.parent?.left) {
                         currNode = currNode.parent as RBNode
                         currNode.rotateRight()
                         grandparent = currNode.getGrandparent() as RBNode
@@ -97,7 +97,7 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
                     grandparent.rotateLeft()
                 }
             }
-            if (currNode.parent == null){
+            if (currNode.parent == null) {
                 currNode.color = Color.BLACK
             }
         }
