@@ -1,6 +1,6 @@
 package trees
 
-enum class Color {
+internal enum class Color {
     RED, BLACK
 }
 
