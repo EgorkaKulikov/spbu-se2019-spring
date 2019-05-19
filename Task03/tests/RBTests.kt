@@ -17,7 +17,7 @@ class RBTreeTests {
     }
 
     @Test
-    fun basicTest() {
+    fun simpleInsertionAndFindingTest() {
         val tree = RBTree<Int, Int>()
 
         for (i in 1..5) {
@@ -32,7 +32,7 @@ class RBTreeTests {
     }
 
     @Test
-    fun correctnessTest() {
+    fun randomInsertionTest() {
         for (i in 1..10) {
             val tree = randomRBTree(Random.Default.nextInt(0, 10))
             assert(tree.isRBTree())
@@ -42,7 +42,7 @@ class RBTreeTests {
 
     @Test
     fun stressTest() {
-        val tree = randomRBTree(1000)
+        val tree = randomRBTree(10000)
         assert(tree.isRBTree())
         assert(tree.isBinarySearchTree())
     }
