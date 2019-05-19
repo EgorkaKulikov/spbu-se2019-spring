@@ -12,6 +12,18 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>: Iterab
             return res.toArray()
         }
 
+    val values: Array<out Any>?
+        get() {
+            val res = arrayListOf<V>()
+            for (node in this)
+                res.add(node.value)
+            return res.toArray()
+        }
+
+    fun add(key: K, value: V) {
+        this[key] = value
+    }
+
     open operator fun set(key: K, value: V) {}
 
     operator fun get(key: K): V? {

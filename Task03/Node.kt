@@ -1,12 +1,18 @@
-enum class Side {
-    Left, Right
-}
-
-
-abstract class Node<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>(var key: K, var value: V) {
+abstract class Node<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>(internal var key: K, internal var value: V) {
     var left: NodeType? = null
+        internal set
     var right: NodeType? = null
+        internal set
     var parent: NodeType? = null
+        internal set
+
+    fun getKey() : K {
+        return key
+    }
+
+    fun getValue() : V {
+        return value
+    }
 
     val sibling: NodeType?
         get() = if (this.parent?.left == this)
@@ -112,7 +118,7 @@ enum class Color {
 }
 
 
-class RedBlackNode<K: Comparable<K>, V>(key: K, value: V, var color: Color) :
+class RedBlackNode<K: Comparable<K>, V>(key: K, value: V, internal var color: Color) :
         Node<K, V, RedBlackNode<K, V>>(key, value) {
     private val balancer = NodeBalancer<K, V, RedBlackNode<K, V>>()
     internal fun leftRotate() {
