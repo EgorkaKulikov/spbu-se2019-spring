@@ -17,7 +17,7 @@ class BinarySearchTreeTests {
     }
 
     @Test
-    fun basicTest() {
+    fun simpleInsertionAndFindingTest() {
         val tree = BinarySearchTree<Int, Int>()
 
         for (i in 1..5) {
@@ -32,7 +32,7 @@ class BinarySearchTreeTests {
     }
 
     @Test
-    fun correctnessTest() {
+    fun randomInsertionTest() {
         for (i in 1..10) {
             val tree = randomBinarySearchTree(Random.Default.nextInt(0, 10))
             assert(tree.isBinarySearchTree())
@@ -41,7 +41,7 @@ class BinarySearchTreeTests {
 
     @Test
     fun stressTest() {
-        val tree = randomBinarySearchTree(1000)
+        val tree = randomBinarySearchTree(10000)
         assert(tree.isBinarySearchTree())
     }
 
