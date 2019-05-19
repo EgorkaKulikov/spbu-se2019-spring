@@ -17,7 +17,7 @@ class AVLTreeTests {
     }
 
     @Test
-    fun basicTest() {
+    fun simpleInsetrionAndFindingTest() {
         val tree = AVLTree<Int, Int>()
         for (i in 1..5) {
             tree.insert(i, i * i)
@@ -31,7 +31,7 @@ class AVLTreeTests {
     }
 
     @Test
-    fun correctnessTest() {
+    fun randomInsetrionTest() {
         for (i in 1..10) {
             val tree = randomAVLTree(Random.Default.nextInt(0, 10))
             assert(tree.isAVLTree())
@@ -41,7 +41,7 @@ class AVLTreeTests {
 
     @Test
     fun stressTest() {
-        val tree = randomAVLTree(1000)
+        val tree = randomAVLTree(10000)
         assert(tree.parentsCorrectness())
         assert(tree.isAVLTree())
         assert(tree.isBinarySearchTree())
