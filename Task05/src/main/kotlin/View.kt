@@ -1,6 +1,7 @@
 package zipExplore
 
 import java.time.format.DateTimeFormatter
+import org.apache.commons.io.FileUtils
 
 class View(private var archiveName: String) {
 
@@ -53,7 +54,7 @@ class View(private var archiveName: String) {
         for (instance in foundFolder) {
             println(
                 "Folder: ${instance.name}, " +
-                        "Size = ${archive.getFolderSize(instance.name)} bytes"
+                        "Size = ${FileUtils.byteCountToDisplaySize(archive.getFolderSize(instance.name))} bytes"
             )
         }
 
