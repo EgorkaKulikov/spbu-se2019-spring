@@ -1,5 +1,4 @@
 import java.io.IOException
-import java.nio.file.attribute.FileTime
 import java.util.zip.*
 import kotlin.system.exitProcess
 
@@ -7,7 +6,7 @@ import kotlin.system.exitProcess
 const val ROOTINDEX = -1
 
 class Model {
-    var fileTree = FileTree()
+    var fileTree = FileTree(EntryType.DIRECTORY)
 
     fun extractData(archiveName: String) {
         try {
@@ -25,9 +24,9 @@ class Model {
     private fun generateFileTree(entries: List<ZipEntry>, entryIndex: Int): FileTree {
         val currTree: FileTree =
             if (entryIndex == ROOTINDEX)
-                FileTree()//root directory
+                FileTree(EntryType.DIRECTORY)//root directory
             else
-                FileTree(getEntryName(entries[entryIndex]))
+                FileTree(EntryType.DIRECTORY, getEntryName(entries[entryIndex]))
 
         val parentEntryName = currTree.entryName
         var subEntryIndex = entryIndex + 1
@@ -42,27 +41,11 @@ class Model {
                 val subEntryName = getEntryName(entries[subEntryIndex])
                 val subEntryTime = entries[subEntryIndex].creationTime
                 val subEntryFileSize = entries[subEntryIndex].size
-                currTree.addSubEntry(FileTree(subEntryFileSize, subEntryTime, subEntryName))
+                currTree.addSubEntry(FileTree(EntryType.FILE, subEntryName, subEntryFileSize, subEntryTime))
                 subEntryIndex++
             }
         }
         return currTree
-    }
-
-    fun findFile(name: String): Pair<Boolean, FileTime> {
-        val fileEntry = fileTree.findEntryByName(name)
-        return if (fileEntry == null)
-            Pair(false, FileTime.fromMillis(0))
-        else
-            Pair(true, fileEntry.fileTime)
-    }
-
-    fun findDirectory(name: String): Pair<Boolean, Long> {
-        val directoryEntry = fileTree.findEntryByName(name)
-        return if (directoryEntry == null)
-            Pair(false, 0L)
-        else
-            Pair(true, directoryEntry.getSubEntriesFileSize())
     }
 
     //removes last backslash in directory name

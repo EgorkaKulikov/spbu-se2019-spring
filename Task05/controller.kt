@@ -19,13 +19,13 @@ class Controller(model: Model, view: View, args: Array<String>) {
             args.size == 3
                     && ((args[1] == "-f") || (args[0] == "--file")) -> {
                 model.extractData(args[0])
-                view.printFile(model.findFile(args[2]))
+                view.printFile(model.fileTree.findEntriesByName(args[2], EntryType.FILE))
 
             }
             args.size == 3
                     && ((args[1] == "-d") || (args[0] == "--directory")) -> {
                 model.extractData(args[0])
-                view.printDirectory(model.findDirectory(args[2]))
+                view.printDirectory(model.fileTree.findEntriesByName(args[2], EntryType.DIRECTORY))
             }
             else -> {
                 println("Invalid arguments, use -h or --help")
