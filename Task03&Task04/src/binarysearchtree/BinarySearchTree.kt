@@ -1,23 +1,21 @@
-package BinarySearchTree
+package binarysearchtree
 
 import tree.Tree
 
 
 class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<Key, Data>> {
 
-    var root: BinarySearchTreeNode<Key, Data>? = null
+    internal var root: BinarySearchTreeNode<Key, Data>? = null
 
     override fun find(key: Key): Pair<Key, Data>? {
 
         var currentNode: BinarySearchTreeNode<Key, Data>? = root
 
         while(currentNode != null) {
-            if (currentNode.key == key) {
-                return Pair(currentNode.key, currentNode.data)
-            }
             when {
                 currentNode.key > key -> currentNode = currentNode.leftChild
                 currentNode.key < key -> currentNode = currentNode.rightChild
+                currentNode.key == key -> return Pair(currentNode.key, currentNode.data)
             }
         }
 
@@ -36,31 +34,35 @@ class BinarySearchTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<P
 
         var currentNode: BinarySearchTreeNode<Key, Data>? = root
 
-        while (currentNode != null) {
-            if (currentNode.key > newNode.key) {
+        while (currentNode != null) when {
+
+            currentNode.key > newNode.key -> {
                 if (currentNode.leftChild == null) {
                     currentNode.leftChild = newNode
                     newNode.parent = currentNode
                     return
-                } else {
-                    currentNode = currentNode.leftChild
                 }
-            } else  if (currentNode.key < newNode.key)  {
+                currentNode = currentNode.leftChild
+
+            }
+
+            currentNode.key < newNode.key -> {
 
                 if (currentNode.rightChild == null) {
                     currentNode.rightChild = newNode
                     newNode.parent = currentNode
                     return
-                } else {
-                    currentNode = currentNode.rightChild
                 }
-            } else if (currentNode.key == newNode.key) {
+                currentNode = currentNode.rightChild
+
+            }
+
+            currentNode.key == newNode.key -> {
                 currentNode.data = newNode.data
                 return
             }
-        }
 
-        return
+        }
 
     }
 

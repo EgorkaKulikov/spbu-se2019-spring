@@ -1,20 +1,21 @@
-package AVLTree
+package avltree
 
 import tree.Tree
 
 class AVLTree<Key: Comparable<Key>, Data>: Tree<Key, Data>, Iterable<Pair<Key, Data>> {
 
-    var root: AVLTreeNode<Key, Data>? = null
+    internal var root: AVLTreeNode<Key, Data>? = null
 
     override fun find(key: Key): Pair<Key, Data>? {
 
         var currentNode = root
 
-        while (currentNode != null) {
-            if (currentNode.key == key) {
-                return Pair(currentNode.key, currentNode.data)
+        while(currentNode != null) {
+            when {
+                currentNode.key > key -> currentNode = currentNode.leftChild
+                currentNode.key < key -> currentNode = currentNode.rightChild
+                currentNode.key == key -> return Pair(currentNode.key, currentNode.data)
             }
-            currentNode = if (currentNode.key > key) currentNode.leftChild else currentNode.rightChild
         }
 
         return null

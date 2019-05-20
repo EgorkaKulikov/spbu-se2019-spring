@@ -1,10 +1,10 @@
-package RedBlackTree
+package redblacktree
 
 import tree.Tree
 
 class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<Key, Data>> {
 
-    var root: RedBlackTreeNode<Key, Data>? = null
+    internal var root: RedBlackTreeNode<Key, Data>? = null
 
     override fun insert(key: Key, data: Data) {
 
@@ -104,11 +104,12 @@ class RedBlackTree<Key: Comparable<Key>, Data> : Tree<Key, Data>, Iterable<Pair<
 
         var currentNode: RedBlackTreeNode<Key, Data>? = root
 
-        while (currentNode != null) {
-            if (currentNode.key == key) {
-                return Pair(currentNode.key, currentNode.data)
-                }
-            currentNode = if(currentNode.key > key) currentNode.leftChild else currentNode.rightChild
+        while(currentNode != null) {
+            when {
+                currentNode.key > key -> currentNode = currentNode.leftChild
+                currentNode.key < key -> currentNode = currentNode.rightChild
+                currentNode.key == key -> return Pair(currentNode.key, currentNode.data)
+            }
         }
 
         return null

@@ -1,40 +1,50 @@
-package RedBlackTree
+package avltree
 
-enum class Color {
-    RED,
-    BLACK
-}
+class AVLTreeNode<Key: Comparable<Key>, Data>(val key: Key, var data: Data, var parent: AVLTreeNode<Key, Data>? = null){
 
-class RedBlackTreeNode<Key, Data>(var key: Key, var data: Data,
-                                  var parent: RedBlackTreeNode<Key, Data>? = null, var color: Color = Color.RED) {
-
-    var leftChild: RedBlackTreeNode<Key, Data>? = null
-    var rightChild: RedBlackTreeNode<Key, Data>? = null
+    var height : Int = 1
+    var leftChild: AVLTreeNode<Key, Data>? = null
+    var rightChild: AVLTreeNode<Key, Data>? = null
 
     override fun equals(other: Any?): Boolean {
 
-        if (other is RedBlackTreeNode<*, *>?) {
+        if (other is AVLTreeNode<*, *>?) {
+
             if (other == null) return false
 
             if (this.key == other.key &&
                 this.data == other.data &&
-                this.color == other.color &&
+                this.height == other.height &&
                 this.leftChild?.key == other.leftChild?.key &&
                 this.rightChild?.key == other.rightChild?.key &&
                 this.leftChild?.data == other.leftChild?.data &&
                 this.rightChild?.data == other.rightChild?.data &&
                 this.parent?.key == other.parent?.key &&
-                this.parent?.color == other.parent?.color) return true
+                this.parent?.height == other.parent?.height) return true
 
             return false
-
         }
 
         return false
 
+
     }
 
-    internal fun leftRotate() {
+    override fun hashCode(): Int {
+
+        var result = key.hashCode()
+
+        result = 31 * result + (key.hashCode())
+        result = 31 * result + (height.hashCode())
+        result = 31 * result + (this.leftChild?.hashCode() ?: 0)
+        result = 31 * result + (this.rightChild?.hashCode() ?: 0)
+        result = 31 * result + (this.parent?.hashCode() ?: 0)
+
+        return result
+
+    }
+
+    fun leftRotate() {
 
         val rightChild = this.rightChild ?: return
 
@@ -49,9 +59,12 @@ class RedBlackTreeNode<Key, Data>(var key: Key, var data: Data,
             rightChild.parent?.rightChild -> rightChild.parent?.rightChild = rightChild
         }
 
+        this.updateHeight()
+        rightChild.updateHeight()
+
     }
 
-    internal fun rightRotate() {
+    fun rightRotate() {
 
         val leftChild = this.leftChild ?: return
 
@@ -66,8 +79,31 @@ class RedBlackTreeNode<Key, Data>(var key: Key, var data: Data,
             leftChild.parent?.leftChild -> leftChild.parent?.leftChild = leftChild
         }
 
+        this.updateHeight()
+        leftChild.updateHeight()
+
     }
 
-    internal fun isLeaf():Boolean = this.leftChild == null && this.rightChild == null //function only for tests
+    fun bigLeftRotate() {
+
+        this.rightChild?.rightRotate()
+        this.leftRotate()
+
+    }
+
+    fun bigRightRotate() {
+
+        this.leftChild?.leftRotate()
+        this.rightRotate()
+
+    }
+
+    internal fun updateHeight() {
+
+        height = kotlin.math.max(leftChild?.height ?: 0, rightChild?.height ?: 0) + 1
+
+    }
+
+    internal fun getHeight(node: AVLTreeNode<Key, Data>?): Int = node?.height ?: 0
 
 }

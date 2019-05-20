@@ -1,4 +1,4 @@
-package BinarySearchTree
+package binarysearchtree
 
 class BinarySearchTreeNode<Key, Data> (var key: Key, var data: Data)
 {
@@ -28,4 +28,16 @@ class BinarySearchTreeNode<Key, Data> (var key: Key, var data: Data)
 
     }
 
+    override fun hashCode(): Int {
+
+        var result = key.hashCode()
+
+        result = 31 * result + (key.hashCode())
+        result = 31 * result + (this.leftChild?.hashCode() ?: 0)
+        result = 31 * result + (this.rightChild?.hashCode() ?: 0)
+        result = 31 * result + (this.parent?.hashCode() ?: 0)
+
+        return result
+
+    }
 }
