@@ -28,20 +28,23 @@ class Model {
             else
                 FileTree(EntryType.DIRECTORY, getEntryName(entries[entryIndex]))
 
-        val parentEntryName = currTree.entryName
+        val currEntryName = currTree.entryName
         var subEntryIndex = entryIndex + 1
 
         while (subEntryIndex < entries.size
-            && entries[subEntryIndex].name.startsWith(parentEntryName)) {
+            && entries[subEntryIndex].name.startsWith(currEntryName)
+        ) {
             if (entries[subEntryIndex].isDirectory) {
                 val subEntry = generateFileTree(entries, subEntryIndex)
                 currTree.addSubEntry(subEntry)
                 subEntryIndex += subEntry.subTreeSize
             } else {
-                val subEntryName = getEntryName(entries[subEntryIndex])
-                val subEntryTime = entries[subEntryIndex].creationTime
-                val subEntryFileSize = entries[subEntryIndex].size
-                currTree.addSubEntry(FileTree(EntryType.FILE, subEntryName, subEntryFileSize, subEntryTime))
+                currTree.addSubEntry(
+                    FileTree(
+                        EntryType.FILE, getEntryName(entries[subEntryIndex])
+                        , entries[subEntryIndex].size, entries[subEntryIndex].creationTime
+                    )
+                )
                 subEntryIndex++
             }
         }
