@@ -22,7 +22,7 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
         return null
     }
 
-    fun inserte (key: K, value: T) {
+    fun insert (key: K, value: T) {
         if (root == null) {
             root = Node(key, value)
         }
@@ -57,39 +57,39 @@ class IterableSearchTree<K: Comparable<K>, T>: Iterable<T> {
     }
 
     inner class TreeIterator: Iterator<T> {
-        private val ListOfNodes = ListOfNodesWithBFS()
-        private fun ListOfNodesWithBFS (): LinkedList<Node> {
-            val ListOfNodes = LinkedList<Node>()
+        private val listOfNodes = listOfNodesWithBFS()
+        private fun listOfNodesWithBFS (): LinkedList<Node> {
+            val listOfNodes = LinkedList<Node>()
             val queue: Queue<Node> = LinkedList<Node>()
 
             if (root != null) {
                 queue.add(root)
-                ListOfNodes.add(root!!)
+                listOfNodes.add(root!!)
             }
 
             while(!queue.isEmpty()) {
                 val tempNode = queue.remove()
                 if (tempNode.left != null) {
                     queue.add(tempNode.left)
-                    ListOfNodes.add(tempNode.left!!)
+                    listOfNodes.add(tempNode.left!!)
                 }
                 if (tempNode.right != null) {
                     queue.add(tempNode.right)
-                    ListOfNodes.add(tempNode.right!!)
+                    listOfNodes.add(tempNode.right!!)
                 }
             }
-            return ListOfNodes
+            return listOfNodes
         }
 
         override fun hasNext(): Boolean {
-            return !ListOfNodes.isEmpty()
+            return !listOfNodes.isEmpty()
         }
 
         override fun next(): T {
             if (!hasNext())
                 throw Exception("There are no elements left")
 
-            return ListOfNodes.remove().value
+            return listOfNodes.remove().value
         }
 
     }
