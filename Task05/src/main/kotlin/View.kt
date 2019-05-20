@@ -54,7 +54,7 @@ class View(private var archiveName: String) {
         for (instance in foundFolder) {
             println(
                 "Folder: ${instance.name}, " +
-                        "Size = ${FileUtils.byteCountToDisplaySize(archive.getFolderSize(instance.name))} bytes"
+                        "Size = ${FileUtils.byteCountToDisplaySize(archive.getFolderSize(instance.name))}"
             )
         }
 
