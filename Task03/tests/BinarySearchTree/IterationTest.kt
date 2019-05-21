@@ -2,6 +2,7 @@ package BinarySearchTree
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.fail
 import java.util.Random
 import BinarySearchTree
 
@@ -72,7 +73,45 @@ class IterationTest {
         for (key in keys)
             actualTree[key] = value
 
-        assertArrayEquals(Array(SIZE) { keys.toList()[it] }.sortedArray(), actualTree.keys)
+        val actualTreeKeys = mutableListOf<Int>()
+        val actualTreeIterator = actualTree.iterator()
+
+        while (actualTreeIterator.hasNext())
+            actualTreeKeys.add(actualTreeIterator.next().key)
+
+        assertArrayEquals(Array(SIZE) { keys.toList()[it] }.sortedArray(), actualTreeKeys.toTypedArray())
     }
 
+    @Test
+    fun iterateEmptyWithException() {
+        val actualTreeIterator = actualTree.iterator()
+
+        try {
+            actualTreeIterator.next()
+            fail<Any>()
+        }
+        catch (e: Exception) {}
+    }
+
+    @Test
+    fun iterateRandomStressWithException() {
+        val keys = mutableSetOf<Int>()
+        while (keys.size < SIZE)
+            keys.add(random.nextInt())
+
+        for (key in keys)
+            actualTree[key] = value
+
+        val actualTreeKeys = mutableListOf<Int>()
+        val actualTreeIterator = actualTree.iterator()
+
+        while (actualTreeIterator.hasNext())
+            actualTreeKeys.add(actualTreeIterator.next().key)
+
+        try {
+            actualTreeIterator.next()
+            fail<Any>()
+        }
+        catch (e: Exception) {}
+    }
 }
