@@ -95,10 +95,10 @@ class BinarySearchTreeTest {
 
         tree.insert(2, 3)
 
-        val sizeBefore = tree.size
+        val sizeBefore = tree.numEdges
         tree.insert(6, 6)
 
-        assertEquals(sizeBefore + 1, tree.size)
+        assertEquals(sizeBefore + 1, tree.numEdges)
     }
 
     @Test
@@ -107,10 +107,10 @@ class BinarySearchTreeTest {
 
         tree.insert(3, 5)
 
-        val sizeBefore = tree.size
+        val sizeBefore = tree.numEdges
         tree.insert(2, 4)
 
-        assertEquals(sizeBefore + 1, tree.size)
+        assertEquals(sizeBefore + 1, tree.numEdges)
     }
 
     @Test
@@ -121,17 +121,17 @@ class BinarySearchTreeTest {
             tree.insert(i, i + 3)
         }
 
-        val sizeBefore = tree.size
+        val sizeBefore = tree.numEdges
         tree.insert(4, 4)
 
-        assertEquals(sizeBefore, tree.size)
+        assertEquals(sizeBefore, tree.numEdges)
     }
 
     @Test
     fun sizeOfEmptyTreeTest() {
         val tree = BinarySearchTree<Int, Int>()
 
-        assertEquals(0, tree.size)
+        assertEquals(0, tree.numEdges)
     }
 }
 

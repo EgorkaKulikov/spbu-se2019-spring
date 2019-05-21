@@ -81,10 +81,10 @@ abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>
     protected abstract fun balance(node: Node)
 
     override fun innerInsert(key: K, value: T): Node {
-        val sizeBeforeIns = size
+        val sizeBeforeIns = numEdges
         val insertedNode = super.innerInsert(key, value)
 
-        if (sizeBeforeIns != size) {
+        if (sizeBeforeIns != numEdges) {
             balance(insertedNode)
         }
         // If size of the tree is the same

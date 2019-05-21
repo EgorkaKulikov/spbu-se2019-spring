@@ -33,7 +33,7 @@ open class BinarySearchTree<K:Comparable<K>, T> {
         }
     }
 
-    var size = 0
+    var numEdges = 0
         protected set
 
     protected var root: Node? = null
@@ -64,7 +64,7 @@ open class BinarySearchTree<K:Comparable<K>, T> {
 
         if (root == null) {
             root = createNode(key, value, null)
-            size++
+            numEdges++
             return root!!
         }
 
@@ -75,7 +75,7 @@ open class BinarySearchTree<K:Comparable<K>, T> {
                 currNode.key > key -> {
                     if (currNode.left == null) {
                         currNode.left = createNode(key, value, currNode)
-                        size++
+                        numEdges++
                         return currNode.left!!
                     } else {
                         currNode = currNode.left!!  //We checked it's not null
@@ -84,7 +84,7 @@ open class BinarySearchTree<K:Comparable<K>, T> {
                 currNode.key < key -> {
                     if (currNode.right == null) {
                         currNode.right = createNode(key, value, currNode)
-                        size++
+                        numEdges++
                         return currNode.right!!
                     } else {
                         currNode = currNode.right!! //We checked it's not null
@@ -111,8 +111,6 @@ open class BinarySearchTree<K:Comparable<K>, T> {
     internal fun parentsCorrectness(): Boolean {
         return if (root != null) {
             root!!.parent == null && root!!.verifyParents()
-        } else {
-            true
-        }
+        } else true
     }
 }
