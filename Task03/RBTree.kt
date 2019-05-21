@@ -53,7 +53,7 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
 
         var currNode = node as RBNode
 
-        if (currNode?.parent == null) {
+        if (currNode.parent == null) {
             (root as RBNode).color = Color.BLACK
             return
         }

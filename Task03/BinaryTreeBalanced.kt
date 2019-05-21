@@ -35,10 +35,10 @@ abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>
             if (parentOfCurrNode == null) {
                 root = rightNode
             } else {
-                if (parentOfCurrNode?.left == this) {
+                if (parentOfCurrNode.left == this) {
                     parentOfCurrNode.left = rightNode
                 } else {
-                    parentOfCurrNode!!.right = rightNode
+                    parentOfCurrNode.right = rightNode
                 }
             }
 
@@ -64,10 +64,10 @@ abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>
             if (parentOfCurrNode == null) {
                 root = leftNode
             } else {
-                if (parentOfCurrNode?.left == this) {
+                if (parentOfCurrNode.left == this) {
                     parentOfCurrNode.left = leftNode
                 } else {
-                    parentOfCurrNode!!.right = leftNode
+                    parentOfCurrNode.right = leftNode
                 }
             }
 

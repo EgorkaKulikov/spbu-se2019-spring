@@ -45,15 +45,15 @@ class  AVLTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
     }
 
     override fun balance(node: Node) {
-        var insertedNode = node as AVLNode
+        val insertedNode = node as AVLNode
 
         if (insertedNode == this.root) {
             return
         }
         var unbalancedNode = insertedNode.parent as AVLNode?
         while (unbalancedNode != null) {
-            var rightSubtree = unbalancedNode.right as AVLNode?
-            var leftSubtree = unbalancedNode.left as AVLNode?
+            val rightSubtree = unbalancedNode.right as AVLNode?
+            val leftSubtree = unbalancedNode.left as AVLNode?
 
             unbalancedNode.updateHeight()
             unbalancedNode.diffBetweenSubtrees = (leftSubtree?.height ?: 0) - (rightSubtree?.height ?: 0)
