@@ -15,6 +15,19 @@ data class Zipfile(val zipname: String)
  
   public fun filesize() = filesize
 
+  public fun struct(): List<String>
+  {
+    var structure = mutableListOf<String>()
+
+    while (hasNext() == true)
+    {
+      next()
+      structure.add(filename)
+    }
+
+    return structure.sorted()
+  }
+
   public fun hasNext() : Boolean
   {
     if (size() >= 22 
@@ -86,22 +99,21 @@ data class Zipfile(val zipname: String)
     bitNext = false
   }
 
-
 /*
   Using MS-DOS date & time format.
   http://www.vsft.com/hal/dostime.htm
 */
-  public fun year() = 1980 + (date and 0xFE00) / 0x200
+  public fun year() = (1980 + (date and 0xFE00) / 0x200).toInt()
 
-  public fun month() = (date and 0x1E0) / 0x20
+  public fun month() = ((date and 0x1E0) / 0x20).toInt()
 
-  public fun day() = (date and 0x1F)
+  public fun day() = (date and 0x1F).toInt()
 
-  public fun hour() = time / 0x800
+  public fun hour() = (time / 0x800).toInt()
 
-  public fun minute() = (time and 0x7E0) / 0x20
+  public fun minute() = ((time and 0x7E0) / 0x20).toInt()
 
-  public fun second() = (time and 0x1F) * 2
+  public fun second() = ((time and 0x1F) * 2).toInt()
 
   public fun closeStream() = zip.close()
 
@@ -111,15 +123,30 @@ data class Zipfile(val zipname: String)
 
   private var filename = ""
 
-  private var time = 0L
-
   private var date = 0L
+
+  private var time = 0L
 
   private var filesize = 0L
 
   private var bitHasNext = true
 
   private var bitNext = false
+
+  private fun extract(size: Int) : ByteArray
+  {
+    val record = ByteArray(size)
+    
+    if (zip.read(record) == size)
+    {
+      return record
+    }
+    else
+    {
+      println("Error of reading.")
+      exitProcess(4)
+    }   
+  }
 
   private fun bytesToLong(size: Int) : Long
   {
@@ -140,20 +167,5 @@ data class Zipfile(val zipname: String)
   private fun bytesToString(size: Int) : String
   {
     return extract(size).toString(charset)
-  }
-
-  private fun extract(size: Int) : ByteArray
-  {
-    val record = ByteArray(size)
-    
-    if (zip.read(record) == size)
-    {
-      return record
-    }
-    else
-    {
-      println("Error of reading.")
-      exitProcess(4)
-    }   
   }
 }
