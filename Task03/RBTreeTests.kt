@@ -3,6 +3,7 @@ package trees
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
+import kotlin.system.measureTimeMillis
 
 class RBTreeTest {
     private fun randomRBTree(size: Int): RBTree<Int, Int> {
@@ -16,7 +17,7 @@ class RBTreeTest {
     }
 
     @Test
-    fun basicTest() {
+    fun basicInsertAndFindTest() {
         val tree = RBTree<Int, Int>()
 
         for (i in 1..5) {
@@ -31,7 +32,7 @@ class RBTreeTest {
     }
 
     @Test
-    fun correctnessTest() {
+    fun correctnessPropertiesTest() {
         for (i in 1..10) {
             val tree = randomRBTree(Random.Default.nextInt(0, 10))
             assert(tree.isRBTree())
@@ -40,8 +41,8 @@ class RBTreeTest {
     }
 
     @Test
-    fun stressTest() {
-        val tree = randomRBTree(1000)
+    fun stressCorrectnessPropertiesTest() {
+        val tree = randomRBTree(100000)
         assert(tree.isRBTree())
         assert(tree.isBinarySearchTree())
     }

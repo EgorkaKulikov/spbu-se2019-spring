@@ -61,8 +61,8 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
         //In this circle we are sure about existing grandparent
         //because parent has red color so it isn't root
         while ((currNode.parent as RBNode?)?.color == Color.RED) {
-            val uncle = currNode.getUncle() as RBNode?
-            var grandparent = currNode.getGrandparent() as RBNode
+            val uncle = currNode.uncle as RBNode?
+            var grandparent = currNode.grandparent as RBNode
 
             if (currNode.parent == grandparent.left) {
                 if (uncle != null && uncle?.color != Color.BLACK) {
@@ -74,7 +74,7 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
                     if (currNode == currNode.parent?.right) {
                         currNode = currNode.parent as RBNode
                         currNode.rotateLeft()
-                        grandparent = currNode.getGrandparent() as RBNode
+                        grandparent = currNode.grandparent as RBNode
                     }
                     (currNode.parent as RBNode).color = Color.BLACK
                     grandparent.color = Color.RED
@@ -90,7 +90,7 @@ class RBTree<K : Comparable<K>, T> : BalancedSearchTree<K, T>() {
                     if (currNode == currNode.parent?.left) {
                         currNode = currNode.parent as RBNode
                         currNode.rotateRight()
-                        grandparent = currNode.getGrandparent() as RBNode
+                        grandparent = currNode.grandparent as RBNode
                     }
                     (currNode.parent as RBNode).color = Color.BLACK
                     grandparent.color = Color.RED

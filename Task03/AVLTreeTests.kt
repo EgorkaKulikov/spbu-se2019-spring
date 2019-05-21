@@ -3,6 +3,7 @@ package trees
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
+import kotlin.system.measureTimeMillis
 
 class AVLTreeTest {
     private fun randomAVLTree(size: Int): AVLTree<Int, Int> {
@@ -16,7 +17,7 @@ class AVLTreeTest {
     }
 
     @Test
-    fun basicTest() {
+    fun basicInsertAndFindTest() {
         val tree = AVLTree<Int, Int>()
         for (i in 1..5) {
             tree.insert(i, i * i)
@@ -30,7 +31,7 @@ class AVLTreeTest {
     }
 
     @Test
-    fun correctnessTest() {
+    fun correctnessPropertiesTest() {
         for (i in 1..10) {
             val tree = randomAVLTree(Random.Default.nextInt(0, 10))
             assert(tree.isAVLTree())
@@ -39,8 +40,8 @@ class AVLTreeTest {
     }
 
     @Test
-    fun stressTest() {
-        val tree = randomAVLTree(1000)
+    fun stressCorrectnessPropertiesTest() {
+        val tree = randomAVLTree(100000)
         assert(tree.parentsCorrectness())
         assert(tree.isAVLTree())
         assert(tree.isBinarySearchTree())

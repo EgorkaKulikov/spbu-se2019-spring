@@ -3,25 +3,22 @@ package trees
 abstract class BalancedSearchTree<K : Comparable<K>, T> : BinarySearchTree<K, T>() {
 
     open inner class BalancedNode(key_: K, value_: T, parent_: Node?) : Node(key_, value_, parent_) {
-        internal fun getGrandparent(): Node? = this.parent?.parent
 
-        internal fun getUncle(): Node? {
-            val grandparent = this.parent?.parent
-            return when {
+        internal var grandparent: Node? = null
+            private set
+            get() = this.parent?.parent
+
+        internal var uncle: Node? = null
+            private set
+            get() = when {
                 grandparent == null -> null
                 grandparent?.left == this.parent -> grandparent?.right
                 else -> grandparent?.left
             }
-        }
 
-        internal fun getSibling(): Node? {
-            val parent = this.parent
-            return if (parent?.left == this) {
-                parent?.right
-            } else {
-                parent?.left
-            }
-        }
+        internal var sibling: Node? = null
+            private set
+            get() = if (parent?.left == this) parent?.right else parent?.left
 
         fun rotateLeft() {
             if (this.right == null) {

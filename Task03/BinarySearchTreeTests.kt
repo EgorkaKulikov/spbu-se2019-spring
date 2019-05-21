@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
+import kotlin.system.measureTimeMillis
 
 class BinarySearchTreeTest {
 
@@ -18,7 +19,7 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun basicTest() {
+    fun basicInsertAndFindTest() {
         val tree = BinarySearchTree<Int, Int>()
 
         for (i in 1..5) {
@@ -33,7 +34,7 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun correctnessTest() {
+    fun correctnessPropertiesTest() {
         for (i in 1..10) {
             val tree = randomBinarySearchTree(Random.Default.nextInt(0, 10))
             assert(tree.isBinarySearchTree())
@@ -41,8 +42,8 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun stressTest() {
-        val tree = randomBinarySearchTree(1000)
+    fun stressCorrectnessPropertiesTest() {
+        val tree = randomBinarySearchTree(100000)
         assert(tree.isBinarySearchTree())
     }
 
