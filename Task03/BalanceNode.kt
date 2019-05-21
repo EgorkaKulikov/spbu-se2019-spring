@@ -38,7 +38,7 @@ abstract class BalanceNode<K: Comparable<K>, V, NT: BalanceNode<K, V, NT>>: Node
     }
 
     public fun bigRightRotate() {
-        if (left == null)
+        if (right == null)
             throw Exception("The right son must exist")
         val rightSon = right!!
         rightSon.leftRotate()
