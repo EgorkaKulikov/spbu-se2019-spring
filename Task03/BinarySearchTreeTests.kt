@@ -87,7 +87,6 @@ class BinarySearchTreeTest {
         assertEquals(root.right, rightSon)
         assertEquals(root.left, leftSon)
         assertEquals(root, leftSon.parent)
-        assertEquals(root, leftSon.parent)
     }
 
     @Test
