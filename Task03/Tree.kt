@@ -104,24 +104,28 @@ abstract class Tree<K: Comparable<K>, V, NT: Node<K, V, NT>>: Iterable<Node<K, V
         }
 
     override fun iterator(): Iterator<NT> = (object: Iterator<NT> {
-        val path = Stack<NT>()
-        override fun next(): NT = path.peek()
-        override fun hasNext(): Boolean {
-            if (path.empty()) {
-                var node = root
-                while (node != null) {
-                    path.push(node)
-                    node = node.left
-                }
-                return ! path.empty()
+        val path = if (root == null)
+            Stack<NT>()
+        else {
+            val result = Stack<NT>()
+            var nodeOnLeftmostPath = root!!
+            result.push(root!!)
+            while (nodeOnLeftmostPath.left != null) {
+                nodeOnLeftmostPath = nodeOnLeftmostPath.left!!
+                result.push(nodeOnLeftmostPath)
             }
+            result
+        }
+        override fun next(): NT {
+            val result = path.peek()
+            if (path.empty())
+                throw Exception("Next node don't exist")
             else if (path.peek().right != null) {
                 var node = path.peek().right
                 while (node != null) {
                     path.push(node)
                     node = node.left
                 }
-                return true
             }
             else {
                 var node = path.peek()
@@ -129,11 +133,10 @@ abstract class Tree<K: Comparable<K>, V, NT: Node<K, V, NT>>: Iterable<Node<K, V
                     node = node.parent!!
                     path.pop()
                 }
-                if (node.type == SonType.Root)
-                    return false
                 path.pop()
-                return true
             }
+            return result
         }
+        override fun hasNext(): Boolean = ! path.empty()
     })
 }
