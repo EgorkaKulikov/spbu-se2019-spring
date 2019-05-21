@@ -3,7 +3,6 @@ package trees
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
-import kotlin.system.measureTimeMillis
 
 class AVLTreeTest {
     private fun randomAVLTree(size: Int): AVLTree<Int, Int> {

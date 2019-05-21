@@ -100,17 +100,11 @@ open class BinarySearchTree<K:Comparable<K>, T> {
 
     //part of the team tests
     internal fun isBinarySearchTree(): Boolean {
-        return if (root != null) {
-            root!!.verifySearch()
-        } else {
-            true
-        }
+        return root?.verifySearch() ?: true
     }
 
     //part of the team tests
     internal fun parentsCorrectness(): Boolean {
-        return if (root != null) {
-            root!!.parent == null && root!!.verifyParents()
-        } else true
+        return root?.parent == null && root?.verifyParents()  ?: true
     }
 }

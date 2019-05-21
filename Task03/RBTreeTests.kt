@@ -3,7 +3,6 @@ package trees
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
-import kotlin.system.measureTimeMillis
 
 class RBTreeTest {
     private fun randomRBTree(size: Int): RBTree<Int, Int> {
