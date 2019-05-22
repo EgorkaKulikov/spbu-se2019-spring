@@ -83,7 +83,11 @@ abstract class Tree<K: Comparable<K>, V, NodeType: Node<K, V, NodeType>>: Iterab
             Iterator<NodeType> {
         private var path = Stack<NodeType>()
 
-        override fun next(): NodeType = path.peek()
+        override fun next(): NodeType {
+            if (path.isEmpty())
+                throw NoSuchElementException("No elements left")
+            return path.peek()
+        }
 
         // adds all nodes into @path which placed to the left from @startNode (including itself)
         private fun addAllLeftFrom(startNode: NodeType?) {

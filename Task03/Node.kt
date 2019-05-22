@@ -110,6 +110,10 @@ class BinaryNode<K: Comparable<K>, V>(key: K, value: V) :
                 && left == other.left
                 && right == other.right)
     }
+
+    override fun hashCode(): Int {
+        return key.hashCode() + value.hashCode()
+    }
 }
 
 
@@ -153,6 +157,10 @@ class RedBlackNode<K: Comparable<K>, V>(key: K, value: V, internal var color: Co
                 && color == other.color
                 && left == other.left
                 && right == other.right)
+    }
+
+    override fun hashCode(): Int {
+        return key.hashCode() + value.hashCode()
     }
 }
 
@@ -215,5 +223,9 @@ class AVLNode<K: Comparable<K>, V>(key: K, value: V) :
                 && value == other.value
                 && left == other.left
                 && right == other.right)
+    }
+
+    override fun hashCode(): Int {
+        return key.hashCode() + value.hashCode()
     }
 }
