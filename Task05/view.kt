@@ -5,10 +5,9 @@ import java.util.zip.ZipFile
 
 class View {
     fun printStructure(data: ZipFile) {
-        val zipEntries = data.entries()
+        val zipEntries = data.entries().toList().sortedBy { it.name }
 
-        while(zipEntries.hasMoreElements()) {
-            val currEntry = zipEntries.nextElement()
+        for (currEntry in zipEntries) {
             val name = if (currEntry.isDirectory) currEntry.name.dropLast(1) else currEntry.name
 
             var indent = ""
