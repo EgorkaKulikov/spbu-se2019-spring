@@ -21,7 +21,12 @@ class FileTree(
     }
 
     fun findEntriesByName(name: String, type: EntryType): MutableList<FileTree> {
-        if (this.entryName.substringAfterLast("/") == name
+        val searchName = if (this.entryType == EntryType.DIRECTORY)
+            this.entryName.removeSuffix("/").substringAfterLast("/")
+        else
+            this.entryName.substringAfterLast("/")
+
+        if (searchName == name
             && this.entryType == type) {
             return mutableListOf(this)
         }
