@@ -15,6 +15,10 @@ class BinaryNode<K : Comparable<K>, V>(key: K, value: V) : Node<K, V, BinaryNode
                 && value == other.value)
     }
 
+    override fun hashCode(): Int {
+        return key.hashCode()
+    }
+
     internal fun addLeftSon(key: K, value: V) {
         val son = BinaryNode(key, value)
         this.left = son
@@ -28,15 +32,17 @@ class BinaryNode<K : Comparable<K>, V>(key: K, value: V) : Node<K, V, BinaryNode
     }
 }
 
-class RBNode<K : Comparable<K>, V>(key: K, value: V, var color: Color) : Node<K, V, RBNode<K, V>>(key, value) {
-    internal val rotator = NodeRotator<K, V, RBNode<K, V>>()
+class RBNode<K : Comparable<K>, V>(key: K, value: V, col: Color) : Node<K, V, RBNode<K, V>>(key, value) {
+    var color = col
+        internal set
+
     internal fun leftRotate(): RBNode<K, V> {
-        return rotator.leftRotate(this)
+        return NodeRotator.leftRotate(this)
 
     }
 
     internal fun rightRotate(): RBNode<K, V> {
-        return rotator.rightRotate(this)
+        return NodeRotator.rightRotate(this)
     }
 
     internal fun swapColors(other: RBNode<K, V>) {
@@ -56,6 +62,10 @@ class RBNode<K : Comparable<K>, V>(key: K, value: V, var color: Color) : Node<K,
                 && color == other.color)
     }
 
+    override fun hashCode(): Int {
+        return key.hashCode()
+    }
+
     internal fun addLeftSon(key: K, value: V, color: Color) {
         val son = RBNode(key, value, color)
         this.left = son
@@ -71,13 +81,14 @@ class RBNode<K : Comparable<K>, V>(key: K, value: V, var color: Color) : Node<K,
 
 class AVLNode<K : Comparable<K>, V>(key: K, value: V) : Node<K, V, AVLNode<K, V>>(key, value) {
     var height: Int = 1
-    internal val rotator = NodeRotator<K, V, AVLNode<K, V>>()
+        private set
+
     internal fun leftRotate(): AVLNode<K, V> {
-        return rotator.leftRotate(this)
+        return NodeRotator.leftRotate(this)
     }
 
     internal fun rightRotate(): AVLNode<K, V> {
-        return rotator.rightRotate(this)
+        return NodeRotator.rightRotate(this)
     }
 
     internal fun updateHeight() {
@@ -91,6 +102,10 @@ class AVLNode<K : Comparable<K>, V>(key: K, value: V) : Node<K, V, AVLNode<K, V>
                 && parent?.key == other.parent?.key
                 && key == other.key
                 && value == other.value)
+    }
+
+    override fun hashCode(): Int {
+        return key.hashCode()
     }
 
     internal fun addLeftSon(key: K, value: V) {

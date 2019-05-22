@@ -2,6 +2,10 @@ class RedBlackTree<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     override fun set(key: K, value: V) {
         val node = RBNode(key, value, Color.Red)
         insert(node)
+    }
+
+    override fun insert(node : RBNode<K,V>) {
+        super.insert(node)
         fixColors(node)
     }
 
@@ -78,5 +82,9 @@ class RedBlackTree<K : Comparable<K>, V> : Tree<K, V, RBNode<K, V>>() {
     override fun equals(other: Any?): Boolean {
         return (other is RedBlackTree<*, *>
                 && this.root == other.root)
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
     }
 }

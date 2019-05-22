@@ -1,5 +1,8 @@
+import org.hamcrest.core.StringStartsWith.startsWith
 import org.junit.Assert
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import java.util.*
 
 class BinarySearchTreeIterationTest {
@@ -43,18 +46,14 @@ class BinarySearchTreeIterationTest {
         Assert.assertArrayEquals(keys.sortedArray(), actualTree.keys)
     }
 
+    @get:Rule
+    var thrown = ExpectedException.none()
+
     @Test
     fun iterateEmpty() {
-        val keys = arrayOf<Int>()
-        var message : String? = ""
-        try {
-            actualTree.iterator().next()
-        }
-        catch (e : NoSuchElementException)
-        {
-            message = e.message
-        }
-        Assert.assertEquals(message, ("Empty tree"))
+        thrown.expect(NoSuchElementException::class.java)
+        thrown.expectMessage(startsWith("Empty tree"))
+        actualTree.iterator().next()
     }
 
     @Test

@@ -10,7 +10,7 @@ abstract class Tree<K : Comparable<K>, V, NodeType : Node<K, V, NodeType>> : Ite
 
     open operator fun set(key: K, value: V) {}
 
-    protected open fun insert(node: NodeType) {
+    open fun insert(node: NodeType) {
         if (this.root == null) this.root = node
         else {
             val parent = find_parent(node.key)!!
@@ -24,7 +24,7 @@ abstract class Tree<K : Comparable<K>, V, NodeType : Node<K, V, NodeType>> : Ite
         }
     }
 
-    protected fun find_parent(key: K): NodeType? {
+    internal fun find_parent(key: K): NodeType? {
 
         var node = this.root
         var parent: NodeType? = null
@@ -78,7 +78,7 @@ abstract class Tree<K : Comparable<K>, V, NodeType : Node<K, V, NodeType>> : Ite
         override fun next(): NodeType {
             var nextNode: NodeType?
             if (node?.right != null) {
-                nextNode = getMinNode(node?.right) ?: throw NullPointerException("There are no more nodes in the tree")
+                nextNode = getMinNode(node?.right)!!
             } else {
                 nextNode = node
                 while (nextNode?.parent != null && nextNode.parent?.left != nextNode) {
