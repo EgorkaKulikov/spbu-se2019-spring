@@ -3,7 +3,7 @@ import rb.Color
 import rb.RedBlackSearchData
 import rb.RedBlackSearchTree
 
-class RedBlackSearchTreeTest: BalancedBinarySearchTreeTest<RedBlackSearchData<Int, Int>> {
+class RedBlackSearchTreeTest : BalancedBinarySearchTreeTest<RedBlackSearchData<Int, Int>> {
 
     private companion object {
         const val INVALID_BLACK_HEIGHT = -1

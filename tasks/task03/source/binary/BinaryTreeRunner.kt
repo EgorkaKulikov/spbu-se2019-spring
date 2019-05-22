@@ -16,11 +16,11 @@ open class BinaryTreeRunner<Data>(var current: BinaryNode<Data>) {
     protected val left get() = current.left ?: throw IllegalStateException("Left child must exists")
 
     val leftChildData get() = left.data
-    
+
     protected val right get() = current.right ?: throw IllegalStateException("Right child must exists")
 
     val rightChildData get() = right.data
-    
+
     protected val parent get() = current.parent ?: throw IllegalStateException("Parent must exists")
 
     val parentData get() = parent.data

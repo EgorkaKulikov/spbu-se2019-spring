@@ -25,7 +25,7 @@ interface BalancedBinarySearchTreeTest<Data : SearchData<Int, Int>> {
         var hasAllKeys = true
 
         for (key in keys) {
-            if (tree[key] != key + 1)  {
+            if (tree[key] != key + 1) {
                 hasAllKeys = false
                 break
             }

@@ -11,7 +11,7 @@ data class RedBlackSearchData<Key, Value>(
 
 typealias RedBlackSearchTree<Key, Value> = BinarySearchTree<Key, Value, RedBlackSearchData<Key, Value>>
 
-fun <Key: Comparable<Key>, Value> RedBlackSearchTree(): RedBlackSearchTree<Key, Value> {
+fun <Key : Comparable<Key>, Value> RedBlackSearchTree(): RedBlackSearchTree<Key, Value> {
     return BinarySearchTree(RedBlackTreeBalancer()) { key: Key, value: Value ->
         RedBlackSearchData(key, value, Color.Red)
     }

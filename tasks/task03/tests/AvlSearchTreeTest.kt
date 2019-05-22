@@ -3,7 +3,7 @@ import avl.AvlSearchTree
 import binary.BinaryTreeRunner
 import kotlin.math.max
 
-class AvlSearchTreeTest: BalancedBinarySearchTreeTest<AvlSearchData<Int, Int>> {
+class AvlSearchTreeTest : BalancedBinarySearchTreeTest<AvlSearchData<Int, Int>> {
 
     private companion object {
         const val INVALID_HEIGHT = -1

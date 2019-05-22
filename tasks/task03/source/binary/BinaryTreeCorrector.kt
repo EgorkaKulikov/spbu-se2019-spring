@@ -1,6 +1,6 @@
 package binary
 
-class BinaryTreeCorrector<Data>(current: BinaryNode<Data>): BinaryTreeRunner<Data>(current) {
+class BinaryTreeCorrector<Data>(current: BinaryNode<Data>) : BinaryTreeRunner<Data>(current) {
 
     fun rotateCurrentToLeft() = current.rotateLeft()
 

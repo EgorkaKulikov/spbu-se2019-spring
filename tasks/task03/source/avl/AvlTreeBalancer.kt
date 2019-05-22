@@ -9,15 +9,15 @@ enum class BalanceFactor(val value: Int) {
     val increased
         get() = when (this) {
             LEFT_HEAVY -> BALANCED
-            BALANCED   -> RIGHT_HEAVY
-            else                         -> throw IllegalStateException("This is maximum value")
+            BALANCED -> RIGHT_HEAVY
+            else -> throw IllegalStateException("This is maximum value")
         }
 
     val decreased
         get() = when (this) {
             RIGHT_HEAVY -> BALANCED
-            BALANCED    -> LEFT_HEAVY
-            else                          -> throw IllegalStateException("This is minimum value")
+            BALANCED -> LEFT_HEAVY
+            else -> throw IllegalStateException("This is minimum value")
         }
 }
 
@@ -26,7 +26,7 @@ interface AvlData {
 }
 
 class AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data>() {
-    
+
     override fun balance(corrector: BinaryTreeCorrector<Data>) = with(corrector) {
         currentData.state = BalanceFactor.BALANCED
 
@@ -39,11 +39,11 @@ class AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data>() {
                                 parentData.state = BalanceFactor.LEFT_HEAVY
                                 currentData.state = BalanceFactor.BALANCED
                             }
-                            BalanceFactor.BALANCED    -> {
+                            BalanceFactor.BALANCED -> {
                                 parentData.state = BalanceFactor.BALANCED
                                 currentData.state = BalanceFactor.BALANCED
                             }
-                            else                      -> {
+                            else -> {
                                 parentData.state = BalanceFactor.BALANCED
                                 currentData.state = BalanceFactor.RIGHT_HEAVY
                             }
@@ -71,16 +71,16 @@ class AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data>() {
                                 parentData.state = BalanceFactor.RIGHT_HEAVY
                                 currentData.state = BalanceFactor.BALANCED
                             }
-                            BalanceFactor.BALANCED   -> {
+                            BalanceFactor.BALANCED -> {
                                 parentData.state = BalanceFactor.BALANCED
                                 currentData.state = BalanceFactor.BALANCED
                             }
-                            else                     -> {
+                            else -> {
                                 parentData.state = BalanceFactor.BALANCED
                                 currentData.state = BalanceFactor.LEFT_HEAVY
                             }
                         }
-                        
+
                         rightChildData.state = BalanceFactor.BALANCED
 
                         rotateCurrentToLeft()
