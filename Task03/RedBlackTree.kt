@@ -51,4 +51,8 @@ class RedBlackTree<K: Comparable<K>, V> : Tree<K, V, RedBlackNode<K, V>>() {
         return (other is RedBlackTree<*, *>
                 && other.root == root)
     }
+
+    override fun hashCode(): Int {
+        return root.hashCode()
+    }
 }

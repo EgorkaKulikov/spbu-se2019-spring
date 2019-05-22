@@ -44,4 +44,8 @@ class AVLTree<K: Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         return (other is AVLTree<*, *>
                 && other.root == root)
     }
+
+    override fun hashCode(): Int {
+        return root.hashCode()
+    }
 }

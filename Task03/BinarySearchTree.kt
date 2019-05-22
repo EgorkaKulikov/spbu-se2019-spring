@@ -7,4 +7,8 @@ class BinarySearchTree<K: Comparable<K>, V> : Tree<K, V, BinaryNode<K, V>>() {
         return (other is BinarySearchTree<*, *>
                 && other.root == root)
     }
+
+    override fun hashCode(): Int {
+        return root.hashCode()
+    }
 }
