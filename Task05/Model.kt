@@ -22,7 +22,11 @@ class Model(pathName: String) {
     private val filesEnum = zipFile.entries()
 
     fun getGeneralInfo() {
-        viewer.printDirectoryTree(filesEnum.toList())
+        val filesList = mutableListOf<String>()
+        for (file in filesEnum) {
+            filesList.add(file.name)
+        }
+        viewer.printDirectoryTree(filesList.sorted())
     }
 
     fun getFolderSize(folderName: String){
@@ -79,8 +83,11 @@ class Model(pathName: String) {
 
             if (currElement.name.contains(fileName) && isFile) {
                 isFileExists = true
-                val time = currElement.timeLocal.toString()
-                viewer.printFileInfo(fileName, time.replace("T", " "), true)
+                val time = currElement.creationTime.toString()
+                    .split("T", "Z")
+                    .joinToString(prefix = "", postfix = "", separator = " ")
+                    .substringBefore(".")
+                viewer.printFileInfo(fileName, time, true)
             }
         }
 

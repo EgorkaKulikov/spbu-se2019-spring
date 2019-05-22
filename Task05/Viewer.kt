@@ -1,5 +1,3 @@
-import java.util.zip.ZipEntry
-
 const val COMMANDS = "general_info\n\t" +
                      "folder_info\n\t" +
                      "file_info\n"
@@ -12,34 +10,32 @@ const val USER_GUIDE = "Enter data in the next format: \n\t" +
                         "\"file_info\""
 
 class Viewer {
-    fun printDirectoryTree(listFiles: List<ZipEntry>) {
-        var lastDirectory = mutableListOf<String>()
+    fun printDirectoryTree(listFiles: List<String>) {
+        var lastDirectoryList = mutableListOf<String>()
 
-        for (files in listFiles) {
-            var currName = files.name
+        for (file in listFiles) {
+            var currName = file
 
             if (!currName.contains("/")) {
                 println(currName)
                 continue
             }
 
-            val newDirectory = mutableListOf<String>()
-            for (folder in lastDirectory){
-                if (currName.contains(folder)) {
-                    newDirectory.add(folder)
-                }
-            }
-            lastDirectory = newDirectory
-
-            var index = 1
+            val newDirectoryList = mutableListOf<String>()
+            val lastDirectoryIterator = lastDirectoryList.iterator()
 
             while (currName.contains("/")) {
                 val currDirectory = currName.substringBefore("/")
-                if (index > lastDirectory.size) {
-                    lastDirectory.add(currDirectory)
+
+                newDirectoryList.add(currDirectory)
+                if (lastDirectoryIterator.hasNext()){
+                    if (currDirectory != lastDirectoryIterator.next()) {
+                        println(currDirectory)
+                    }
+                } else {
                     println(currDirectory)
                 }
-                index++
+
 
                 currName = currName.substringAfter("/")
                 if (currName != "") {
@@ -49,10 +45,11 @@ class Viewer {
                                 && currName.endsWith("/")-> {
                             print("|__")
                         }
-                        else -> {print("|  ")}
+                        currName != "" -> {print("   ")}
                     }
                 }
             }
+            lastDirectoryList = newDirectoryList
         }
     }
 
@@ -72,7 +69,7 @@ class Viewer {
 
     fun printFileInfo(fileName: String, time: String, isFileExists: Boolean) {
         if (isFileExists) {
-            println("Last modification of $fileName was $time")
+            println("File \"$fileName\" was created $time")
         } else {
             println("File \"$fileName\" doesn't exist")
         }
