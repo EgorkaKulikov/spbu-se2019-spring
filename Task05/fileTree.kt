@@ -10,7 +10,7 @@ class FileTree(
     //default values for root directory
     , var entryName: String = ""
     , var fileSize: Long = 0L
-    , var fileTime: FileTime = FileTime.fromMillis(0)
+    , var fileTime: FileTime? = FileTime.fromMillis(0)
 ) {
     var subTreeSize: Int = 1
     var subEntries: MutableList<FileTree> = mutableListOf()
@@ -41,11 +41,11 @@ class FileTree(
     }
 
     fun getSubEntriesFileSize(): Long {
-        var subEntriesfileSize = this.fileSize
+        var subEntriesFileSize = this.fileSize
 
         for (subEntry in this.subEntries) {
-            subEntriesfileSize += subEntry.getSubEntriesFileSize()
+            subEntriesFileSize += subEntry.getSubEntriesFileSize()
         }
-        return subEntriesfileSize
+        return subEntriesFileSize
     }
 }
