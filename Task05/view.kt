@@ -1,13 +1,20 @@
 class View {
     fun printFileTree(depth: Int, fileTree: FileTree) {
-        val name = fileTree.entryName.substringAfterLast("/")
+        var name = fileTree.entryName
+
+        if (fileTree.entryType == EntryType.DIRECTORY) {
+            name = fileTree.entryName.dropLast(1)//removing last backslash
+        }
+
+        name = name.substringAfterLast("/")
+
         for (i in 0 until depth) {
             print("  |")
         }
         println("___$name")
 
-        for (child in fileTree.subEntries) {
-            printFileTree(depth + 1, child)
+        for (subEntry in fileTree.subEntries) {
+            printFileTree(depth + 1, subEntry)
         }
     }
 

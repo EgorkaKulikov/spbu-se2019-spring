@@ -11,7 +11,7 @@ class Model {
     fun extractData(archiveName: String) {
         try {
             val entries = ZipFile(archiveName).entries().toList()
-            this.fileTree = generateFileTree(entries, ROOTINDEX)
+            this.fileTree = generateFileTree(entries.sortedBy { it.name }, ROOTINDEX)
         } catch (e: IOException) {
             println("Error opening file: ${e.message}")
             exitProcess(1)
@@ -26,7 +26,7 @@ class Model {
             if (entryIndex == ROOTINDEX)
                 FileTree(EntryType.DIRECTORY)//root directory
             else
-                FileTree(EntryType.DIRECTORY, getEntryName(entries[entryIndex]))
+                FileTree(EntryType.DIRECTORY, entries[entryIndex].name)
 
         val currEntryName = currTree.entryName
         var subEntryIndex = entryIndex + 1
@@ -41,7 +41,7 @@ class Model {
             } else {
                 currTree.addSubEntry(
                     FileTree(
-                        EntryType.FILE, getEntryName(entries[subEntryIndex])
+                        EntryType.FILE, entries[subEntryIndex].name
                         , entries[subEntryIndex].size, entries[subEntryIndex].creationTime
                     )
                 )
@@ -49,11 +49,5 @@ class Model {
             }
         }
         return currTree
-    }
-
-    //removes last backslash in directory name
-    private fun getEntryName(entry: ZipEntry): String {
-        return if (entry.isDirectory) entry.name.dropLast(1)
-        else entry.name
     }
 }
