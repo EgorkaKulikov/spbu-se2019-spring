@@ -16,14 +16,17 @@ class View {
                 printSubTree(i,depth + 1)
             }
         }
-        printSubTree(tree.root,0)
+        for (node in tree.root.children)
+        {
+            printSubTree(node,0)
+        }
     }
 
-    fun printCreationDateTime (ready : Boolean, date : FileTime) {
-        if (ready) {
-            println("Creation date is $date")
-        } else {
-            println("No such file")
+    fun printCreationDateTime (ready : Int, date : FileTime) {
+        when (ready) {
+            0 -> println("No such file")
+            1 -> println("Creation date and time is not stated")
+            2 -> println("Creation date is $date")
         }
     }
 

@@ -18,8 +18,11 @@ class ZipTree (zipFile: ZipFile){
         }
         names.sort()
 
-        root.value = names[0]
-        var currentNode = root
+        root.value = "root"
+        var currentNode = Node()
+        currentNode.value = names[0]
+        currentNode.parent = root
+        root.children.add(currentNode)
 
         for (i in 1..names.size-1) {
             val newNode = Node()

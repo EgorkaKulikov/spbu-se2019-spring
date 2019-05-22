@@ -28,8 +28,11 @@ class Model (val zipFile: ZipFile){
         return Pair(entry?.isDirectory ?: false, size)
     }
 
-    fun getFileInfo( name : String) : Pair<Boolean, FileTime>  {
-        val entry = findEntryByName(name) ?: return Pair(false, FileTime.fromMillis(0)) //something
-        return Pair(true, entry.creationTime)
+    fun getFileInfo( name : String) : Pair<Int, FileTime>  {
+        val entry = findEntryByName(name) ?: return Pair(0, FileTime.fromMillis(0)) //something
+        if (entry.creationTime == null) { //elvis operator doesn't work for some reason
+            return Pair(1, FileTime.fromMillis(0))
+        }
+        return Pair(2, entry.creationTime)
     }
 }
