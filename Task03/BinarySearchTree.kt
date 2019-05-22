@@ -12,7 +12,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
                 print(" ")
             }
 
-            when(side) {
+            when (side) {
                 -1 -> print("/")
                 1 -> print("\\")
             }

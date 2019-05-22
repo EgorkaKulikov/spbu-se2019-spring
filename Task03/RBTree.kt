@@ -12,7 +12,7 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
                 print(" ")
             }
 
-            when(side) {
+            when (side) {
                 -1 -> print("/")
                 1 -> print("\\")
             }
@@ -22,37 +22,49 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         }
 
         //returns tree correctness and black height for recursive checks
-        internal fun verifyRB() : Pair<Boolean, Int> {
-            if (this.color == Color.RED) {
-                val localLeftRBNodeColor = (this.left as RBNode?)?.color ?: Color.BLACK
-                val localRightRBNodeColor = (this.right as RBNode?)?.color ?: Color.BLACK
+        internal fun verifyRB(): Pair<Boolean, Int> {
+            val localLeft = left
+            val localRight = right
+            var correctnessAndHeight: Pair<Boolean, Int> = Pair(false, 0)
 
-                if (localLeftRBNodeColor != Color.BLACK
-                    || localRightRBNodeColor != Color.BLACK) {
-                    return Pair(false, 0)
+            if (localLeft is RBNode? && localRight is RBNode?) {
+                if (this.color == Color.RED) {
+                    val leftRBNodeColor = localLeft?.color ?: Color.BLACK
+                    val rightRBNodeColor = localRight?.color ?: Color.BLACK
+
+                    if (leftRBNodeColor != Color.BLACK
+                        || rightRBNodeColor != Color.BLACK
+                    ) {
+                        return Pair(false, 0)
+                    }
                 }
+
+                val leftCorrectnessAndHeight = localLeft?.verifyRB()
+
+                val leftCorrectness = leftCorrectnessAndHeight?.first ?: true
+                val leftBlackHeight = leftCorrectnessAndHeight?.second ?: 1
+
+                val rightCorrectnessAndHeight = localRight?.verifyRB()
+
+                val rightCorrectness = rightCorrectnessAndHeight?.first ?: true
+                val rightBlackHeight = rightCorrectnessAndHeight?.second ?: 1
+
+                correctnessAndHeight = Pair(
+                    leftCorrectness
+                            && rightCorrectness
+                            && rightBlackHeight == leftBlackHeight
+                    , leftBlackHeight + if (this.color == Color.BLACK) 1 else 0
+                )
             }
 
-            val leftCorrectnessAndHeight = (this.left as RBNode?)?.verifyRB()
-
-            val leftCorrectness = leftCorrectnessAndHeight?.first ?: true
-            val leftBlackHeight = leftCorrectnessAndHeight?.second ?: 1
-
-            val rightCorrectnessAndHeight = (this.right as RBNode?)?.verifyRB()
-
-            val rightCorrectness = rightCorrectnessAndHeight?.first ?: true
-            val rightBlackHeight = rightCorrectnessAndHeight?.second ?: 1
-
-            return Pair(leftCorrectness
-                    && rightCorrectness
-                    && rightBlackHeight == leftBlackHeight
-                , leftBlackHeight + if (this.color == Color.BLACK) 1 else 0)
+            return correctnessAndHeight
         }
     }
 
     private fun balance(insertedNode: RBNode) {
-        val grandparent = insertedNode.grandparent() as RBNode?
+        val grandparent = insertedNode.grandparent as RBNode?
         val parent = insertedNode.parent as RBNode?
+
         if (parent == null) {
             insertedNode.color = Color.BLACK
             return
@@ -60,7 +72,7 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         if (parent.color == Color.BLACK) {
             return
         }
-        val uncle = insertedNode.uncle() as RBNode?
+        val uncle = insertedNode.uncle as RBNode?
 
         if (uncle != null && uncle.color == Color.RED) {
             //red uncle case
@@ -112,12 +124,18 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
     }
 
     override fun print() {
-        root?.let { (root as RBNode).print(0, 0) }
+        if (root is RBNode?) {
+            root?.print(0, 0)
+        }
     }
 
     internal fun isRBTree(): Boolean {
-        val localRoot = root as RBNode? ?: return true
-        return localRoot.color == Color.BLACK
-                && localRoot.verifyRB().first //first is boolean correctness
+        val localRoot = root ?: return true
+
+        return if (localRoot is RBNode) {
+            localRoot.color == Color.BLACK && localRoot.verifyRB().first //first is boolean correctness
+        } else {
+            false
+        }
     }
 }

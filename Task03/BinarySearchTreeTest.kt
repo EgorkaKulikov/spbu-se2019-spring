@@ -37,6 +37,7 @@ class BinarySearchTreeTest {
         for (i in 1..10) {
             val tree = randomBinarySearchTree(Random.Default.nextInt(0, 10))
             assert(tree.isBinarySearchTree())
+            assert(tree.parentsCorrectness())
         }
     }
 
@@ -50,8 +51,8 @@ class BinarySearchTreeTest {
     fun insertExistingKey() {
         val tree = BinarySearchTree<Int, Int>()
 
-        for (i in 1..5){
-            tree.insert(i, i*i)
+        for (i in 1..5) {
+            tree.insert(i, i * i)
         }
 
         tree.insert(3, 10)
@@ -59,7 +60,7 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun differentKeyEqualValueTest(){
+    fun differentKeyEqualValueTest() {
         val tree = BinarySearchTree<Int, Int>()
         val firstNode = tree.Node(3, 4, null)
         val secondNode = tree.Node(5, 4, firstNode)
@@ -68,7 +69,7 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun equalityNodesWithEqualKeyValueTest(){
+    fun equalityNodesWithEqualKeyValueTest() {
         val tree = BinarySearchTree<Int, Int>()
         val firstNode = tree.innerInsert(5, 4)
         val secondNode = tree.innerInsert(5, 4)
@@ -77,13 +78,13 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun equalityNodesTest(){
+    fun equalityNodesTest() {
         val tree = BinarySearchTree<Int, Int>()
         val root = tree.innerInsert(5, 3)
         val rightSon = tree.innerInsert(6, 7)
         val leftSon = tree.innerInsert(4, 10)
 
-        assertEquals(root.right , rightSon)
+        assertEquals(root.right, rightSon)
         assertEquals(root.left, leftSon)
         assertEquals(root, leftSon.parent)
         assertEquals(root, leftSon.parent)
@@ -93,7 +94,9 @@ class BinarySearchTreeTest {
     fun sizeDifferenceAfterInsertionRightNodeTest() {
         val tree = BinarySearchTree<Int, Int>()
 
-        tree.insert(2, 3)
+        for (i in 1..5) {
+            tree.insert(i, i)
+        }
 
         val sizeBefore = tree.size
         tree.insert(6, 6)
@@ -105,20 +108,22 @@ class BinarySearchTreeTest {
     fun sizeDifferenceAfterInsertionLeftNodeTest() {
         val tree = BinarySearchTree<Int, Int>()
 
-        tree.insert(3, 5)
+        for (i in 1..5) {
+            tree.insert(i, i)
+        }
 
         val sizeBefore = tree.size
-        tree.insert(2, 4)
+        tree.insert(0, 0)
 
         assertEquals(sizeBefore + 1, tree.size)
     }
 
     @Test
-    fun sizeDifferenceBeforeAndAfterInsertionExistingKeyTest(){
+    fun sizeDifferenceBeforeAndAfterInsertionExistingKeyTest() {
         val tree = BinarySearchTree<Int, Int>()
 
-        for (i in 1..5){
-            tree.insert(i, i+3)
+        for (i in 1..5) {
+            tree.insert(i, i + 3)
         }
 
         val sizeBefore = tree.size
@@ -128,7 +133,7 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun sizeOfEmptyTreeTest(){
+    fun sizeOfEmptyTreeTest() {
         val tree = BinarySearchTree<Int, Int>()
 
         assertEquals(tree.size, 0)

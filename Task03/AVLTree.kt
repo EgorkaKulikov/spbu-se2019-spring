@@ -9,35 +9,39 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
 
         val heightDiff: Int
             get() {
-                val leftHeight = (this.left as AVLNode?)?.height ?: 0
-                val rightHeight = (this.right as AVLNode?)?.height ?: 0
-                return  rightHeight - leftHeight
+                val leftHeight = (left as AVLNode?)?.height ?: 0
+                val rightHeight = (right as AVLNode?)?.height ?: 0
+                return rightHeight - leftHeight
             }
 
-        public fun newHeight() {
-            val leftHeight = (this.left as AVLNode?)?.height ?: 0
-            val rightHeight = (this.right as AVLNode?)?.height ?: 0
-            this.height = max(leftHeight, rightHeight) + 1
+        public fun updateNodeHeight() {
+            val localLeft = left
+            val localRight = right
+            if (localLeft is AVLNode? && localRight is AVLNode?) {
+                val leftHeight = localLeft?.height ?: 0
+                val rightHeight = localRight?.height ?: 0
+                height = max(leftHeight, rightHeight) + 1
+            }
         }
 
         public fun balanceWithLeftRotate() {
-            val localRightNode = (this.right as AVLNode?) ?: return //local copy to avoid using !!
-            when (localRightNode.heightDiff)
-            {
-                -1 -> {
-                    localRightNode.rotateRightHeightFix()
-                    this.rotateLeftHeightFix()
-                }
-                else -> {
-                    this.rotateLeftHeightFix()
+            val localRightNode = right ?: return //local copy to avoid using !!
+            if (localRightNode is AVLNode) {
+                when (localRightNode.heightDiff) {
+                    -1 -> {
+                        localRightNode.rotateRightHeightFix()
+                        this.rotateLeftHeightFix()
+                    }
+                    else -> {
+                        this.rotateLeftHeightFix()
+                    }
                 }
             }
         }
 
         public fun balanceWithRightRotate() {
-            val localLeftNode = (this.left as AVLNode?) ?: return //local copy to avoid using !!
-            when (localLeftNode.heightDiff)
-            {
+            val localLeftNode = (left as AVLNode?) ?: return //local copy to avoid using !!
+            when (localLeftNode.heightDiff) {
                 1 -> {
                     localLeftNode.rotateLeftHeightFix()
                     this.rotateRightHeightFix()
@@ -56,50 +60,60 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
                 print(" ")
             }
 
-            when(side) {
+            when (side) {
                 -1 -> print("/")
                 1 -> print("\\")
             }
             println("$key $value $height")
 
-            this.left?.print(indentation + 1, 1)
+            left?.print(indentation + 1, 1)
         }
 
         internal fun verifyAVL(): Pair<Boolean, Int> {
-            val leftCorrectnessAndHeight = (this.left as AVLNode?)?.verifyAVL()
+            val localLeft = left
+            val localRight = right
+            var correctnessAndHeight: Pair<Boolean, Int> = Pair(false, 0)
 
-            val leftCorrectness = leftCorrectnessAndHeight?.first ?: true
-            val leftHeight = leftCorrectnessAndHeight?.second ?: 0
+            if (localLeft is AVLNode? && localRight is AVLNode?) {
+                val leftCorrectnessAndHeight = localLeft?.verifyAVL()
 
-            val rightCorrectnessAndHeight = (this.right as AVLNode?)?.verifyAVL()
+                val leftCorrectness = leftCorrectnessAndHeight?.first ?: true
+                val leftHeight = leftCorrectnessAndHeight?.second ?: 0
 
-            val rightCorrectness = rightCorrectnessAndHeight?.first ?: true
-            val rightHeight = rightCorrectnessAndHeight?.second ?: 0
+                val rightCorrectnessAndHeight = localRight?.verifyAVL()
 
-            return Pair(leftCorrectness
-                    && rightCorrectness
-                    && abs(rightHeight - leftHeight) < 2
-                , max(rightHeight, leftHeight) + 1)
+                val rightCorrectness = rightCorrectnessAndHeight?.first ?: true
+                val rightHeight = rightCorrectnessAndHeight?.second ?: 0
+
+                correctnessAndHeight = Pair(
+                    leftCorrectness
+                            && rightCorrectness
+                            && abs(rightHeight - leftHeight) < 2
+                    , max(rightHeight, leftHeight) + 1
+                )
+            }
+
+            return correctnessAndHeight
+        }
+
+        //rotations with height updating
+        private fun rotateLeftHeightFix() {
+            this.rotateLeft()
+            val parent = this.parent!! as AVLNode
+            this.updateNodeHeight()
+            parent.updateNodeHeight()
+        }
+
+        private fun rotateRightHeightFix() {
+            this.rotateRight()
+            val parent = this.parent!! as AVLNode
+            this.updateNodeHeight()
+            parent.updateNodeHeight()
         }
     }
 
     override fun createNode(key: K, value: V, parent: Node?): Node {
         return AVLNode(key, value, parent)
-    }
-
-    //rotations with height updating
-    private fun AVLNode.rotateLeftHeightFix() {
-        this.rotateLeft()
-        val parent = this.parent!! as AVLNode
-        this.newHeight()
-        parent.newHeight()
-    }
-
-    private fun AVLNode.rotateRightHeightFix() {
-        this.rotateRight()
-        val parent = this.parent!! as AVLNode
-        this.newHeight()
-        parent.newHeight()
     }
 
     override fun innerInsert(key: K, value: V): Node {
@@ -111,7 +125,7 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
                 2 -> currentNode.balanceWithLeftRotate()
                 -2 -> currentNode.balanceWithRightRotate()
             }
-            currentNode.newHeight()
+            currentNode.updateNodeHeight()
             currentNode = currentNode.parent as AVLNode
         }
 
@@ -119,16 +133,24 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
             2 -> currentNode.balanceWithLeftRotate()
             -2 -> currentNode.balanceWithRightRotate()
         }
-        currentNode.newHeight()
+        currentNode.updateNodeHeight()
 
         return currentNode
     }
 
     override fun print() {
-        root?.let { (root as AVLNode).print(0, 0) }
+        if (root is AVLNode?) {
+            root?.print(0, 0)
+        }
     }
 
     internal fun isAVLTree(): Boolean {
-        return root == null || (root as AVLNode).verifyAVL().first
+        val localRoot = root//local copy of root
+
+        return if (localRoot is AVLNode?) {
+            localRoot?.verifyAVL()?.first ?: true
+        } else {
+            false
+        }
     }
 }

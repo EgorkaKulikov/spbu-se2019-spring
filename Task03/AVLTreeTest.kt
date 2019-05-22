@@ -16,7 +16,7 @@ class AVLTreeTest {
     }
 
     @Test
-    fun basicTest() {
+    fun basicInsertionTest() {
         val tree = AVLTree<Int, Int>()
         for (i in 1..5) {
             tree.insert(i, i * i)
@@ -39,7 +39,7 @@ class AVLTreeTest {
     }
 
     @Test
-    fun stressTest() {
+    fun randomInsertionTest() {
         val tree = randomAVLTree(1000)
         assert(tree.parentsCorrectness())
         assert(tree.isAVLTree())
