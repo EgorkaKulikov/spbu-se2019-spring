@@ -1,6 +1,6 @@
 import binaryTree.BSTNode
 import binaryTree.BinaryTree
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -13,15 +13,15 @@ internal class TestBinarySearchTree {
     @Test
     fun testSearchingKey() {
 
-        val a: MutableList<Int> = MutableList(100) { it + 1 }
+        val nodesToInsert: MutableList<Int> = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             assertEquals(Tree.find(x), Pair(x, x))
         }
 
@@ -31,11 +31,11 @@ internal class TestBinarySearchTree {
     @Test
     fun failSearchingKeyTest() {
 
-        val a: MutableList<Int> = MutableList(100) { it + 1 }
+        val nodesToInsert: MutableList<Int> = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
 
@@ -43,30 +43,51 @@ internal class TestBinarySearchTree {
 
     }
 
+    @DisplayName("Searching in empty tree")
+    @Test
+    fun searchingEmptyTree(){
+
+        assertNull(Tree.find(0))
+    }
+
+    @DisplayName("Insert with the same keys")
+    @Test
+    fun doubleInsertKeyTest(){
+
+        Tree.insert(1, 5)
+        Tree.insert(1, 10)
+
+        assertEquals(Tree.root!!.key, 1)
+        assertEquals(Tree.root!!.value, 2)
+        assertTrue(Tree.root!!.parent == null)
+        assertTrue(Tree.root!!.left == null)
+        assertTrue(Tree.root!!.right == null)
+    }
+
+
     @DisplayName("Test for iterator using BFS algorithm")
     @Test
     fun testBFSIterator() {
-        val testList: MutableList<Int> = mutableListOf(7, 3, 11, 2, 5, 9, 13, 1, 4, 6, 10, 12, 14, 15)
-        val res: MutableList<Int> = mutableListOf()
+        val expected: MutableList<Int> = mutableListOf(7, 3, 11, 2, 5, 9, 13, 1, 4, 6, 10, 12, 14, 15)
+        val actual: MutableList<Int> = mutableListOf()
 
-        for (x in testList) {
+        for (x in expected) {
             Tree.insert(x, x)
         }
 
         for (x in Tree)
-            res.add(x.value)
-        assertEquals(testList, res)
+            actual.add(x.value)
+        assertEquals(expected, actual)
     }
 
     @DisplayName("CommonTestIterator")
     @Test
     fun testIterator() {
-        val expect = MutableList(5) { it + 1 }
-        val res = mutableListOf<Int>()
+        val nodesToInsert = MutableList(5) { it + 1 }
 
-        expect.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in expect) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
 
@@ -75,6 +96,23 @@ internal class TestBinarySearchTree {
         }
 
     }
+
+    @DisplayName("Equality with different children")
+    @Test
+    fun testEqualityWithDifferentLeftChildren() {
+
+        val cur = BSTNode(1, 1, null)
+        cur.left = BSTNode(2, 2, null)
+        cur.left!!.parent = cur
+
+        val otherNode = BSTNode(1, 1, null)
+        otherNode.left = BSTNode(3, 3, null)
+        otherNode.left!!.parent = cur
+
+        assertNotEquals(cur, otherNode)
+
+    }
+
 
     @DisplayName("EmptyIteratorTest")
     @Test
@@ -89,11 +127,11 @@ internal class TestBinarySearchTree {
     @DisplayName("Property of right key test")
     @Test
     fun propRightKey() {
-        val a = MutableList(100) { it + 1 }
+        val nodesToInsert = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
         var cur: BSTNode<Int, Int> = Tree.root ?: throw Exception("Insert error")
@@ -111,11 +149,11 @@ internal class TestBinarySearchTree {
     @DisplayName("Property of left key test")
     @Test
     fun propLeftKey() {
-        val a = MutableList(100) { it + 1 }
+        val nodesToInsert = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
         var cur: BSTNode<Int, Int> = Tree.root ?: throw Exception("Insert error")
@@ -127,7 +165,7 @@ internal class TestBinarySearchTree {
             cur = cur.left!!
         }
 
-        assertEquals(true, actual)
+        assertTrue(actual)
 
     }
 }

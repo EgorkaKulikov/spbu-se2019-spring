@@ -7,16 +7,22 @@ import java.util.*
 class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
     var root: AVLNode<K, V>? = null
 
-    private fun prefind(key: K, AVLNode: AVLNode<K, V>? = root): AVLNode<K, V>? = when {
-        AVLNode == null || AVLNode.key == key -> AVLNode
-        key < AVLNode.key -> prefind(key, AVLNode.left)
-        else -> prefind(key, AVLNode.right)
+    override fun find(key: K): Pair<K, V>? {
+        var cur: AVLNode<K, V>? = root ?: return null
+        var result: AVLNode<K, V>?
+
+        while (cur != null){
+            result = cur
+            when {
+                key < cur.key -> cur = cur.left
+                key > cur.key -> cur = cur.right
+                key == cur.key -> return Pair(result.key, result.value)
+            }
+        }
+
+        return null
     }
 
-    override fun find(key: K): Pair<K, V>? {
-        val res = prefind(key) ?: return null
-        return Pair(res.key, res.value)
-    }
 
     override fun insert(key: K, value: V) {
 
@@ -42,20 +48,16 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
 
         if (key < parent.key) {
             parent.left = AVLNode(key, value, parent)
-            treeBalance(parent.left)
+            balanceTree(parent.left)
         } else {
             parent.right = AVLNode(key, value, parent)
-            treeBalance(parent.right)
+            balanceTree(parent.right)
         }
 
     }
 
-    private fun treeBalance(node: AVLNode<K, V>?) {
-        var cur = node
-        while (cur != null) {
-            cur.correctHeight()
-            cur = cur.parent
-        }
+    private fun balanceTree(node: AVLNode<K, V>?) {
+        correctHeight(node)
         var noNullCur = node ?: return
         while (abs(noNullCur.getBalance()) < 2) {
             noNullCur = noNullCur.parent ?: return
@@ -83,44 +85,56 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
         while (root?.parent != null) {
             root = root?.parent
         }
+    correctHeight(node)
+    }
+
+    private fun correctHeight(node : AVLNode<K, V>?){
+        var cur = node
+        while (cur != null) {
+            cur.correctHeight()
+            cur = cur.parent
+        }
     }
 
 
-    override fun iterator(): Iterator<AVLNode<K, V>> =
-        (object : Iterator<AVLNode<K, V>> {
-            var cur = root
-            val helpDeq: Deque<AVLNode<K, V>> = ArrayDeque()
-            val turn: Deque<AVLNode<K, V>> = ArrayDeque()
-
-            override fun next(): AVLNode<K, V> = helpDeq.poll()
+    override fun iterator() : Iterator<AVLNode<K, V>> =
+        (object : Iterator<AVLNode<K, V>>{
 
 
-            override fun hasNext(): Boolean {
-                if (helpDeq.isEmpty() && cur?.left == null && cur?.right == null) {
-                    return !helpDeq.isEmpty()
-                } else if (helpDeq.isEmpty()) {
-                    helpDeq.add(cur)
-                    turn.add(cur)
-                    while (!turn.isEmpty()) {
-                        val res = turn.poll()
-                        if (res.left != null) {
-                            helpDeq.add(res.left)
-                            turn.add(res.left)
-                        }
-                        if (res.right != null) {
-                            helpDeq.add(res.right)
-                            turn.add(res.right)
-                        }
-                        cur = res
+            private fun createDeq(): Deque<AVLNode<K, V>>{
+                val turn: Deque<AVLNode<K,V>> = ArrayDeque()
+                val deque: Deque<AVLNode<K,V>> = ArrayDeque()
+                val cur = root ?: return deque
+
+                deque.add(cur)
+                turn.add(cur)
+
+                while (!turn.isEmpty()){
+                    val res = turn.poll()
+
+                    if (res.left != null) {
+                        deque.add(res.left)
+                        turn.add(res.left)
+                    }
+
+                    if (res.right != null) {
+                        deque.add(res.right)
+                        turn.add(res.right)
                     }
 
                 }
 
-                return !helpDeq.isEmpty()
-
-
+                return deque
             }
 
+            val iterationList = createDeq()
+
+
+            override fun hasNext() = !iterationList.isEmpty()
+
+
+            override fun next(): AVLNode<K, V> = iterationList.poll()
 
         })
+
 }

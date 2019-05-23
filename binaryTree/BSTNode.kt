@@ -8,6 +8,7 @@ class BSTNode<K : Comparable<K>, V>(
     var left: BSTNode<K, V>? = null
     var right: BSTNode<K, V>? = null
 
+
     override fun equals(other: Any?): Boolean =
         other is BSTNode<*, *>
                 && key == other.key
@@ -19,7 +20,6 @@ class BSTNode<K : Comparable<K>, V>(
     override fun hashCode(): Int {
         var result = key.hashCode()
         result = 31 * result + (value?.hashCode() ?: 0)
-        result = 31 * result + (parent?.hashCode() ?: 0)
         result = 31 * result + (left?.hashCode() ?: 0)
         result = 31 * result + (right?.hashCode() ?: 0)
         return result

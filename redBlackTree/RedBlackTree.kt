@@ -7,19 +7,24 @@ import java.util.*
 class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
     var root: RBNode<K, V>? = null
 
-    private fun prefind(key: K, RBNode: RBNode<K, V>? = root): RBNode<K, V>? = when {
-        RBNode == null || RBNode.key == key -> RBNode
-        key < RBNode.key -> prefind(key, RBNode.left)
-        else -> prefind(key, RBNode.right)
-    }
 
     override fun find(key: K): Pair<K, V>? {
-        val res = prefind(key) ?: return null
-        return Pair(res.key, res.value)
+        var cur: RBNode<K, V>? = root ?: return null
+        var result: RBNode<K, V>?
+
+        while (cur != null) {
+            result = cur
+            when {
+                key < cur.key -> cur = cur.left
+                key > cur.key -> cur = cur.right
+                key == cur.key -> return Pair(result.key, result.value)
+            }
+        }
+        return null
     }
 
-    override fun insert(key: K, value: V) {
 
+    override fun insert(key: K, value: V) {
         var parent: RBNode<K, V>? = null
         var cur: RBNode<K, V>? = root
 
@@ -37,35 +42,36 @@ class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
 
         if (parent == null) {
             root = RBNode(key, value)
-            root?.isBlack = true
+            root?.color = Color.Black
             return
         }
 
         if (key < parent.key) {
-            parent.left = RBNode(key, value, false, parent)
-            treeBalance(parent.left ?: throw Exception("Incorrect BSTNode's construction"))
+            parent.left = RBNode(key, value, Color.Red, parent)
+            balanceTree(parent.left)
         } else {
-            parent.right = RBNode(key, value, false, parent)
-            treeBalance(parent.right ?: throw Exception("Incorrect BSTNode's construction"))
+            parent.right = RBNode(key, value, Color.Red, parent)
+            balanceTree(parent.right)
         }
 
     }
 
-    private fun treeBalance(RBNode: RBNode<K, V>) {
-        var cur: RBNode<K, V> = RBNode
+
+    private fun balanceTree(RBNode: RBNode<K, V>?) {
+        var cur: RBNode<K, V> = RBNode ?: throw Exception("Incorrect RBNode's construction")
         var parent: RBNode<K, V>? = cur.parent
 
-        while (parent?.isBlack == false) {
+        while (parent?.color == Color.Red) {
             //uncle is red
-            if (cur.uncle()?.isBlack == false) {
-                cur.uncle()?.isBlack = true
-                parent.isBlack = true
-                cur.grandparent()?.isBlack = false
+            if (cur.uncle()?.color == Color.Red) {
+                cur.uncle()?.color = Color.Black
+                parent.color = Color.Black
+                cur.grandparent()?.color = Color.Red
                 cur = cur.grandparent() ?: throw Exception("Insert error")
                 parent = cur.parent
             }
             //uncle is black or leaf
-            else when{
+            else when {
                 //Left Left Case
                 cur.grandparent()?.left == parent && parent.left == cur -> {
                     parent = parent.parent
@@ -94,52 +100,54 @@ class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
                 }
             }
 
-
         }
 
         while (root?.parent != null) {
             root = root?.parent
         }
-        root?.isBlack = true
+
+        root?.color = Color.Black
+
     }
 
 
     override fun iterator() : Iterator<RBNode<K, V>> =
         (object : Iterator<RBNode<K, V>>{
-            var cur = root
-            val helpDeq: Deque<RBNode<K, V>> = ArrayDeque()
-            val turn: Deque<RBNode<K, V>> = ArrayDeque()
-
-            override fun next(): RBNode<K, V> = helpDeq.poll()
 
 
-            override fun hasNext(): Boolean {
-                if (helpDeq.isEmpty() && cur?.left == null && cur?.right == null) {
-                    return !helpDeq.isEmpty()
-                }
-                else if (helpDeq.isEmpty()) {
-                    helpDeq.add(cur)
-                    turn.add(cur)
-                    while (!turn.isEmpty()) {
-                        val res = turn.poll()
-                        if (res.left != null) {
-                            helpDeq.add(res.left)
-                            turn.add(res.left)
-                        }
-                        if (res.right != null) {
-                            helpDeq.add(res.right)
-                            turn.add(res.right)
-                        }
-                        cur = res
+            private fun createDeq(): Deque<RBNode<K, V>>{
+                val turn: Deque<RBNode<K,V>> = ArrayDeque()
+                val deque: Deque<RBNode<K,V>> = ArrayDeque()
+                val cur = root ?: return deque
+
+                deque.add(cur)
+                turn.add(cur)
+
+                while (!turn.isEmpty()){
+                    val res = turn.poll()
+
+                    if (res.left != null) {
+                        deque.add(res.left)
+                        turn.add(res.left)
+                    }
+
+                    if (res.right != null) {
+                        deque.add(res.right)
+                        turn.add(res.right)
                     }
 
                 }
 
-                return !helpDeq.isEmpty()
-
-
+                return deque
             }
 
+            val iterationList = createDeq()
+
+
+            override fun hasNext() = !iterationList.isEmpty()
+
+
+            override fun next(): RBNode<K, V> = iterationList.poll()
 
         })
 

@@ -1,41 +1,119 @@
 import AVLTree.AVLTree
 import AVLTree.AVLNode
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import kotlin.test.assertTrue
 
 @DisplayName("Tests for AVL Tree")
 internal class TestAVLTree {
     private val Tree = AVLTree<Int, Int>()
 
-    //BASE TEST, COPIES FROM BSTNode
+    private fun isAVLTree(node: AVLNode<Int, Int>? = Tree.root): Boolean{
+        if (node == null) {
+            return true
+        }
+        return if (node.getBalance() in -1..1){
+            val leftChild = isAVLTree(node.left)
+            val rightChild = isAVLTree(node.right)
+            leftChild && rightChild
+        }else false
+
+    }
+
+    @DisplayName("Stress test case 1")
+    @Test
+    fun stressTest1(){
+
+        val nodeToInsert = List(10000){it}
+
+        for (x in nodeToInsert){
+            Tree.insert(x, x)
+        }
+
+        assertTrue(isAVLTree(Tree.root))
+
+    }
+
+    @DisplayName("Stress test case 2")
+    @Test
+    fun stressTest2(){
+
+        val nodeToInsert = List(10000){10000 - it}
+
+        for (x in nodeToInsert){
+            Tree.insert(x, x)
+        }
+
+        assertTrue(isAVLTree(Tree.root))
+
+    }
+
+    @DisplayName("Stress test case 3")
+    @Test
+    fun stressTest3(){
+
+        val nodeToInsert = MutableList(10000){it}
+
+        nodeToInsert.shuffle()
+
+        for (x in nodeToInsert){
+            Tree.insert(x, x)
+        }
+
+        assertTrue(isAVLTree(Tree.root))
+
+    }
+
     @DisplayName("SearchExistingKey")
     @Test
     fun testSearchingKey() {
 
-        val a: MutableList<Int> = MutableList(100) { it + 1 }
+        val nodesToInsert: MutableList<Int> = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             assertEquals(Tree.find(x), Pair(x, x))
         }
 
+    }
+
+    @DisplayName("Searching in empty tree")
+    @Test
+    fun searchingEmptyTree(){
+
+        Assertions.assertNull(Tree.find(0))
+    }
+
+    @DisplayName("Insert with the same keys")
+    @Test
+    fun doubleInsertKeyTest(){
+
+        Tree.insert(1, 5)
+        Tree.insert(1, 10)
+
+        assertEquals(Tree.root!!.key, 1)
+        assertEquals(Tree.root!!.value, 2)
+        Assertions.assertTrue(Tree.root!!.parent == null)
+        Assertions.assertTrue(Tree.root!!.left == null)
+        Assertions.assertTrue(Tree.root!!.right == null)
     }
 
     @DisplayName("Searching nonexistent key")
     @Test
     fun failSearchingKeyTest() {
 
-        val a: MutableList<Int> = MutableList(100) { it + 1 }
+        val nodesToInsert: MutableList<Int> = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
 
@@ -46,23 +124,22 @@ internal class TestAVLTree {
     @DisplayName("Test for iterator using BFS algorithm")
     @Test
     fun testBFSIterator() {
-        val testList: MutableList<Int> = mutableListOf(7, 3, 11, 2, 5, 9, 13, 1, 4, 6, 10, 12, 14, 15)
+        val nodesToInsert: MutableList<Int> = mutableListOf(7, 3, 11, 2, 5, 9, 13, 1, 4, 6, 10, 12, 14, 15)
         val res: MutableList<Int> = mutableListOf()
 
-        for (x in testList) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
 
         for (x in Tree)
             res.add(x.value)
-        assertEquals(testList, res)
+        assertEquals(nodesToInsert, res)
     }
 
     @DisplayName("CommonTestIterator")
     @Test
     fun testIterator() {
         val expect = MutableList(5) { it + 1 }
-        val res = mutableListOf<Int>()
 
         expect.shuffle()
 
@@ -89,11 +166,11 @@ internal class TestAVLTree {
     @DisplayName("Property of right key test")
     @Test
     fun propRightKey() {
-        val a = MutableList(100) { it + 1 }
+        val nodesToInsert = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
         var cur: AVLNode<Int, Int> = Tree.root ?: throw Exception("Insert error")
@@ -111,11 +188,11 @@ internal class TestAVLTree {
     @DisplayName("Property of left key test")
     @Test
     fun propLeftKey() {
-        val a = MutableList(100) { it + 1 }
+        val nodesToInsert = MutableList(100) { it + 1 }
 
-        a.shuffle()
+        nodesToInsert.shuffle()
 
-        for (x in a) {
+        for (x in nodesToInsert) {
             Tree.insert(x, x)
         }
         var cur: AVLNode<Int, Int> = Tree.root ?: throw Exception("Insert error")
@@ -130,7 +207,7 @@ internal class TestAVLTree {
         assertEquals(true, actual)
 
     }
-    //New test for AVLTree
+
 
     @DisplayName("Left Right Case Check Test")
     @Test
@@ -179,7 +256,7 @@ internal class TestAVLTree {
     @DisplayName("Right Left Case Test")
     @Test
     fun rlCaseTest(){
-        val list = listOf(7, 11, 9)
+        val nodesToInsert = listOf(7, 11, 9)
         val expectTree = AVLTree<Int, Int>()
         expectTree.root = AVLNode(9, 9)
         expectTree.root?.left = AVLNode(7, 7,  expectTree.root)
@@ -187,7 +264,7 @@ internal class TestAVLTree {
         val expRoot = expectTree.root
         expRoot?.height = 2
 
-        for (x in list){
+        for (x in nodesToInsert){
             Tree.insert(x, x)
         }
 

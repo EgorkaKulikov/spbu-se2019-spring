@@ -7,20 +7,25 @@ import java.util.*
 class BinaryTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
     var root: BSTNode<K, V>? = null
 
-    private fun prefind(key: K, BSTNode: BSTNode<K, V>? = root): BSTNode<K, V>? = when {
-        BSTNode == null || BSTNode.key == key -> BSTNode
-        key < BSTNode.key -> prefind(key, BSTNode.left)
-        else -> prefind(key, BSTNode.right)
-    }
 
     override fun find(key: K): Pair<K, V>? {
-        val res = prefind(key) ?: return null
-        return Pair(res.key, res.value)
+        var cur: BSTNode<K, V>? = root ?: return null
+        var result: BSTNode<K, V>?
+
+        while (cur != null){
+            result = cur
+            when {
+                key < cur.key -> cur = cur.left
+                key > cur.key -> cur = cur.right
+                key == cur.key -> return Pair(result.key, result.value)
+            }
+        }
+
+        return null
     }
 
 
     override fun insert(key: K, value: V) {
-
         var parent: BSTNode<K, V>? = null
         var cur: BSTNode<K, V>? = root
 
@@ -52,44 +57,42 @@ class BinaryTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
 
     override fun iterator() : Iterator<BSTNode<K, V>> =
         (object : Iterator<BSTNode<K, V>>{
-            var cur = root
-            val helpDeq: Deque<BSTNode<K,V>> = ArrayDeque()
-            val turn: Deque<BSTNode<K,V>> = ArrayDeque()
-
-            override fun next(): BSTNode<K, V> = helpDeq.poll()
 
 
-            override fun hasNext(): Boolean {
-                    if (helpDeq.isEmpty() && cur?.left == null && cur?.right == null) {
-                        return !helpDeq.isEmpty()
+            private fun createDeq(): Deque<BSTNode<K, V>>{
+                val turn: Deque<BSTNode<K,V>> = ArrayDeque()
+                val deque: Deque<BSTNode<K,V>> = ArrayDeque()
+                val cur = root ?: return deque
+
+                deque.add(cur)
+                turn.add(cur)
+
+                while (!turn.isEmpty()){
+                    val res = turn.poll()
+
+                    if (res.left != null) {
+                        deque.add(res.left)
+                        turn.add(res.left)
                     }
-                        else if (helpDeq.isEmpty()) {
-                            helpDeq.add(cur)
-                            turn.add(cur)
-                            while (!turn.isEmpty()) {
-                                val res = turn.poll()
-                                if (res.left != null) {
-                                    helpDeq.add(res.left)
-                                    turn.add(res.left)
-                                }
-                                if (res.right != null) {
-                                    helpDeq.add(res.right)
-                                    turn.add(res.right)
-                                }
-                                cur = res
-                            }
 
-                        }
+                    if (res.right != null) {
+                        deque.add(res.right)
+                        turn.add(res.right)
+                    }
 
-                        return !helpDeq.isEmpty()
+                }
 
-
+                return deque
             }
 
-
-    })
-
+            val iterationList = createDeq()
 
 
+            override fun hasNext() = !iterationList.isEmpty()
+
+
+            override fun next(): BSTNode<K, V> = iterationList.poll()
+
+        })
 
 }

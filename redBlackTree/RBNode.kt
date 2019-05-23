@@ -1,9 +1,13 @@
 package redBlackTree
 
+enum class Color{
+    Red, Black
+}
+
 class RBNode<K : Comparable<K>, V>(
     var key: K,
     var value: V,
-    var isBlack: Boolean = false,
+    var color: Color = Color.Red,
     var parent: RBNode<K, V>? = null
 ) {
     var left: RBNode<K, V>? = null
@@ -16,39 +20,40 @@ class RBNode<K : Comparable<K>, V>(
                 && value == other.value
                 && left == other.left
                 && right == other.right
-                && isBlack == other.isBlack
+                && color == other.color
 
     override fun hashCode(): Int {
         var result = key.hashCode()
         result = 31 * result + (value?.hashCode() ?: 0)
-        result = 31 * result + (parent?.hashCode() ?: 0)
+        result = 31 * result + color.hashCode()
         result = 31 * result + (left?.hashCode() ?: 0)
         result = 31 * result + (right?.hashCode() ?: 0)
         return result
     }
 
 
+    fun grandparent(): RBNode<K, V>? = parent?.parent
 
 
-    fun grandparent(): RBNode<K, V>? = this.parent?.parent
-
-    fun uncle(): RBNode<K, V>? = when (this.parent) {
+    fun uncle(): RBNode<K, V>? = when (parent) {
 
         this.grandparent()?.left -> this.grandparent()!!.right
         else -> this.grandparent()?.left
 
     }
-    private fun swapColors(ABLRBNode: RBNode<K, V>?){
-        val tmp = ABLRBNode?.isBlack ?: return
-        ABLRBNode.isBlack = this.isBlack
-        this.isBlack = tmp
+
+
+    private fun swapColors(cur: RBNode<K, V>?){
+        val tmp = cur?.color ?: return
+        cur.color = this.color
+        color = tmp
     }
 
+
     fun leftRotate(){
-        //this == parent
-        val rightChild = this.right ?: throw Exception("Null node")
-        val parent = this.parent
-        this.swapColors(rightChild)
+        val rightChild = this.right ?: throw Exception("Right child for node does no exist")
+        val parent = parent
+        swapColors(rightChild)
 
         rightChild.left?.parent = this
         this.right = rightChild.left
@@ -63,12 +68,12 @@ class RBNode<K : Comparable<K>, V>(
         rightChild.parent = parent
     }
 
-    fun rightRotate(){
-        val leftChild = this.left ?: throw Exception("Null node")
-        val parent = this.parent
-        this.swapColors(leftChild)
 
-        //leftChild?.right = T3
+    fun rightRotate(){
+        val leftChild = this.left ?: throw Exception("Left child for node does no exist")
+        val parent = parent
+        swapColors(leftChild)
+
         leftChild.right?.parent = this
         this.left = leftChild.right
         leftChild.right = this
@@ -81,6 +86,5 @@ class RBNode<K : Comparable<K>, V>(
         this.parent = leftChild
         leftChild.parent = parent
     }
-
 
 }
