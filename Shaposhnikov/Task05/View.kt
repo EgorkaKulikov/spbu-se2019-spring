@@ -1,103 +1,71 @@
-import java.util.zip.*
-
-var IS_PRINTED : Boolean = true
-var NEXT_ENTRY : ZipEntry? = null
-//these two global vars are designed to not miss any entries
-//when recursive [printFolder] closes
-
-fun  findFile(zip : PKZip, fileName : String){
-    val input = zip.getZipInput()
-    var file: ZipEntry
-    try {
-        file = input.nextEntry
-    }
-    catch(e: Exception){
-        println("[${zip.archive}] is empty.")
-        return
-    }
-    while (file.name.substringAfterLast('/') != fileName){
-        try{
-            file = input.nextEntry
-        }
-        catch(e: Exception){
-            println("There is no [$fileName] in [${zip.archive}]")
+class View(zipName : Model) {
+    private val zip = zipName
+    fun findFile(fileName: String) {
+        val file = zip.getEntry(fileName)
+        if (file == null) {
+            println("There is no [$fileName] in [${zip.archiveName}]")
             return
         }
+        print("$fileName exists in ")
+        if (file.name.substringBeforeLast('/') == fileName)
+            println("[${zip.archiveName}]")
+        else
+            println("[${file.name.substringBeforeLast('/')}]:")
+        println("Date of modification in format {YYYY-MM-DD.T.HH:MM:SS}:")
+        println("\t${file.timeLocal}")
     }
-    println("$fileName exists in [${file.name.substringBeforeLast('/')}]:")
-    println("Size is ${file.size}")
-    println("Date of modification in format {YYYY-MM-DD.T.HH:MM:SS}:")
-    println("\t${file.timeLocal}")
-}
 
-fun getFolder(zip : PKZip, folderName : String){
-    var size : Long = 0
-    var entry : ZipEntry
-    val input = zip.getZipInput()
-    val directory = "/$folderName/"
-    while(true){
-        try{
-            entry = input.nextEntry
+    fun getFolder(folderName: String) {
+        val folderEntry = zip.getEntry(folderName)
+        if (folderEntry == null) {
+            println("Directory [$folderName] doesn't exist in [${zip.archiveName}]")
+            return
         }
-        catch(e: Exception){
-            if(size <= 0) {
-                println("There is no [$folderName] in [${zip.archive}]")
-                return
+        if (!folderEntry.isDirectory) {
+            println("[$folderName] refers to a file and not to a folder")
+            return
+        }
+        val size = zip.getFoldersSize(folderName)
+        print("Size of [$folderName]'s folder content is : ")
+        print(
+            when {
+                size > 1 shl 30 -> "${size / (1 shl 30)} gb and ${(size % (1 shl 30)) / (1 shl 20)} mb."
+                size > 1 shl 20 -> "${size / (1 shl 20)} mb and ${(size % (1 shl 20)) / 1024} kb."
+                size > 1024 -> "${size / 1024} kb."
+                else -> "$size b."
             }
-            break
-        }
-        if (entry.name.contains(directory))
-            size += entry.size
-        if (!entry.name.contains(directory) && size > 0)
-            break
+        )
+
     }
-    print("Size of [$folderName]'s folder content is : ")
-    print(
-        when {
-            size > 1 shl 30 -> "${size/(1 shl 30)} gb and ${(size%(1 shl 30))/(1 shl 20)} mb."
-            size > 1 shl 20 -> "${size/(1 shl 20)} mb and ${(size%(1 shl 20))/1024} kb."
-            size > 1024 -> "${size/1024} kb."
-            else -> "$size b."
-        }
-    )
 
-}
+    fun printZip() {
+        val prefix = "../"
+        if (zip.listOfEntries.isEmpty())
+            println("Zip archive [${zip.archiveName}] is empty.")
 
-fun printZip(zip : PKZip){
-    val input = zip.getZipInput()
-    var offset : String
-    while(true){
-        offset = ""
-        if(IS_PRINTED) NEXT_ENTRY = input.nextEntry ?: break
-        IS_PRINTED = false
-        if (!(NEXT_ENTRY?.isDirectory ?: return)) {
-            println(NEXT_ENTRY!!.name.substringAfterLast('/'))
-            IS_PRINTED = true
-        }
-        else {
-            println("${(NEXT_ENTRY!!.name.dropLast(1)).substringAfterLast('/')}:")
-            printFolder(input, NEXT_ENTRY!!.name, offset)
+        println("${(1421).toChar()} is a folder sign in further info:\n")
+        for (entry in zip.listOfEntries) {
+            val name = if (entry.isDirectory) entry.name.dropLast(1)
+            else entry.name
+            val depth = name.entrances('/')
+            print("\t${" ".times(depth * 3)}${prefix.times(depth)}")
+            if (entry.isDirectory)
+                println("${(1421).toChar()}${name.substringAfterLast('/')}")
+            else
+                println(name.substringAfterLast('/'))
         }
     }
-}
 
-private fun printFolder(input : ZipInputStream
-                           , directory : String
-                           , offset : String){
-    val newOffset = "    $offset\\"
-    NEXT_ENTRY = input.nextEntry ?: return
-    while(NEXT_ENTRY?.name?.startsWith(directory) ?: return){
-        if(!NEXT_ENTRY!!.isDirectory) {
-            println("$newOffset${NEXT_ENTRY!!.name.substringAfterLast('/')}")
-            IS_PRINTED = true
-        }
-        else {
-            println("$newOffset${(NEXT_ENTRY!!.name.dropLast(1)).substringAfterLast('/')}:")
-            IS_PRINTED = true
-            printFolder(input, NEXT_ENTRY!!.name, newOffset)
-        }
-        if(IS_PRINTED)
-            NEXT_ENTRY = input.nextEntry ?: return
-        IS_PRINTED = false
+    private fun String.times(amount: Int): String {
+        var result = ""
+        for (i in 0 until amount)
+            result += this
+        return result
+    }
+
+    private fun String.entrances(char: Char): Int {
+        var result = 0
+        this.forEach { letter -> if (letter == char) ++result }
+        return result
     }
 }
