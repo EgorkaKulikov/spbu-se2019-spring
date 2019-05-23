@@ -4,6 +4,6 @@ class BSTNode<K : Comparable<K>, V>(
     var parent : BSTNode<K, V>? = null
 )
 {
-    var left : BSTNode<K, V>? = null
-    var right : BSTNode<K, V>? = null
+    internal var left : BSTNode<K, V>? = null
+    internal var right : BSTNode<K, V>? = null
 }

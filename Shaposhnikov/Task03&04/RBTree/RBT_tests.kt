@@ -23,7 +23,7 @@ class RBTests{
         for (num in list)
             tree.insert(num, num)
         for (num in list)
-            assertEquals(tree.find(num), Pair(num, num))
+            assertEquals(Pair(num, num), tree.find(num))
         assert(!tree.root!!.isRed)
     }
 
@@ -68,7 +68,7 @@ class RBTests{
         var amount = 0
         for (node in tree)
             amount++
-        assertEquals(amount, list.size)
+        assertEquals(list.size, amount)
     }
 
     @DisplayName("Empty tree iteration")

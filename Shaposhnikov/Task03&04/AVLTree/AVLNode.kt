@@ -3,15 +3,15 @@ import java.lang.Integer.max
 class AVLNode<K : Comparable<K>, V>(
     var key : K,
     var value : V,
-    var parent : AVLNode<K, V>? = null,
-    var height : Int = 1
+    var parent : AVLNode<K, V>? = null
 ){
-    var left : AVLNode<K, V>? = null
-    var right : AVLNode<K, V>? = null
+    internal var left : AVLNode<K, V>? = null
+    internal var right : AVLNode<K, V>? = null
+    internal var height : Int = 1
 
     fun rotateLeft(){
-        val curRight = this.right ?: return
-        this.right = curRight.left
+        val curRight = right ?: throw Exception("Couldn't rotateLeft as right child == null")
+        right = curRight.left
         curRight.left?.parent = this
 
         curRight.parent = parent
@@ -20,15 +20,15 @@ class AVLNode<K : Comparable<K>, V>(
             else -> parent?.right = curRight
         }
         curRight.left = this
-        this.parent = curRight
+        parent = curRight
 
-        this.height = max(this.left?.height ?: 0, this.right?.height ?: 0) + 1
+        height = max(left?.height ?: 0, right?.height ?: 0) + 1
         curRight.height = max(curRight.left?.height ?: 0, curRight.right?.height ?: 0) + 1
     }
 
     fun rotateRight(){
-        val curLeft = this.left ?: return
-        this.left = curLeft.right
+        val curLeft = left ?: throw Exception("Couldn't rotateRight as left child == null")
+        left = curLeft.right
         curLeft.right?.parent = this
 
         curLeft.parent = parent
@@ -38,9 +38,10 @@ class AVLNode<K : Comparable<K>, V>(
         }
         curLeft.right = this
         parent = curLeft
-        this.height = max(this.left?.height ?: 0, this.right?.height ?: 0) + 1
+
+        height = max(left?.height ?: 0, right?.height ?: 0) + 1
         curLeft.height = max(curLeft.left?.height ?: 0, curLeft.right?.height ?: 0) + 1
     }
 
-    fun heightDif(): Int = (this.left?.height ?: 0) - (this.right?.height ?: 0)
+    fun heightDif(): Int = (left?.height ?: 0) - (right?.height ?: 0)
 }

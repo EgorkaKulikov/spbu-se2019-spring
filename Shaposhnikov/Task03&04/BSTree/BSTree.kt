@@ -1,15 +1,16 @@
-import java.util.Stack
+import java.util.*
+import kotlin.NoSuchElementException as NoSuchElementException1
 
 class BSTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
 
-    var root : BSTNode<K, V>? = null
+    internal var root : BSTNode<K, V>? = null
 
     override fun insert(key : K, value: V) {
         var current = root
         var parent : BSTNode<K, V>? = null
         if (current == null) {
             root = BSTNode(key, value)
-                  return
+            return
         }
 
         while (current != null) {
@@ -47,7 +48,12 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
                     stack.push(current)
                     current = current!!.left
                 }
-                current = stack.pop()
+                try {
+                    current = stack.pop()
+                }
+                catch(e : Exception){
+                    throw kotlin.NoSuchElementException()
+                }
                 val node = current
                 current = current?.right
                 return node!!
@@ -59,5 +65,5 @@ class BSTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
         current == null || key == current.key -> current
         key < current.key -> findNode(key, current.left)
         else -> findNode(key, current.right)
-        }
+    }
 }

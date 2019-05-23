@@ -2,16 +2,16 @@ import java.util.*
 
 class RBTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
 
-    var root : RBNode<K, V>? = null
+    internal var root : RBNode<K, V>? = null
 
     override fun insert(key : K, value: V) {
-        var current = root
         var parent : RBNode<K, V>? = null
-        if (current == null) {
+        if (root == null) {
             root = RBNode(key, value)
             return
         }
 
+        var current = root
         while (current != null) {
             parent = current
             when {
@@ -25,15 +25,15 @@ class RBTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
         }
         when {
             key < parent!!.key -> {
-                                    parent.left = RBNode(key, value, parent)
-                                    balance(parent.left)
-                                    fixRoot(parent)
-                                  }
+                parent.left = RBNode(key, value, parent)
+                balance(parent.left)
+                fixRoot(parent)
+            }
             key > parent.key -> {
-                                    parent.right = RBNode(key, value, parent)
-                                    balance(parent.right)
-                                    fixRoot(parent)
-                                }
+                parent.right = RBNode(key, value, parent)
+                balance(parent.right)
+                fixRoot(parent)
+            }
         }
     }
 
@@ -55,7 +55,12 @@ class RBTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
                     stack.push(current)
                     current = current!!.left
                 }
-                current = stack.pop()
+                try {
+                    current = stack.pop()
+                }
+                catch(e : Exception){
+                    throw kotlin.NoSuchElementException()
+                }
                 val node = current
                 current = current?.right
                 return node!!
@@ -90,39 +95,39 @@ class RBTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
         else {
             when (parent){
                 grandParent?.left -> when (node) {
-                                                parent.left -> {  // left-left case
-                                                    grandParent.rotateRight()
-                                                    grandParent.isRed = true
-                                                    parent.isRed = false
-                                                    if (grandParent.parent?.isRed  == true)
-                                                        balance(grandParent)
-                                                }
-                                                parent.right -> { // left-right case
-                                                    parent.rotateLeft()
-                                                    grandParent.rotateRight()
-                                                    grandParent.isRed = true
-                                                    node.isRed = false
-                                                    if (grandParent.parent?.isRed  == true)
-                                                        balance(grandParent)
-                                                }
+                    parent.left -> {  // left-left case
+                        grandParent.rotateRight()
+                        grandParent.isRed = true
+                        parent.isRed = false
+                        if (grandParent.parent?.isRed  == true)
+                            balance(grandParent)
                     }
+                    parent.right -> { // left-right case
+                        parent.rotateLeft()
+                        grandParent.rotateRight()
+                        grandParent.isRed = true
+                        node.isRed = false
+                        if (grandParent.parent?.isRed  == true)
+                            balance(grandParent)
+                    }
+                }
                 grandParent?.right -> when (node) {
-                                                parent.right -> { // right-right case
-                                                    grandParent.rotateLeft()
-                                                    grandParent.isRed = true
-                                                    parent.isRed = false
-                                                    if (grandParent.parent?.isRed  == true)
-                                                        balance(grandParent)
-                                                }
-                                                parent.left -> { // right-left case
-                                                    parent.rotateRight()
-                                                    grandParent.rotateLeft()
-                                                    grandParent.isRed = true
-                                                    node.isRed = false
-                                                    if (grandParent.parent?.isRed  == true)
-                                                        balance(grandParent)
-                                                }
+                    parent.right -> { // right-right case
+                        grandParent.rotateLeft()
+                        grandParent.isRed = true
+                        parent.isRed = false
+                        if (grandParent.parent?.isRed  == true)
+                            balance(grandParent)
                     }
+                    parent.left -> { // right-left case
+                        parent.rotateRight()
+                        grandParent.rotateLeft()
+                        grandParent.isRed = true
+                        node.isRed = false
+                        if (grandParent.parent?.isRed  == true)
+                            balance(grandParent)
+                    }
+                }
             }
         }
 

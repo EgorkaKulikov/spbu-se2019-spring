@@ -1,121 +1,181 @@
-import java.util.*
-import kotlin.math.abs
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import java.lang.Integer.max
 
-class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
+class AVLTests{
 
-    var root : AVLNode<K, V>? = null
+    private var tree = AVLTree<Int, Int>()
 
-    override fun insert(key : K, value: V) {
-        var current = root
-        var parent : AVLNode<K, V>? = null
-        if (current == null) {
-            root = AVLNode(key, value)
-            return
-        }
-
-        while (current != null) {
-            parent = current
-            when {
-                key < current.key -> current = current.left
-                key > current.key -> current = current.right
-                key == current.key -> {
-                    current.value = value
-                    return
-                }
-            }
-        }
-
-
-        when {
-            key < parent!!.key -> {
-                                    parent.left = AVLNode(key, value, parent)
-                                    fixHeights(parent.left)
-                                    balance(parent.left)
-                                    fixRoot(parent)
-                                  }
-            key > parent.key -> {
-                                    parent.right = AVLNode(key, value, parent)
-                                    fixHeights(parent.right)
-                                    balance(parent.right)
-                                    fixRoot(parent)
-                                }
-        }
-
+    @DisplayName("Unexisting call")
+    @Test
+    fun `find(null)`(){
+        for (num in 1..1000) tree.insert(num, num)
+        for (num in 1001..2000)
+            assertNull(tree.find(num))
     }
 
-    override fun find(key: K): Pair<K, V>? {
-        val node : AVLNode<K, V>? = findNode(key) ?: return null
-        return Pair(node!!.key, node.value)
+    @DisplayName("Testing find function")
+    @Test
+    fun testingFind(){
+        val list = MutableList(1000) {it}
+        list.shuffle()
+        for (num in list)
+            tree.insert(num, num)
+        for (num in list)
+            assertEquals(Pair(num, num), tree.find(num))
     }
 
-    override fun iterator(): Iterator<AVLNode<K, V>> {
-        return (object : Iterator<AVLNode<K, V>> {
-            private var stack = Stack<AVLNode<K, V>?>()
-            private var current : AVLNode<K, V>? = root
-
-            override fun hasNext(): Boolean = (!stack.isEmpty() || current != null)
-
-            override fun next(): AVLNode<K, V> {
-                while (current != null)
-                {
-                    stack.push(current)
-                    current = current!!.left
-                }
-                current = stack.pop()
-                val node = current
-                current = current?.right
-                return node!!
-            }
-        })
+    @DisplayName("Testing iterator")
+    @Test
+    fun iteratorTest(){
+        for (num in 1..1000)
+            tree.insert(num, num)
+        for (node in tree)
+            assertEquals(Pair(node.key, node.value), tree.find(node.key))
     }
 
-    private fun findNode(key: K, current : AVLNode<K, V>? = root): AVLNode<K, V>? = when {
-        current == null || key == current.key -> current
-        key < current.key -> findNode(key, current.left)
-        else -> findNode(key, current.right)
+    @DisplayName("Left keys condition")
+    @Test
+    fun leftCondition(){
+        val list = MutableList(1000) {it}
+        list.shuffle()
+        for (num in list)
+            tree.insert(num, num)
+        for (node in tree)
+            assert(node.left?.key ?: continue < node.key)
     }
 
-    private fun balance(node : AVLNode<K, V>?){
-        var unbalanced = node ?: return
-        while (abs(unbalanced.heightDif()) < 2){
-            unbalanced = unbalanced.parent ?: return
-        }
-        when (unbalanced.heightDif()){
-            2 -> when (unbalanced.left!!.heightDif()){
-                                                1 -> unbalanced.rotateRight() //left-left case
-                                                -1 -> { //left-right case
-                                                    unbalanced.left!!.rotateLeft()
-                                                    unbalanced.rotateRight()
-                                                }
-                                            }
-            -2 -> when (unbalanced.right!!.heightDif()){
-                                                1 -> { //right-left case
-                                                    unbalanced.right!!.rotateRight()
-                                                    unbalanced.rotateLeft()
-                                                }
-                                                -1 -> unbalanced.rotateLeft() //right-right case
-                                            }
-        }
-        fixHeights(unbalanced)
+    @DisplayName("Right keys condition")
+    @Test
+    fun rightCondition(){
+        val list = MutableList(1000) {it}
+        list.shuffle()
+        for (num in list)
+            tree.insert(num, num)
+        for (node in tree)
+            assert(node.right?.key ?: continue >= node.key)
     }
 
-    private fun fixHeights(node : AVLNode<K, V>?){
-        var current = node
-        while (current != null) {
-            current.height = Integer.max(current.left?.height ?: 0, current.right?.height ?: 0) + 1
-            current = current.parent
-        }
+    @DisplayName("Overlap of iterator")
+    @Test
+    fun iteratorOverlap(){
+        val list = MutableList(1000) {it}
+        list.shuffle()
+        for (num in list)
+            tree.insert(num, num)
+        var amount = 0
+        for (node in tree)
+            amount++
+        assertEquals(list.size, amount)
     }
 
-    private fun fixRoot(node : AVLNode<K, V>) {
-        if (root?.parent == null) return // to avoid excess iterations
-        var cur = node
-        while (cur.parent != null)
-            cur = cur.parent!!
-        root = cur
+    @DisplayName("Empty tree iteration")
+    @Test
+    fun iterateNull(){
+        for (node in tree)
+            assertEquals(false, true)
+    }
+
+    // these one were simply copy-pasted from BST_tests due to our architecture
+
+    @DisplayName("Left rotate test")
+    @Test
+    fun `test left rotate`(){
+        tree.insert(10, 10)
+        tree.insert(20, 20)
+        tree.insert(30, 30)
+        assert(tree.root!!.key == 20)
+    }
+
+    @DisplayName("Right rotate test")
+    @Test
+    fun `test right rotate`(){
+        tree.insert(10, 10)
+        tree.insert(20, 20)
+        tree.insert(30, 30)
+        assert(tree.root!!.key == 20)
+    }
+
+    @DisplayName("Insert case 1: left-left")
+    @Test
+    fun `test left-left insertion`(){
+        tree.insert(50, 50) //root
+        tree.insert(25, 25) //left child
+        tree.insert(10, 10) // left-left child
+        //here comes balancing
+        val root = tree.root!!
+        assertEquals(25, root.key)
+        assertEquals(50, root.right!!.key)
+        assertEquals(10, root.left!!.key)
+        assertEquals(2, root.height)
+        assertEquals(1, root.left!!.height)
+        assertEquals(1, root.right!!.height)
+    }
+
+    @DisplayName("Insert case 2: left-right")
+    @Test
+    fun `test left-right insertion`(){
+        tree.insert(50, 50) //root
+        tree.insert(25, 25) //left child
+        tree.insert(30, 30) // left-right child
+        //here comes balancing
+        val root = tree.root!!
+        assertEquals(30, root.key)
+        assertEquals(50, root.right!!.key)
+        assertEquals(25, root.left!!.key)
+        assertEquals(2, root.height)
+        assertEquals(1, root.right!!.height)
+        assertEquals(1, root.left!!.height)
+    }
+
+    @DisplayName("Insert case 3: right-right")
+    @Test
+    fun `test right-right insertion`(){
+        tree.insert(50, 50) //root
+        tree.insert(75, 75) //right child
+        tree.insert(80, 80) // right-right child
+        //here comes balancing
+        val root = tree.root!!
+        assertEquals(75, root.key)
+        assertEquals(80, root.right!!.key)
+        assertEquals(50, root.left!!.key)
+        assertEquals(2, root.height)
+        assertEquals(1, root.right!!.height)
+        assertEquals(1, root.left!!.height)
+    }
+
+    @DisplayName("Insert case 4: right-left")
+    @Test
+    fun `test right-left insertion`(){
+        tree.insert(50, 50) //root
+        tree.insert(75, 75) //right child
+        tree.insert(60, 60) // right-right child
+        //here comes balancing
+        val root = tree.root!!
+        assertEquals(60, root.key)
+        assertEquals(75, root.right!!.key)
+        assertEquals(50, root.left!!.key)
+        assertEquals(2, root.height)
+        assertEquals(1, root.right!!.height)
+        assertEquals(1, root.left!!.height)
+    }
+
+    @DisplayName("Delta height condition")
+    @Test
+    fun `check delta height`(){
+        for (num in 1..1000)
+            tree.insert(num, num)
+        for (node in tree)
+            assert(node.heightDif() < 2)
+    }
+
+    @DisplayName("Correct heights in nodes")
+    @Test
+    fun `check heights correctness`(){
+        for (num in 1..1000)
+            tree.insert(num, num)
+        for (node in tree)
+            assertEquals(node.height, max(node.left?.height ?: 0, node.right?.height ?: 0) + 1)
     }
 }
-
-
-
-
