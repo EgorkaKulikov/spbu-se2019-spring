@@ -15,10 +15,6 @@ class BinaryNode<K : Comparable<K>, V>(key: K, value: V) : Node<K, V, BinaryNode
                 && value == other.value)
     }
 
-    override fun hashCode(): Int {
-        return key.hashCode()
-    }
-
     internal fun addLeftSon(key: K, value: V) {
         val son = BinaryNode(key, value)
         this.left = son
@@ -62,10 +58,6 @@ class RBNode<K : Comparable<K>, V>(key: K, value: V, col: Color) : Node<K, V, RB
                 && color == other.color)
     }
 
-    override fun hashCode(): Int {
-        return key.hashCode()
-    }
-
     internal fun addLeftSon(key: K, value: V, color: Color) {
         val son = RBNode(key, value, color)
         this.left = son
@@ -102,10 +94,6 @@ class AVLNode<K : Comparable<K>, V>(key: K, value: V) : Node<K, V, AVLNode<K, V>
                 && parent?.key == other.parent?.key
                 && key == other.key
                 && value == other.value)
-    }
-
-    override fun hashCode(): Int {
-        return key.hashCode()
     }
 
     internal fun addLeftSon(key: K, value: V) {

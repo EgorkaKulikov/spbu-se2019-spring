@@ -8,8 +8,4 @@ class BinarySearchTree<K : Comparable<K>, V> : Tree<K, V, BinaryNode<K, V>>() {
         return (other is BinarySearchTree<*, *>
                 && this.root == other.root)
     }
-
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
 }

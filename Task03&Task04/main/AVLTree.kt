@@ -98,8 +98,4 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V, AVLNode<K, V>>() {
         return (other is AVLTree<*, *>
                 && this.root == other.root)
     }
-
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
 }
