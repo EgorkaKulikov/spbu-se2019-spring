@@ -39,7 +39,7 @@ class RBTreeTest {
 
     @Test
     fun stressTest() {
-        val tree = randomRBTree(1000)
+        val tree = randomRBTree(10000)
         assert(tree.isRBTree())
         assert(tree.isBinarySearchTree())
     }

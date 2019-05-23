@@ -40,7 +40,7 @@ class BinarySearchTreeTest {
 
     @Test
     fun stressTest() {
-        val tree = randomBinarySearchTree(1000)
+        val tree = randomBinarySearchTree(10000)
         assert(tree.isBinarySearchTree())
     }
 
@@ -83,7 +83,6 @@ class BinarySearchTreeTest {
 
         assertEquals(root.right , rightSon)
         assertEquals(root.left, leftSon)
-        assertEquals(root, leftSon.parent)
         assertEquals(root, leftSon.parent)
     }
 

@@ -38,8 +38,8 @@ class AVLTreeTest {
 
     @Test
     fun stressTest() {
-        val tree = randomAVLTree(1000)
-        assert(tree.parentsCorrectness())
+        val tree = randomAVLTree(10000)
+        assert(tree.verifyParentsCorrectness())
         assert(tree.isAVLTree())
         assert(tree.isBinarySearchTree())
     }

@@ -1,6 +1,6 @@
 class RBTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
     inner class RBNode(_key: K, _value: T, _parent: Node?) : BalancedNode(_key, _value, _parent) {
-        var color = Color.RED
+        internal var color = Color.RED
 
         internal fun balanceNode() {
             var dad: RBNode? = null
@@ -53,11 +53,14 @@ class RBTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
         }
 
         fun verifyRB(): Pair<Boolean, Int>{
+            val right = this.right as RBNode?
+            val left = this.left as RBNode?
+
             if (this.color == Color.RED) {
-                if (this.left != null && (this.left as RBNode).color == Color.RED) {
+                if (left != null && left.color == Color.RED) {
                     return Pair(false, 0)
                 }
-                if(this.right != null && (this.right as RBNode).color == Color.RED){
+                if(right != null && right.color == Color.RED){
                     return Pair(false, 0)
                 }
             }
@@ -65,14 +68,14 @@ class RBTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
             var correctness = true
             var blackHeight = 1
 
-            if (this.left != null){
-                correctness = (this.left as RBNode).verifyRB().first
-                blackHeight = (this.left as RBNode).verifyRB().second
+            if (left != null){
+                correctness = left.verifyRB().first
+                blackHeight = left.verifyRB().second
             }
 
-            if (this.right != null){
-                correctness = ((this.right as RBNode).verifyRB().first && correctness)
-                if (blackHeight != (this.right as RBNode).verifyRB().second) {
+            if (right != null){
+                correctness = (right.verifyRB().first && correctness)
+                if (blackHeight != right.verifyRB().second) {
                     return Pair(false,0)
                 }
             }

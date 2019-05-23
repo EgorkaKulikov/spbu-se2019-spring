@@ -61,8 +61,8 @@ open class BinarySearchTree<T, K : Comparable<K>> {
     }
 
     private fun verifySearch(curNode: Node): Boolean{
-        return (((curNode.left == null) || (curNode.key >= curNode.left!!.key && verifySearch(curNode.left!!))) &&
-                ((curNode.right == null) || (curNode.key <= curNode.right!!.key && verifySearch(curNode.right!!))))
+        return (curNode.left == null || curNode.key >= curNode.left!!.key && verifySearch(curNode.left!!)) &&
+                (curNode.right == null || curNode.key <= curNode.right!!.key && verifySearch(curNode.right!!))
     }
 
     internal fun isBinarySearchTree(): Boolean{

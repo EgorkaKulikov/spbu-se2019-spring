@@ -30,17 +30,20 @@ class AVLTree<T, K : Comparable<K>> : BalancedSearchTree<T, K>() {
 
         internal fun balanceNode(){
             this.fixHeight()
+            val right = this.right as AVLNode?
+            val left = this.left as AVLNode?
+
             if(this.balanceFactor() == 2){
-                if((this.right as AVLNode).balanceFactor() < 0){
-                    (this.right as BalancedNode).rotateRight()
+                if(right!!.balanceFactor() < 0){
+                    right.rotateRight()
                 }
-                (this.right as BalancedNode).rotateLeft()
+                right.rotateLeft()
             }
             if(this.balanceFactor() == -2){
-                if((this.left as AVLNode).balanceFactor() > 0){
-                    (this.left as BalancedNode).rotateLeft()
+                if(left!!.balanceFactor() > 0){
+                    left.rotateLeft()
                 }
-                (this.left as BalancedNode).rotateRight()
+                left.rotateRight()
             }
         }
     }

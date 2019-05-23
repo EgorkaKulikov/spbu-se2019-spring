@@ -1,3 +1,4 @@
-enum class Color {
-    RED, BLACK
+internal enum class Color {
+    RED,
+    BLACK,
 }

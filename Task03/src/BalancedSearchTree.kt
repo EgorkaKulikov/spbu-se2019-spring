@@ -67,7 +67,7 @@ abstract class BalancedSearchTree<T, K : Comparable<K>> : BinarySearchTree<T, K>
         }
     }
 
-    internal fun parentsCorrectness(): Boolean {
+    internal fun verifyParentsCorrectness(): Boolean {
         return root == null || (root!!.parent == null && (root as BalancedNode).verifyParents())
     }
 }
