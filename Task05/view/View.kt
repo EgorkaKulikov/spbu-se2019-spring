@@ -5,18 +5,16 @@ import presenter.Presenter
 
 @kotlin.ExperimentalUnsignedTypes
 internal object View {
-    private val pathJava = "..."
+    private val pathJava = System.getProperty("java.home").toString() + "\\bin\\java.exe"
     private val pathIntelliJ = "..."
-    private val pathProduction = "..."
-    private val pathKotlinLib = "..."
-    // аналогично main.kt
+    private val pathJavaClass = System.getProperty("java.class.path")
     var maxAmountDisplayedObjectsInFolder = 10
         private set
     var maxHeightDisplayedTreeFolder = 3
         private set
     var mainArchiveName: String? = null
         private set
-    fun execute(userCommands: List<String>, prevViewCondition: ViewCondition): ViewCondition {
+    fun execute(userCommands: List<String>, prevViewCondition: ViewCondition?): ViewCondition? {
         var index = 0
         var viewCondition = prevViewCondition
         while (index < userCommands.size) {
@@ -27,12 +25,7 @@ internal object View {
                             "cmd", "/c",
                             "start $pathJava \"-javaagent:$pathIntelliJ\\lib\\idea_rt.jar=61388:" +
                                     "$pathIntelliJ\\bin\" -Dfile.encoding=UTF-8 " +
-                                    "-classpath $pathProduction;" +
-                                    "$pathKotlinLib\\kotlin-stdlib.jar;" +
-                                    "$pathKotlinLib\\kotlin-reflect.jar;" +
-                                    "$pathKotlinLib\\kotlin-test.jar;" +
-                                    "$pathKotlinLib\\kotlin-stdlib-jdk7.jar;" +
-                                    "$pathKotlinLib\\kotlin-stdlib-jdk8.jar view.ViewProcessKt\n"
+                                    "-classpath $pathJavaClass view.ViewProcessKt\n"
                         ).start()
                         index++
                     }
@@ -44,12 +37,7 @@ internal object View {
                             "cmd", "/c",
                             "start $pathJava \"-javaagent:$pathIntelliJ\\lib\\idea_rt.jar=61388:" +
                                     "$pathIntelliJ\\bin\" -Dfile.encoding=UTF-8 " +
-                                    "-classpath $pathProduction;" +
-                                    "$pathKotlinLib\\kotlin-stdlib.jar;" +
-                                    "$pathKotlinLib\\kotlin-reflect.jar;" +
-                                    "$pathKotlinLib\\kotlin-test.jar;" +
-                                    "$pathKotlinLib\\kotlin-stdlib-jdk7.jar;" +
-                                    "$pathKotlinLib\\kotlin-stdlib-jdk8.jar view.ViewProcessKt " +
+                                    "-classpath $pathJavaClass view.ViewProcessKt " +
                                     "${userCommands.subList(index + 1, userCommands.size)
                                         .joinToString(separator = "\" \"", prefix = "\"", postfix = "\"")}\n").start()
                     }
@@ -270,7 +258,7 @@ internal object View {
                     return VCExit()
                 }
                 else -> {
-                    return VCHelp("Неизвестная команда: $command")
+                    return VCHelp("Неизвестная команда: \"$command\"")
                 }
             }
         }
