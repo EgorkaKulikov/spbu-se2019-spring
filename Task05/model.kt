@@ -69,7 +69,7 @@ data class Zipfile(val zipname: String)
     
     zip.skip(2L)
   
-    if (bytesToLong(1).toUByte().toInt() and 8 == 8)
+    if (bytesToLong(1).toInt() and 8 == 8)
     {
       offset += 16L
     }
@@ -156,7 +156,16 @@ data class Zipfile(val zipname: String)
     for (i in size-1 downTo 0)
     {
       longField *= 256L 
-      longField += field[i].toUByte().toLong()
+      val signedByte = field[i].toLong()
+      
+      if (field[i] < 0)
+      {
+        longField += signedByte + 256L
+      }
+      else
+      {
+        longField += signedByte
+      }
     }
 
     return longField
