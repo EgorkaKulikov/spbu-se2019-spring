@@ -3,10 +3,10 @@ package avl
 import avl.BalanceFactor.*
 import binary.RotatableBinaryNode
 
-enum class BalanceFactor(val value: Int) {
-    LEFT_HEAVY(-1),
-    BALANCED(0),
-    RIGHT_HEAVY(1);
+enum class BalanceFactor {
+    LEFT_HEAVY,
+    BALANCED,
+    RIGHT_HEAVY;
 
     val increased
         get() = when (this) {

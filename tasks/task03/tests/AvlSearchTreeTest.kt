@@ -1,5 +1,6 @@
 import avl.AvlSearchData
 import avl.AvlSearchTree
+import avl.BalanceFactor
 import binary.BinaryNode
 import kotlin.math.max
 
@@ -25,8 +26,11 @@ class AvlSearchTreeTest : BalancedBinarySearchTreeTest<AvlSearchData<Int, Int>> 
                 return INVALID_HEIGHT
             }
 
-            if (rightHeight - leftHeight != data.state.value) {
-                return INVALID_HEIGHT
+            when (rightHeight - leftHeight) {
+                -1 -> if (data.state != BalanceFactor.LEFT_HEAVY) return INVALID_HEIGHT
+                0 -> if (data.state != BalanceFactor.BALANCED) return INVALID_HEIGHT
+                1 -> if (data.state != BalanceFactor.RIGHT_HEAVY) return INVALID_HEIGHT
+                else -> return INVALID_HEIGHT
             }
 
             return max(leftHeight, rightHeight) + 1
