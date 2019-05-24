@@ -32,6 +32,11 @@ fun apply(arguments: Array<String>, view: View) {
         return
     }
 
+    if (arguments.size != command.countOfArguments) {
+        view.showError("Please use the following format:" + "\n    ${command.format}")
+        return
+    }
+
     val structure = createStructure(arguments[1])
 
     if (structure == null) {
@@ -39,9 +44,5 @@ fun apply(arguments: Array<String>, view: View) {
         return
     }
 
-    if (arguments.size != command.countOfArguments) {
-        view.showError("Please use the following format:" + "\n    ${command.format}")
-    } else {
-        command.doSomething(arguments, structure, view)
-    }
+    command.doSomething(arguments, structure, view)
 }
