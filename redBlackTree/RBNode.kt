@@ -5,7 +5,7 @@ enum class Color{
 }
 
 class RBNode<K : Comparable<K>, V>(
-    var key: K,
+    val key: K,
     var value: V,
     var color: Color = Color.Red,
     var parent: RBNode<K, V>? = null

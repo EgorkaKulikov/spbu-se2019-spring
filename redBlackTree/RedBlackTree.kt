@@ -4,8 +4,8 @@ import Tree
 import java.util.*
 
 
-class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
-    var root: RBNode<K, V>? = null
+class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<V> {
+    internal var root: RBNode<K, V>? = null
 
 
     override fun find(key: K): Pair<K, V>? {
@@ -111,8 +111,8 @@ class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
     }
 
 
-    override fun iterator() : Iterator<RBNode<K, V>> =
-        (object : Iterator<RBNode<K, V>>{
+    override fun iterator() : Iterator<V> =
+        (object : Iterator<V>{
 
 
             private fun createDeq(): Deque<RBNode<K, V>>{
@@ -147,7 +147,7 @@ class RedBlackTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<RBNode<K, V>> {
             override fun hasNext() = !iterationList.isEmpty()
 
 
-            override fun next(): RBNode<K, V> = iterationList.poll()
+            override fun next(): V = iterationList.poll().value
 
         })
 

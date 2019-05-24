@@ -32,7 +32,7 @@ class AVLNode<K : Comparable<K>, V>(
 
     private fun getLeafHeight(node: AVLNode<K, V>?): Pair<Int, Int> {
         when {
-            node?.height == null -> throw Exception("Error, null node has'nt leaf")
+            node?.height == null -> throw Exception("Error, null node hasn't leaf")
             else -> return Pair(node.left?.height ?: 0, node.right?.height ?: 0)
         }
     }

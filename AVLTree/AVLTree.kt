@@ -4,8 +4,8 @@ import Tree
 import java.lang.Math.abs
 import java.util.*
 
-class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
-    var root: AVLNode<K, V>? = null
+class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<V> {
+    internal var root: AVLNode<K, V>? = null
 
     override fun find(key: K): Pair<K, V>? {
         var cur: AVLNode<K, V>? = root ?: return null
@@ -97,8 +97,8 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
     }
 
 
-    override fun iterator() : Iterator<AVLNode<K, V>> =
-        (object : Iterator<AVLNode<K, V>>{
+    override fun iterator() : Iterator<V> =
+        (object : Iterator<V>{
 
 
             private fun createDeq(): Deque<AVLNode<K, V>>{
@@ -133,7 +133,7 @@ class AVLTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<AVLNode<K, V>> {
             override fun hasNext() = !iterationList.isEmpty()
 
 
-            override fun next(): AVLNode<K, V> = iterationList.poll()
+            override fun next(): V = iterationList.poll().value
 
         })
 

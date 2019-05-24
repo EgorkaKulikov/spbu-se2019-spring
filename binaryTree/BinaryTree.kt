@@ -4,8 +4,8 @@ import Tree
 import java.util.*
 
 
-class BinaryTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
-    var root: BSTNode<K, V>? = null
+class BinaryTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<V> {
+    internal var root: BSTNode<K, V>? = null
 
 
     override fun find(key: K): Pair<K, V>? {
@@ -55,8 +55,8 @@ class BinaryTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
     }
 
 
-    override fun iterator() : Iterator<BSTNode<K, V>> =
-        (object : Iterator<BSTNode<K, V>>{
+    override fun iterator() : Iterator<V> =
+        (object : Iterator<V>{
 
 
             private fun createDeq(): Deque<BSTNode<K, V>>{
@@ -91,7 +91,7 @@ class BinaryTree<K : Comparable<K>, V> : Tree<K, V>, Iterable<BSTNode<K, V>> {
             override fun hasNext() = !iterationList.isEmpty()
 
 
-            override fun next(): BSTNode<K, V> = iterationList.poll()
+            override fun next(): V = iterationList.poll().value
 
         })
 

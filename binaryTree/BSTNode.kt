@@ -1,7 +1,7 @@
 package binaryTree
 
 class BSTNode<K : Comparable<K>, V>(
-    var key: K,
+    val key: K,
     var value: V,
     var parent: BSTNode<K, V>? = null
 ) {
