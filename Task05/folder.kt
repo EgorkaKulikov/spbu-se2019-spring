@@ -6,7 +6,7 @@ class folder(_parent: folder?, _name: String) {
     val parent = _parent
     val internalFolders = LinkedList<folder>()
     val internalFiles = LinkedList<ZipEntry>()
-    fun addFolder(parent: folder, fullName: String): folder {
+    fun addFolder(fullName: String): folder {
         var indexOfFolder = 0
         for (i in (fullName.length - 2) downTo 0) {
             if (fullName[i] == '/') {
@@ -15,13 +15,12 @@ class folder(_parent: folder?, _name: String) {
             }
         }
         val folderName = fullName.substring(indexOfFolder)
-        val tempFolder = folder(parent, folderName)
+        val tempFolder = folder(this, folderName)
         internalFolders.add(tempFolder)
         return tempFolder
     }
 
     fun addFile(file: ZipEntry) {
-
         internalFiles.add(file)
     }
 }

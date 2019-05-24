@@ -9,13 +9,8 @@ class view (){
             for (i in 0..(tabs-1))
                 print("  ")
 
-            var indexOfFile = 0
-            for (i in (file.name.length - 1) downTo 0) {
-                if (file.name[i] == '/') {
-                    indexOfFile = i + 1
-                    break
-                }
-            }
+            var indexOfFile = file.name.lastIndexOf('/')
+            indexOfFile++
             val fileName = file.name.substring(indexOfFile)
             println(fileName)
         }
@@ -27,15 +22,24 @@ class view (){
     fun printFileDate(date: String?) {
         if (date == null)
             print("this file does not exist")
-        else
-            print(date)
+        else {
+            print(date.replace('T', ' ')
+                .replace('Z', ' '))
+        }
     }
 
     fun printFolderSize(size: Long?) {
         if (size == null)
             print("this folder does not exist")
         else
-            print(size)
+            println("$size bytes")
     }
 
+    fun printMenu() {
+        println("Error!")
+        println("first argument - zip file")
+        println("second argument - getZipStructure for getting structure or")
+        println("second and third arguments are getFileDate and file name or")
+        println("second and third arguments are getFolderSize and folder name")
+    }
 }

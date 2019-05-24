@@ -1,11 +1,20 @@
+import java.io.IOException
 import java.util.zip.ZipEntry
+import java.util.zip.ZipException
 import java.util.zip.ZipFile
+import kotlin.system.exitProcess
 
 class model(filePath: String) {
-    val zipFile = ZipFile(filePath)
+    private val zipFile = try {
+        ZipFile(filePath)
+    } catch (exception: ZipException) {
+        println("wrong file name")
+        exitProcess(1)
+    } catch (exception: IOException) {
+        println("wrong file name")
+        exitProcess(1)
+    }
     val root = createTree()
-
-
 
     fun createTree(): folder {
         val root = folder(null, zipFile.name)
@@ -19,15 +28,16 @@ class model(filePath: String) {
                         newNumberOfSlashes++
 
                 if (newNumberOfSlashes - numberOfSlashes >= 1) {
-                    val newFolder = tempFolder!!.addFolder(tempFolder, file.name)
+                    newNumberOfSlashes = numberOfSlashes + 1
+                    val newFolder = tempFolder!!.addFolder(file.name)
                     tempFolder = newFolder
                     numberOfSlashes = newNumberOfSlashes
                 }
-                if (newNumberOfSlashes <= numberOfSlashes) {
+                else if (newNumberOfSlashes <= numberOfSlashes) {
                     for (i in 0..(numberOfSlashes - newNumberOfSlashes)) {
                         tempFolder = tempFolder!!.parent
                     }
-                    val newFolder = tempFolder!!.addFolder(tempFolder, file.name)
+                    val newFolder = tempFolder!!.addFolder(file.name)
                     tempFolder = newFolder
                     numberOfSlashes = newNumberOfSlashes
                 }
@@ -38,15 +48,10 @@ class model(filePath: String) {
         return root
     }
 
-    fun FileDFS(startNode: folder, wantedFileName: String): ZipEntry? {
+    private fun FileDFS(startNode: folder, wantedFileName: String): ZipEntry? {
         for (file in startNode.internalFiles) {
-            var indexOfFile = 0
-            for (i in (file.name.length - 1) downTo 0) {
-                if (file.name[i] == '/') {
-                    indexOfFile = i + 1
-                    break
-                }
-            }
+            var indexOfFile = file.name.lastIndexOf('/')
+            indexOfFile++
             val fileName = file.name.substring(indexOfFile)
             if (wantedFileName == fileName) {
                 return file
@@ -61,7 +66,7 @@ class model(filePath: String) {
     }
 
     fun getFileTimeCreation(_fileName: String): String? {
-        var file: ZipEntry? = null
+        val file: ZipEntry?
         file = FileDFS(root, _fileName)
         if (file == null)
             return null
@@ -69,7 +74,7 @@ class model(filePath: String) {
             return file.lastModifiedTime.toString()
     }
 
-    fun findFolderWithDFS (startNode: folder, wantedFolderName: String): folder? {
+    private fun findFolderWithDFS (startNode: folder, wantedFolderName: String): folder? {
         if (startNode.name == wantedFolderName)
             return startNode
         for (folder in startNode.internalFolders) {
@@ -80,7 +85,7 @@ class model(filePath: String) {
         return null
     }
 
-    fun folderSizeWithDFS (startNode: folder): Long {
+    private fun folderSizeWithDFS (startNode: folder): Long {
         var sum = 0.toLong()
         for (file in startNode.internalFiles)
             sum += file.size
@@ -92,13 +97,11 @@ class model(filePath: String) {
     }
 
     fun getFolderSize(folderName: String): Long? {
-        var folder: folder? = null
+        val folder: folder?
         folder = findFolderWithDFS(root, folderName)
         if (folder == null)
             return null
         else
             return folderSizeWithDFS(folder)
-
-
     }
 }
