@@ -11,7 +11,9 @@ fun getHelp() {
 
 class View(private var model: Model) {
 
-    fun printFolderList(folderList: List<ZipEntry>) {
+    fun printFolderList(folderName: String) {
+        val folderList = model.getFolderList(folderName)
+
         if (folderList.isEmpty()) {
             println("There is no such folder!")
             return
@@ -30,7 +32,9 @@ class View(private var model: Model) {
         }
     }
 
-    fun printFileList(fileList: List<ZipEntry>) {
+    fun printFileList(fileName: String) {
+        val fileList = model.getFileList(fileName)
+
         if (fileList.isEmpty()) {
             println("There is no such file!")
             return

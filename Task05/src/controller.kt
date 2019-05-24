@@ -9,15 +9,13 @@ class Controller() {
             }
 
             args.size == 3 && args[1] == "folder_info" -> {
-                val model = Model(args[0])
-                val view = View(model)
-                view.printFolderList(model.getFolderList(args[2]))
+                val view = View(Model(args[0]))
+                view.printFolderList(args[2])
             }
 
             args.size == 3 && args[1] == "file_info" -> {
-                val model = Model(args[0])
-                val view = View(model)
-                view.printFileList(model.getFileList(args[2]))
+                val view = View(Model(args[0]))
+                view.printFileList(args[2])
             }
 
             else -> {

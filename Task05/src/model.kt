@@ -23,8 +23,7 @@ class Model (archiveName: String) {
         for (entry in zipFile.entries()) {
             var name = entry.name
 
-            if (("/$folderName/" in name || name.startsWith("$folderName/"))
-                    && entry !in folderList) {
+            if (name == "$folderName/"|| name.endsWith("/$folderName/")) {
                 folderList.add(entry)
             }
         }
