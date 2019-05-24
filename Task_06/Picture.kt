@@ -11,16 +11,16 @@ class Picture(dir_: String){
     private val bytePicHeader = ByteArray(headerSize){i -> byteFile[i]}
     private val bytePicBody = UByteArray(bodySize){i -> byteFile[i+headerSize].toUByte()}
     private val myHemming = Hemming()
-    private val bitBody = makeBitBody()
-
-    fun getBitBody():Array<BitSet>{
-        return bitBody
-    }
-
-    fun setBitBody(bitBody_ :Array<BitSet>){
+    var bitBody = makeBitBody()
+        get() = field
+        set(value ){
+            if(value != null){
+                field = makeBitBody()
+            }
         for(i in 0 until bitBody.size)
-            bitBody[i]=bitBody_[i]
+            bitBody[i]=value[i]
     }
+
 
 
 
@@ -73,7 +73,7 @@ class Picture(dir_: String){
         var result = ByteArray(0)
         result+=bytePicHeader
         result+=newBody
-        val newPic = File("/Users/ivanlyschev/IdeaProjects/Task06/$name.bmp")
+        val newPic = File("src/$name.bmp")
         newPic.createNewFile()
         newPic.writeBytes(result)
     }
