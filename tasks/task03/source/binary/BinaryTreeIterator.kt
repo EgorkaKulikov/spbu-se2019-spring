@@ -17,7 +17,7 @@ class BinaryTreeIterator<Data>(begin: BinaryNode<Data>?) : Iterator<Data> {
         }
     }
 
-    override fun hasNext() = path.size != 0
+    override fun hasNext() = path.isNotEmpty()
 
     override fun next(): Data {
         if (path.isEmpty()) {
