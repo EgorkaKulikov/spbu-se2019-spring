@@ -64,7 +64,7 @@ class BinaryTreeIteratorTest {
     }
 
     @Test
-    fun `Iterator throw exception after request of data from node following the last one`() {
+    fun `Iterator throws exception after request of data from node following the last one`() {
         val iterator = createIterator()
 
         while (iterator.hasNext()) {
