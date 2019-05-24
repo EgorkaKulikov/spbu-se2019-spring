@@ -22,44 +22,20 @@ class DirectoryInfo {
     }
 
     private fun findDirectoryFromThis(path: List<String>): DirectoryInfo? {
+        if (path.isEmpty()) {
+            return this
+        }
+        
         val next = directories[path.first()]
 
-        if (path.size == 1) {
-            return next
-        }
-
-        return next?.findDirectoryFromThis(path.subList(1, path.lastIndex))
+        return next?.findDirectoryFromThis(path.subList(1, path.lastIndex + 1))
     }
 
-    private fun findDirectoryRecursively(path: List<String>): DirectoryInfo? {
+    fun findDirectory(path: List<String>): DirectoryInfo? {
         findDirectoryFromThis(path)?.let { return it }
 
         for (directory in directories) {
             directory.value.findDirectory(path)?.let { return it }
-        }
-
-        return null
-    }
-
-    fun findDirectory(path: List<String>): DirectoryInfo? {
-        if (path.isEmpty()) {
-            return this
-        }
-
-        return findDirectoryRecursively(path)
-    }
-
-    private fun findFileRecursively(path: List<String>): FileInfo? {
-        if (path.size == 1) {
-            files[path.first()]
-        } else {
-            findDirectoryFromThis(
-                path.subList(0, path.lastIndex - 1)
-            )?.run { files[path.last()] }
-        }?.let { return it }
-
-        for (directory in directories) {
-            directory.value.findFile(path)?.let { return it }
         }
 
         return null
@@ -70,11 +46,23 @@ class DirectoryInfo {
             return null
         }
 
-        return findFileRecursively(path)
+        findDirectoryFromThis(
+            path.subList(0, path.lastIndex)
+        )?.run { files[path.last()]?.let { return it } }
+
+        for (directory in directories) {
+            directory.value.findFile(path)?.let { return it }
+        }
+
+        return null
     }
 
     fun insertFile(path: List<String>, file: FileInfo): Boolean {
-        val directory = pavePath(path.subList(0, path.lastIndex - 1))
+        if (path.isEmpty()) {
+            return false
+        }
+
+        val directory = pavePath(path.subList(0, path.lastIndex))
 
         if (path.last() in directory.files) {
             return false
