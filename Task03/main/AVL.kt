@@ -9,15 +9,8 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         internal var height = 1
 
         internal fun updateHeight() {
-            var leftHeight = 0
-            if (left != null) {
-                leftHeight = (left as AVLNode).height
-            }
-
-            var rightHeight = 0
-            if (right != null) {
-                rightHeight = (right as AVLNode).height
-            }
+            val leftHeight = (left as? AVLNode)?.height ?: 0
+            val rightHeight = (right as? AVLNode)?.height ?: 0
 
             val nodeHeight = max(leftHeight, rightHeight) + 1
 
