@@ -1,10 +1,12 @@
 package avl
 
-import binary.BinaryTreeBalancer
-import binary.BinaryTreeCorrector
+import avl.BalanceFactor.*
+import binary.RotatableBinaryNode
 
 enum class BalanceFactor(val value: Int) {
-    LEFT_HEAVY(-1), BALANCED(0), RIGHT_HEAVY(1);
+    LEFT_HEAVY(-1),
+    BALANCED(0),
+    RIGHT_HEAVY(1);
 
     val increased
         get() = when (this) {
@@ -21,87 +23,91 @@ enum class BalanceFactor(val value: Int) {
         }
 }
 
-interface AvlData {
-    var state: BalanceFactor
+open class AvlData(state: BalanceFactor) {
+    var state: BalanceFactor = state
+        internal set
 }
 
-class AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data>() {
+fun <Data : AvlData> createAvlTreeBalancer() = { inserted: RotatableBinaryNode<Data> ->
+    var current = inserted.apply { data.state = BALANCED }
 
-    override fun balance(corrector: BinaryTreeCorrector<Data>) = with(corrector) {
-        currentData.state = BalanceFactor.BALANCED
+    while (true) {
+        val parent = current.parent ?: break
 
-        while (currentHasParent) {
-            if (currentIsRightChild) {
-                if (parentData.state == BalanceFactor.RIGHT_HEAVY) {
-                    if (currentData.state == BalanceFactor.LEFT_HEAVY) {
-                        when (leftChildData.state) {
-                            BalanceFactor.RIGHT_HEAVY -> {
-                                parentData.state = BalanceFactor.LEFT_HEAVY
-                                currentData.state = BalanceFactor.BALANCED
-                            }
-                            BalanceFactor.BALANCED -> {
-                                parentData.state = BalanceFactor.BALANCED
-                                currentData.state = BalanceFactor.BALANCED
-                            }
-                            else -> {
-                                parentData.state = BalanceFactor.BALANCED
-                                currentData.state = BalanceFactor.RIGHT_HEAVY
-                            }
+        if (current === parent.right) {
+            if (parent.data.state == RIGHT_HEAVY) {
+                if (current.data.state == LEFT_HEAVY) {
+                    val left = current.left ?: throw IllegalArgumentException("Tree was changed without balancer")
+
+                    when (left.data.state) {
+                        RIGHT_HEAVY -> {
+                            parent.data.state = LEFT_HEAVY
+                            current.data.state = BALANCED
                         }
-
-                        leftChildData.state = BalanceFactor.BALANCED
-
-                        rotateCurrentToRight()
-                        rotateGrandparentToLeft()
-                    } else {
-                        currentData.state = BalanceFactor.BALANCED
-                        parentData.state = BalanceFactor.BALANCED
-                        rotateParentToLeft()
+                        BALANCED -> {
+                            parent.data.state = BALANCED
+                            current.data.state = BALANCED
+                        }
+                        else -> {
+                            parent.data.state = BALANCED
+                            current.data.state = RIGHT_HEAVY
+                        }
                     }
 
-                    break
+                    left.data.state = BALANCED
+
+                    current.rotateRight()
+                    parent.rotateLeft()
                 } else {
-                    parentData.state = parentData.state.increased
+                    current.data.state = BALANCED
+                    parent.data.state = BALANCED
+                    parent.rotateLeft()
                 }
-            } else {
-                if (parentData.state == BalanceFactor.LEFT_HEAVY) {
-                    if (currentData.state == BalanceFactor.RIGHT_HEAVY) {
-                        when (rightChildData.state) {
-                            BalanceFactor.LEFT_HEAVY -> {
-                                parentData.state = BalanceFactor.RIGHT_HEAVY
-                                currentData.state = BalanceFactor.BALANCED
-                            }
-                            BalanceFactor.BALANCED -> {
-                                parentData.state = BalanceFactor.BALANCED
-                                currentData.state = BalanceFactor.BALANCED
-                            }
-                            else -> {
-                                parentData.state = BalanceFactor.BALANCED
-                                currentData.state = BalanceFactor.LEFT_HEAVY
-                            }
-                        }
 
-                        rightChildData.state = BalanceFactor.BALANCED
-
-                        rotateCurrentToLeft()
-                        rotateGrandparentToRight()
-                    } else {
-                        parentData.state = BalanceFactor.BALANCED
-                        currentData.state = BalanceFactor.BALANCED
-                        rotateParentToRight()
-                    }
-
-                    break
-                } else {
-                    parentData.state = parentData.state.decreased
-                }
-            }
-
-            if (parentData.state == BalanceFactor.BALANCED) {
                 break
             }
 
-            moveToParent()
+            parent.data.state = parent.data.state.increased
+        } else {
+            if (parent.data.state == LEFT_HEAVY) {
+                if (current.data.state == RIGHT_HEAVY) {
+                    val right = current.right ?: throw IllegalArgumentException("Tree was changed without balancer")
+
+                    when (right.data.state) {
+                        LEFT_HEAVY -> {
+                            parent.data.state = RIGHT_HEAVY
+                            current.data.state = BALANCED
+                        }
+                        BALANCED -> {
+                            parent.data.state = BALANCED
+                            current.data.state = BALANCED
+                        }
+                        else -> {
+                            parent.data.state = BALANCED
+                            current.data.state = LEFT_HEAVY
+                        }
+                    }
+
+                    right.data.state = BALANCED
+
+                    current.rotateLeft()
+                    parent.rotateRight()
+                } else {
+                    parent.data.state = BALANCED
+                    current.data.state = BALANCED
+                    parent.rotateRight()
+                }
+
+                break
+            }
+
+            parent.data.state = parent.data.state.decreased
         }
+
+        if (parent.data.state == BALANCED) {
+            break
+        }
+
+        current = parent
     }
 }

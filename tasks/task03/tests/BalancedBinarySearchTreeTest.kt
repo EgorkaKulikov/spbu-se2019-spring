@@ -1,13 +1,13 @@
-import binary.BinaryTreeRunner
+import binary.BinaryNode
 import binary.BinarySearchTree
 import binary.SearchData
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
 interface BalancedBinarySearchTreeTest<Data : SearchData<Int, Int>> {
 
-    fun checkBalance(runner: BinaryTreeRunner<Data>): Boolean
+    fun checkBalance(root: BinaryNode<Data>?): Boolean
 
     fun createTree(): BinarySearchTree<Int, Int, Data>
 
@@ -31,7 +31,7 @@ interface BalancedBinarySearchTreeTest<Data : SearchData<Int, Int>> {
             }
         }
 
-        val isBalanced = checkBalance(tree.getRunner())
+        val isBalanced = checkBalance(tree.openRoot)
 
         assertTrue(hasAllKeys)
         assertTrue(isBalanced)

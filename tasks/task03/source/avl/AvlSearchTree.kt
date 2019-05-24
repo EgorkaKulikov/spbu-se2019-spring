@@ -3,16 +3,12 @@ package avl
 import binary.BinarySearchTree
 import binary.SearchData
 
-data class AvlSearchData<Key, Value>(
+class AvlSearchData<Key, Value>(
     override val key: Key,
     override var value: Value,
-    override var state: BalanceFactor
-) : SearchData<Key, Value>, AvlData
+    state: BalanceFactor
+) : AvlData(state), SearchData<Key, Value>
 
-typealias AvlSearchTree<Key, Value> = BinarySearchTree<Key, Value, AvlSearchData<Key, Value>>
-
-fun <Key : Comparable<Key>, Value> AvlSearchTree(): AvlSearchTree<Key, Value> {
-    return BinarySearchTree(AvlTreeBalancer()) { key: Key, value: Value ->
-        AvlSearchData(key, value, BalanceFactor.BALANCED)
-    }
-}
+class AvlSearchTree<Key : Comparable<Key>, Value> : BinarySearchTree<Key, Value, AvlSearchData<Key, Value>>(
+    createAvlTreeBalancer(), { key: Key, value: Value -> AvlSearchData(key, value, BalanceFactor.BALANCED) }
+)

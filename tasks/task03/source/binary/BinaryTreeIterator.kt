@@ -1,14 +1,14 @@
 package binary
 
-class BinaryTreeIterator<Data, NodeData>(begin: BinaryNode<NodeData>?, val converter: (NodeData) -> Data) : Iterator<Data> {
+class BinaryTreeIterator<Data>(begin: BinaryNode<Data>?) : Iterator<Data> {
 
-    private val path = mutableListOf<BinaryNode<NodeData>>()
+    private val path = mutableListOf<BinaryNode<Data>>()
 
     init {
         rebuildPath(begin)
     }
 
-    private fun rebuildPath(from: BinaryNode<NodeData>?) {
+    private fun rebuildPath(from: BinaryNode<Data>?) {
         var node = from
 
         while (node != null) {
@@ -30,6 +30,6 @@ class BinaryTreeIterator<Data, NodeData>(begin: BinaryNode<NodeData>?, val conve
             rebuildPath(next.right)
         }
 
-        return converter(next.data)
+        return next.data
     }
 }

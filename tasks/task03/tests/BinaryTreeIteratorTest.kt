@@ -1,61 +1,78 @@
-import binary.BinaryNode
+import binary.BinaryTreeNode
 import binary.BinaryTreeIterator
-import org.junit.Test
-import org.junit.Assert.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class BinaryTreeIteratorTest {
 
-    private fun createIterableTree(root: BinaryNode<Int>?) = object : Iterable<Int> {
+    fun createIterator(): BinaryTreeIterator<Int> {
+        val root = BinaryTreeNode(5).apply {
+            left = BinaryTreeNode(3).apply {
+                left = BinaryTreeNode(2).apply {
+                    left = BinaryTreeNode(1)
+                }
+                right = BinaryTreeNode(4)
+            }
+            right = BinaryTreeNode(8).apply {
+                left = BinaryTreeNode(6).apply {
+                    right = BinaryTreeNode(7)
+                }
+                right = BinaryTreeNode(10).apply {
+                    left = BinaryTreeNode(9)
+                }
+            }
+        }
 
-        override fun iterator() = BinaryTreeIterator(root) { it }
+        return BinaryTreeIterator(root)
     }
 
     @Test
     fun `Test iteration for empty tree`() {
-        val tree = createIterableTree(null as BinaryNode<Int>?)
-
+        val iterator = BinaryTreeIterator<Int>(null)
         val actualList = mutableListOf<Int>()
 
-        for (value in tree) {
-            actualList.add(value)
+        while (iterator.hasNext()) {
+            actualList.add(iterator.next())
         }
 
-        val expected = intArrayOf()
-        val actual = actualList.toIntArray()
+        assertArrayEquals(intArrayOf(), actualList.toIntArray())
+    }
 
-        assertArrayEquals(expected, actual)
+    @Test
+    fun `Iterator throws exception after request of data from empty tree`() {
+        val iterator = BinaryTreeIterator<Int>(null)
+
+        assertThrows<NoSuchElementException> {
+            iterator.next()
+        }
     }
 
     @Test
     fun `Test iteration`() {
-        val root = BinaryNode(5).apply {
-            left = BinaryNode(3).apply {
-                left = BinaryNode(2).apply {
-                    left = BinaryNode(1)
-                }
-                right = BinaryNode(4)
-            }
-            right = BinaryNode(8).apply {
-                left = BinaryNode(6).apply {
-                    right = BinaryNode(7)
-                }
-                right = BinaryNode(10).apply {
-                    left = BinaryNode(9)
-                }
-            }
-        }
+        val iterator = createIterator()
 
-        val tree = createIterableTree(root)
+        val actual = mutableListOf<Int>()
 
-        val actualList = mutableListOf<Int>()
-
-        for (value in tree) {
-            actualList.add(value)
+        while (iterator.hasNext()) {
+            actual.add(iterator.next())
         }
 
         val expected = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        val actual = actualList.toIntArray()
 
-        assertArrayEquals(expected, actual)
+        assertArrayEquals(expected, actual.toIntArray())
+    }
+
+    @Test
+    fun `Iterator throw exception after request of data from node following the last one`() {
+        val iterator = createIterator()
+
+        while (iterator.hasNext()) {
+            iterator.next()
+        }
+
+        assertThrows<NoSuchElementException> {
+            iterator.next()
+        }
     }
 }

@@ -1,59 +1,68 @@
 package rb
 
-import binary.BinaryTreeBalancer
-import binary.BinaryTreeCorrector
-import rb.Color.*
+import binary.RotatableBinaryNode
+import rb.Color.Black
+import rb.Color.Red
 
 enum class Color {
-    Red, Black
+    Red,
+    Black
 }
 
-interface RedBlackData {
-    var color: Color
+open class RedBlackData(color: Color) {
+    var color = color
+        internal set
 }
 
-class RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data>() {
+fun <Data : RedBlackData> createRedBlackTreeBalancer() = { inserted: RotatableBinaryNode<Data> ->
+    var current = inserted.apply { data.color = Red }
 
-    override fun balance(corrector: BinaryTreeCorrector<Data>) = with(corrector) {
-        currentData.color = Red
+    while (true) {
+        val parent = current.parent
 
-        while (true) {
-            if (!currentHasParent) {
-                currentData.color = Black
-                break
-            }
+        if (parent == null) {
+            current.data.color = Black
+            break
+        }
 
-            if (parentData.color == Black) {
-                break
-            }
+        if (parent.data.color == Black) {
+            break
+        }
 
-            if (currentHasUncle && uncleData.color == Red) {
-                uncleData.color = Black
-                parentData.color = Black
-                grandparentData.color = Red
-                moveToGrandparent()
-            } else {
-                if (currentIsRightChild) {
-                    if (parentIsLeftChild) {
-                        rotateParentToLeft()
-                        moveToLeftChild()
-                    }
-                } else if (parentIsRightChild) {
-                    rotateParentToRight()
-                    moveToRightChild()
-                }
+        val grandparent = parent.parent ?: throw IllegalArgumentException("Tree was changed without balancer")
+        val uncle = when {
+            parent === grandparent.left -> grandparent.right
+            else -> grandparent.left
+        }
 
-                grandparentData.color = Red
-                parentData.color = Black
+        if (uncle != null && uncle.data.color == Red) {
+            uncle.data.color = Black
+            parent.data.color = Black
+            grandparent.data.color = Red
+            current = grandparent
+        } else {
+            fun update(current: RotatableBinaryNode<Data>, parent: RotatableBinaryNode<Data>) {
+                grandparent.data.color = Red
+                parent.data.color = Black
 
-                if (currentIsLeftChild) {
-                    rotateGrandparentToRight()
+                if (current === parent.left) {
+                    grandparent.rotateRight()
                 } else {
-                    rotateGrandparentToLeft()
+                    grandparent.rotateLeft()
                 }
-
-                break
             }
+
+            if (current === parent.right && parent === grandparent.left) {
+                parent.rotateLeft()
+                update(parent, current)
+            } else if (current === parent.left && parent === grandparent.right) {
+                parent.rotateRight()
+                update(parent, current)
+            } else {
+                update(current, parent)
+            }
+
+            break
         }
     }
 }

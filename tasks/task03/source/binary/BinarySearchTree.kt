@@ -5,19 +5,19 @@ interface SearchData<Key, Value> {
     var value: Value
 }
 
-class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key, Value>>(
-    private val balancer: BinaryTreeBalancer<Data>,
+open class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key, Value>>(
+    private val balancer: (RotatableBinaryNode<Data>) -> Unit,
     private val creator: (Key, Value) -> Data
 ) : Iterable<SearchData<Key, Value>> {
 
-    private var root: BinaryNode<Data>? = null
+    private var root: BinaryTreeNode<Data>? = null
+
+    val openRoot: BinaryNode<Data>? get() = root
 
     var size = 0
         private set
 
-    fun getRunner() = BinaryTreeRunner(root ?: throw IllegalStateException("Tree is empty"))
-
-    override fun iterator() = BinaryTreeIterator(root) { it }
+    override fun iterator() = BinaryTreeIterator(root)
 
     operator fun get(key: Key): Value? {
         var node = root
@@ -38,7 +38,7 @@ class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key, Valu
 
     operator fun set(key: Key, value: Value): Value? {
         var wasInserted = false
-        val root = root ?: BinaryNode(creator(key, value)).also {
+        val root = root ?: BinaryTreeNode(creator(key, value)).also {
             root = it
             wasInserted = true
         }
@@ -50,24 +50,20 @@ class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key, Valu
             val comparisonResult = key.compareTo(data.key)
 
             node = when {
-                comparisonResult < 0 -> node.left ?: let {
-                    BinaryNode(creator(key, value)).also {
-                        node.left = it
-                        wasInserted = true
-                    }
+                comparisonResult < 0 -> node.left ?: BinaryTreeNode(creator(key, value)).also {
+                    node.left = it
+                    wasInserted = true
                 }
-                comparisonResult > 0 -> node.right ?: let {
-                    BinaryNode(creator(key, value)).also {
-                        node.right = it
-                        wasInserted = true
-                    }
+                comparisonResult > 0 -> node.right ?: BinaryTreeNode(creator(key, value)).also {
+                    node.right = it
+                    wasInserted = true
                 }
                 else -> return data.value.also { data.value = value }
             }
         }
 
         size++
-        balancer.balance(node)
+        balancer(node)
 
         while (this.root!!.parent != null) {
             this.root = this.root!!.parent
