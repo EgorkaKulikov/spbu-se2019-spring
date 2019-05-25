@@ -1,7 +1,8 @@
 package trees
 
 internal enum class Color {
-    RED, BLACK
+    RED
+    , BLACK
 }
 
 class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
@@ -10,29 +11,18 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
 
         internal fun verifyRB(): Pair<Boolean, Int> {
             if (color == Color.RED
-                && ((left != null && (left as RBNode).color == Color.RED)
-                        || (right != null && (right as RBNode).color == Color.RED))
+                && (((left as? RBNode)?.color == Color.RED)
+                    || ((right as? RBNode)?.color == Color.RED))
             ) {
                 return Pair(false, 0)
             } else {
-                var leftCorrect: Pair<Boolean, Int>
+                val leftCorrect = (left as? RBNode)?.verifyRB() ?: Pair(true, 1)
+                val rightCorrect = (right as? RBNode)?.verifyRB() ?: Pair(true, 1)
 
-                if (left == null) {
-                    leftCorrect = Pair(true, 1)
-                } else {
-                    leftCorrect = (left as RBNode).verifyRB()
-                }
-
-                var rightCorrect: Pair<Boolean, Int>
-
-                if (right == null) {
-                    rightCorrect = Pair(true, 1)
-                } else {
-                    rightCorrect = (right as RBNode).verifyRB()
-                }
-
-                val nodeCorrect = (leftCorrect.second == rightCorrect.second)
-                        && (leftCorrect.first) && (rightCorrect.first)
+                val nodeCorrect = 
+                    (leftCorrect.second == rightCorrect.second)
+                    && (leftCorrect.first) 
+                    && (rightCorrect.first)
 
                 var nodeHeight = leftCorrect.second
                 if (color == Color.BLACK) {

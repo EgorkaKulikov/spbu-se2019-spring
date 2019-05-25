@@ -46,11 +46,13 @@ open class BinarySearchTree<K : Comparable<K>, V> {
 
     internal var root: Node? = null
 
-    internal fun isBinarySearchTree() = (root == null)
-            || (root!!.verifyBST())
+    internal fun isBinarySearchTree() = 
+        (root?.verifyBST() ?: true)
 
-    internal fun parentsCorrectness() = (root == null)
-            || (root!!.parent == null && root!!.verifyParents())
+    internal fun parentsCorrectness() =
+        (root == null)
+        || (root!!.parent == null 
+            && root!!.verifyParents())
 
     protected open fun createNode(key: K, value: V, parent: Node?) =
         Node(key, value, parent)
