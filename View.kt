@@ -1,7 +1,8 @@
 import java.util.zip.*
 
 
-object Viev {
+object View {
+
     fun printTime() {
         val defaultTime = "00:00:00"
         if (ZipModel.time != defaultTime) {
@@ -11,7 +12,7 @@ object Viev {
 
 
     fun printDate() {
-        val defaultDate = "01.01.1980"
+        val defaultDate = "1980-01-01"
         if (ZipModel.date != defaultDate) {
             println(ZipModel.date)
         }
@@ -20,7 +21,7 @@ object Viev {
 
 
     fun printSize() {
-        println(ZipModel.size)
+        println("${ZipModel.size} Bytes")
     }
 
 

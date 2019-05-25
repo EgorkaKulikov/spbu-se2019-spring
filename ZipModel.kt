@@ -1,10 +1,12 @@
 import java.util.zip.*
 
 object ZipModel {
+
     var curZipInputs: ZipInputStream? = null
-    var date = "01.01.1980"
+    var date = "1980-01-01"
     var time = "00:00:00"
     var size = 0L
+
 
     fun setZipInput(zipInput: ZipInputStream) {
         curZipInputs = zipInput
@@ -17,7 +19,7 @@ object ZipModel {
         while (true) {
             entry = curZipInputs?.nextEntry
             if (entry == null){
-                Viev.printSize()
+                View.printSize()
                 return
             }
             if (entry.name.contains(name)) {
@@ -49,8 +51,8 @@ object ZipModel {
         val resList = entry.lastModifiedTime.toString().split("T", "Z")
         date = resList[0]
         time = resList[1]
-        Viev.printDate()
-        Viev.printTime()
+        View.printDate()
+        View.printTime()
     }
 
 
