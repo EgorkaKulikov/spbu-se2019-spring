@@ -8,6 +8,9 @@ class SimpleSearchData<Key, Value>(
     override var value: Value
 ) : SearchData<Key, Value>
 
-class SimpleBinarySearchTree<Key : Comparable<Key>, Value> : BinarySearchTree<Key, Value, SimpleSearchData<Key, Value>>(
-    {}, { key: Key, value: Value -> SimpleSearchData(key, value) }
+class SimpleBinarySearchTree<Key : Comparable<Key>, Value>
+    : BinarySearchTree<Key, Value, SearchData<Key, Value>, SimpleSearchData<Key, Value>>(
+
+    {},
+    { key: Key, value: Value -> SimpleSearchData(key, value) }
 )

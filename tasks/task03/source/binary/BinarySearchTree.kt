@@ -5,14 +5,14 @@ interface SearchData<Key, Value> {
     var value: Value
 }
 
-open class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key, Value>>(
+open class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchData<Key, Value>, Data : VisibleData>(
     private val balancer: (RotatableBinaryNode<Data>) -> Unit,
     private val creator: (Key, Value) -> Data
-) : Iterable<SearchData<Key, Value>> {
+) : Iterable<VisibleData> {
 
-    private var root: BinaryTreeNode<Data>? = null
+    private var root: BinaryTreeNode<VisibleData, Data>? = null
 
-    val openRoot: BinaryNode<Data>? get() = root
+    val openRoot: BinaryNode<VisibleData>? get() = root
 
     var size = 0
         private set
@@ -36,9 +36,11 @@ open class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key,
         return null
     }
 
+    private fun createNode(key: Key, value: Value) = BinaryTreeNode<VisibleData, Data>(creator(key, value))
+
     operator fun set(key: Key, value: Value): Value? {
         var wasInserted = false
-        val root = root ?: BinaryTreeNode(creator(key, value)).also {
+        val root = root ?: createNode(key, value).also {
             root = it
             wasInserted = true
         }
@@ -50,11 +52,11 @@ open class BinarySearchTree<Key : Comparable<Key>, Value, Data : SearchData<Key,
             val comparisonResult = key.compareTo(data.key)
 
             node = when {
-                comparisonResult < 0 -> node.left ?: BinaryTreeNode(creator(key, value)).also {
+                comparisonResult < 0 -> node.left ?: createNode(key, value).also {
                     node.left = it
                     wasInserted = true
                 }
-                comparisonResult > 0 -> node.right ?: BinaryTreeNode(creator(key, value)).also {
+                comparisonResult > 0 -> node.right ?: createNode(key, value).also {
                     node.right = it
                     wasInserted = true
                 }

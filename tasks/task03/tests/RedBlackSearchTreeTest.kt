@@ -2,14 +2,15 @@ import binary.BinaryNode
 import rb.Color
 import rb.RedBlackSearchData
 import rb.RedBlackSearchTree
+import rb.RedBlackVisibleSearchData
 
-class RedBlackSearchTreeTest : BalancedBinarySearchTreeTest<RedBlackSearchData<Int, Int>> {
+class RedBlackSearchTreeTest : BalancedBinarySearchTreeTest<RedBlackVisibleSearchData<Int, Int>> {
 
     private companion object {
         const val INVALID_BLACK_HEIGHT = -1
     }
 
-    private val BinaryNode<RedBlackSearchData<Int, Int>>?.blackHeight: Int
+    private val BinaryNode<RedBlackVisibleSearchData<Int, Int>>?.blackHeight: Int
         get() {
             this ?: return 1
 
@@ -28,7 +29,7 @@ class RedBlackSearchTreeTest : BalancedBinarySearchTreeTest<RedBlackSearchData<I
             return leftHeight + if (data.color == Color.Black) 1 else 0
         }
 
-    override fun checkBalance(root: BinaryNode<RedBlackSearchData<Int, Int>>?): Boolean {
+    override fun checkBalance(root: BinaryNode<RedBlackVisibleSearchData<Int, Int>>?): Boolean {
         return root.blackHeight != INVALID_BLACK_HEIGHT
     }
 

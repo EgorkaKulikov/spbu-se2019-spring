@@ -23,9 +23,8 @@ enum class BalanceFactor {
         }
 }
 
-open class AvlData(state: BalanceFactor) {
-    var state: BalanceFactor = state
-        internal set
+interface AvlData {
+    var state: BalanceFactor
 }
 
 fun <Data : AvlData> createAvlTreeBalancer() = { inserted: RotatableBinaryNode<Data> ->

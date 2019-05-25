@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-interface BalancedBinarySearchTreeTest<Data : SearchData<Int, Int>> {
+interface BalancedBinarySearchTreeTest<VisibleData : SearchData<Int, Int>> {
 
-    fun checkBalance(root: BinaryNode<Data>?): Boolean
+    fun checkBalance(root: BinaryNode<VisibleData>?): Boolean
 
-    fun createTree(): BinarySearchTree<Int, Int, Data>
+    fun createTree(): BinarySearchTree<Int, Int, VisibleData, *>
 
     private fun createRandomKeys(size: Int) = Array(size) { Random.nextInt() }
 

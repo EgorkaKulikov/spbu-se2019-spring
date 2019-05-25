@@ -9,9 +9,8 @@ enum class Color {
     Black
 }
 
-open class RedBlackData(color: Color) {
-    var color = color
-        internal set
+interface RedBlackData {
+    var color: Color
 }
 
 fun <Data : RedBlackData> createRedBlackTreeBalancer() = { inserted: RotatableBinaryNode<Data> ->

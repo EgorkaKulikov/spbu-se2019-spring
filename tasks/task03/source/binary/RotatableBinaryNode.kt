@@ -1,10 +1,12 @@
 package binary
 
-interface RotatableBinaryNode<Data>: BinaryNode<Data> {
+interface RotatableBinaryNode<Data> {
 
-    override val parent: RotatableBinaryNode<Data>?
-    override val left: RotatableBinaryNode<Data>?
-    override val right: RotatableBinaryNode<Data>?
+    val data: Data
+
+    val parent: RotatableBinaryNode<Data>?
+    val left: RotatableBinaryNode<Data>?
+    val right: RotatableBinaryNode<Data>?
 
     fun rotateLeft()
     fun rotateRight()
