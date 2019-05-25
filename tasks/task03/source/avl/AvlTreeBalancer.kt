@@ -7,7 +7,8 @@ import binary.RotatableBinaryNode
 enum class BalanceFactor {
     LEFT_HEAVY,
     BALANCED,
-    RIGHT_HEAVY;
+    RIGHT_HEAVY,
+    ;
 
     val increased
         get() = when (this) {
@@ -28,9 +29,9 @@ interface AvlData {
     var state: BalanceFactor
 }
 
-class AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data> {
+interface AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data> {
 
-    override fun invoke(inserted: RotatableBinaryNode<Data>) {
+    override fun balance(inserted: RotatableBinaryNode<Data>) {
         var current = inserted.apply { data.state = BALANCED }
 
         while (true) {

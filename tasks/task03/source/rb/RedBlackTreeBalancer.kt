@@ -7,16 +7,16 @@ import rb.Color.Red
 
 enum class Color {
     Red,
-    Black
+    Black,
 }
 
 interface RedBlackData {
     var color: Color
 }
 
-class RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
+interface RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
 
-    override fun invoke(inserted: RotatableBinaryNode<Data>) {
+    override fun balance(inserted: RotatableBinaryNode<Data>) {
         var current = inserted.apply { data.color = Red }
 
         while (true) {

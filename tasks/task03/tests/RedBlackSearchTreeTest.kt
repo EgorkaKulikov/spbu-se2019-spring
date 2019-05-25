@@ -1,6 +1,5 @@
 import binary.BinaryNode
 import rb.Color
-import rb.RedBlackSearchData
 import rb.RedBlackSearchTree
 import rb.RedBlackVisibleSearchData
 

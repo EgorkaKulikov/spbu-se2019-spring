@@ -5,15 +5,9 @@ interface SearchData<Key, Value> {
     var value: Value
 }
 
-interface SearchDataCreator<Key, Value, Data> {
-
-    operator fun invoke(key: Key, value: Value): Data
-}
-
-open class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchData<Key, Value>, Data : VisibleData>(
-    private val balancer: BinaryTreeBalancer<Data>,
-    private val creator: SearchDataCreator<Key, Value, Data>
-) : Iterable<VisibleData> {
+abstract class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchData<Key, Value>, Data : VisibleData> :
+    BinaryTreeBalancer<Data>,
+    Iterable<VisibleData> {
 
     private var root: BinaryTreeNode<VisibleData, Data>? = null
 
@@ -41,7 +35,9 @@ open class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchDa
         return null
     }
 
-    private fun createNode(key: Key, value: Value) = BinaryTreeNode<VisibleData, Data>(creator(key, value))
+    abstract fun createData(key: Key, value: Value): Data
+
+    private fun createNode(key: Key, value: Value) = BinaryTreeNode<VisibleData, Data>(createData(key, value))
 
     operator fun set(key: Key, value: Value): Value? {
         var wasInserted = false
@@ -70,7 +66,7 @@ open class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchDa
         }
 
         size++
-        balancer(node)
+        balance(node)
 
         while (this.root!!.parent != null) {
             this.root = this.root!!.parent
