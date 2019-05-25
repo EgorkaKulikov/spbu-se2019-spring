@@ -1,22 +1,18 @@
 package simple
 
 import binary.BinarySearchTree
+import binary.RotatableBinaryNode
 import binary.SearchData
-import binary.SearchDataCreator
 
-class SimpleSearchData<Key, Value>(
+data class SimpleSearchData<Key, Value>(
     override val key: Key,
     override var value: Value
 ) : SearchData<Key, Value>
 
-class SimpleSearchDataCreator<Key, Value> : SearchDataCreator<Key, Value, SimpleSearchData<Key, Value>> {
+class SimpleBinarySearchTree<Key : Comparable<Key>, Value> :
+    BinarySearchTree<Key, Value, SearchData<Key, Value>, SimpleSearchData<Key, Value>>() {
 
-    override fun invoke(key: Key, value: Value) = SimpleSearchData(key, value)
+    override fun createData(key: Key, value: Value) = SimpleSearchData(key, value)
+
+    override fun balance(inserted: RotatableBinaryNode<SimpleSearchData<Key, Value>>) {}
 }
-
-class SimpleBinarySearchTree<Key : Comparable<Key>, Value>
-    : BinarySearchTree<Key, Value, SearchData<Key, Value>, SimpleSearchData<Key, Value>>(
-
-    SimpleBinaryTreeBalancer(),
-    SimpleSearchDataCreator()
-)
