@@ -5,9 +5,14 @@ interface SearchData<Key, Value> {
     var value: Value
 }
 
+interface SearchDataCreator<Key, Value, Data> {
+
+    operator fun invoke(key: Key, value: Value): Data
+}
+
 open class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchData<Key, Value>, Data : VisibleData>(
-    private val balancer: (RotatableBinaryNode<Data>) -> Unit,
-    private val creator: (Key, Value) -> Data
+    private val balancer: BinaryTreeBalancer<Data>,
+    private val creator: SearchDataCreator<Key, Value, Data>
 ) : Iterable<VisibleData> {
 
     private var root: BinaryTreeNode<VisibleData, Data>? = null

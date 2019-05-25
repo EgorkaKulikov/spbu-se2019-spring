@@ -1,6 +1,7 @@
 package avl
 
 import avl.BalanceFactor.*
+import binary.BinaryTreeBalancer
 import binary.RotatableBinaryNode
 
 enum class BalanceFactor {
@@ -27,86 +28,89 @@ interface AvlData {
     var state: BalanceFactor
 }
 
-fun <Data : AvlData> createAvlTreeBalancer() = { inserted: RotatableBinaryNode<Data> ->
-    var current = inserted.apply { data.state = BALANCED }
+class AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data> {
 
-    while (true) {
-        val parent = current.parent ?: break
+    override fun invoke(inserted: RotatableBinaryNode<Data>) {
+        var current = inserted.apply { data.state = BALANCED }
 
-        if (current === parent.right) {
-            if (parent.data.state == RIGHT_HEAVY) {
-                if (current.data.state == LEFT_HEAVY) {
-                    val left = current.left ?: throw IllegalArgumentException("Tree was changed without balancer")
+        while (true) {
+            val parent = current.parent ?: break
 
-                    when (left.data.state) {
-                        RIGHT_HEAVY -> {
-                            parent.data.state = LEFT_HEAVY
-                            current.data.state = BALANCED
+            if (current === parent.right) {
+                if (parent.data.state == RIGHT_HEAVY) {
+                    if (current.data.state == LEFT_HEAVY) {
+                        val left = current.left ?: throw IllegalArgumentException("Tree was changed without balancer")
+
+                        when (left.data.state) {
+                            RIGHT_HEAVY -> {
+                                parent.data.state = LEFT_HEAVY
+                                current.data.state = BALANCED
+                            }
+                            BALANCED -> {
+                                parent.data.state = BALANCED
+                                current.data.state = BALANCED
+                            }
+                            else -> {
+                                parent.data.state = BALANCED
+                                current.data.state = RIGHT_HEAVY
+                            }
                         }
-                        BALANCED -> {
-                            parent.data.state = BALANCED
-                            current.data.state = BALANCED
-                        }
-                        else -> {
-                            parent.data.state = BALANCED
-                            current.data.state = RIGHT_HEAVY
-                        }
+
+                        left.data.state = BALANCED
+
+                        current.rotateRight()
+                        parent.rotateLeft()
+                    } else {
+                        current.data.state = BALANCED
+                        parent.data.state = BALANCED
+                        parent.rotateLeft()
                     }
 
-                    left.data.state = BALANCED
-
-                    current.rotateRight()
-                    parent.rotateLeft()
-                } else {
-                    current.data.state = BALANCED
-                    parent.data.state = BALANCED
-                    parent.rotateLeft()
+                    break
                 }
 
+                parent.data.state = parent.data.state.increased
+            } else {
+                if (parent.data.state == LEFT_HEAVY) {
+                    if (current.data.state == RIGHT_HEAVY) {
+                        val right = current.right ?: throw IllegalArgumentException("Tree was changed without balancer")
+
+                        when (right.data.state) {
+                            LEFT_HEAVY -> {
+                                parent.data.state = RIGHT_HEAVY
+                                current.data.state = BALANCED
+                            }
+                            BALANCED -> {
+                                parent.data.state = BALANCED
+                                current.data.state = BALANCED
+                            }
+                            else -> {
+                                parent.data.state = BALANCED
+                                current.data.state = LEFT_HEAVY
+                            }
+                        }
+
+                        right.data.state = BALANCED
+
+                        current.rotateLeft()
+                        parent.rotateRight()
+                    } else {
+                        parent.data.state = BALANCED
+                        current.data.state = BALANCED
+                        parent.rotateRight()
+                    }
+
+                    break
+                }
+
+                parent.data.state = parent.data.state.decreased
+            }
+
+            if (parent.data.state == BALANCED) {
                 break
             }
 
-            parent.data.state = parent.data.state.increased
-        } else {
-            if (parent.data.state == LEFT_HEAVY) {
-                if (current.data.state == RIGHT_HEAVY) {
-                    val right = current.right ?: throw IllegalArgumentException("Tree was changed without balancer")
-
-                    when (right.data.state) {
-                        LEFT_HEAVY -> {
-                            parent.data.state = RIGHT_HEAVY
-                            current.data.state = BALANCED
-                        }
-                        BALANCED -> {
-                            parent.data.state = BALANCED
-                            current.data.state = BALANCED
-                        }
-                        else -> {
-                            parent.data.state = BALANCED
-                            current.data.state = LEFT_HEAVY
-                        }
-                    }
-
-                    right.data.state = BALANCED
-
-                    current.rotateLeft()
-                    parent.rotateRight()
-                } else {
-                    parent.data.state = BALANCED
-                    current.data.state = BALANCED
-                    parent.rotateRight()
-                }
-
-                break
-            }
-
-            parent.data.state = parent.data.state.decreased
+            current = parent
         }
-
-        if (parent.data.state == BALANCED) {
-            break
-        }
-
-        current = parent
     }
 }
