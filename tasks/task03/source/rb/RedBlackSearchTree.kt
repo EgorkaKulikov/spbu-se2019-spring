@@ -4,11 +4,11 @@ import binary.BinarySearchTree
 import binary.Copyable
 import binary.SearchData
 
-data class RedBlackSearchTreeData<Key, Value>(
+class RedBlackSearchTreeData<Key, Value>(
     override val key: Key,
     override var value: Value,
-    override var color: Color
-) : RedBlackData, SearchData<Key, Value>, Copyable<RedBlackSearchTreeData<Key, Value>> {
+    color: Color
+) : RedBlackData(color), SearchData<Key, Value>, Copyable<RedBlackSearchTreeData<Key, Value>> {
 
     override fun copy() = RedBlackSearchTreeData(key, value, color)
 }

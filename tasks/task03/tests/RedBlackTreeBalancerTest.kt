@@ -10,11 +10,9 @@ import rb.RedBlackTreeBalancer
 
 class RedBlackTreeBalancerTest {
 
-    private class Data(override var color: Color) : RedBlackData
+    private val balancer = object : RedBlackTreeBalancer<RedBlackData> {}
 
-    private val balancer = object : RedBlackTreeBalancer<Data> {}
-
-    private fun createNode(color: Color) = BinaryTreeNode(Data(color))
+    private fun createNode(color: Color) = BinaryTreeNode(RedBlackData(color))
 
     @Test
     fun `Test balancing of root`() {

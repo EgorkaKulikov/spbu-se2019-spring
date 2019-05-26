@@ -10,9 +10,7 @@ enum class Color {
     Black,
 }
 
-interface RedBlackData {
-    var color: Color
-}
+open class RedBlackData(var color: Color)
 
 interface RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
 

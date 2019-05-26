@@ -4,11 +4,11 @@ import binary.BinarySearchTree
 import binary.Copyable
 import binary.SearchData
 
-data class AvlSearchTreeData<Key, Value>(
+class AvlSearchTreeData<Key, Value>(
     override val key: Key,
     override var value: Value,
-    override var state: BalanceFactor
-) : AvlData, SearchData<Key, Value>, Copyable<AvlSearchTreeData<Key, Value>> {
+    state: BalanceFactor
+) : AvlData(state), SearchData<Key, Value>, Copyable<AvlSearchTreeData<Key, Value>> {
 
     override fun copy() = AvlSearchTreeData(key, value, state)
 }

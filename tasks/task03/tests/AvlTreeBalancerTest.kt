@@ -9,11 +9,9 @@ import org.junit.jupiter.api.Test
 
 class AvlTreeBalancerTest {
 
-    private class Data(override var state: BalanceFactor) : AvlData
+    private val balancer = object : AvlTreeBalancer<AvlData> {}
 
-    private val balancer = object : AvlTreeBalancer<Data> {}
-
-    private fun createNode(state: BalanceFactor) = BinaryTreeNode(Data(state))
+    private fun createNode(state: BalanceFactor) = BinaryTreeNode(AvlData(state))
 
     @Test
     fun `Test balancing of balanced left child of root`() {

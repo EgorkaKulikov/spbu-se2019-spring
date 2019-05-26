@@ -25,9 +25,7 @@ enum class BalanceFactor {
         }
 }
 
-interface AvlData {
-    var state: BalanceFactor
-}
+open class AvlData(var state: BalanceFactor)
 
 interface AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data> {
 
