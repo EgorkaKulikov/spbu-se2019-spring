@@ -1,7 +1,7 @@
 package rb
 
 import binary.BinaryTreeBalancer
-import binary.RotatableBinaryNode
+import binary.BinaryTreeNode
 import rb.Color.Black
 import rb.Color.Red
 
@@ -16,8 +16,8 @@ interface RedBlackData {
 
 interface RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
 
-    override fun balance(inserted: RotatableBinaryNode<Data>) {
-        var current = inserted.apply { data.color = Red }
+    override fun balance(inserted: BinaryTreeNode<Data>) {
+        var current = inserted
 
         while (true) {
             val parent = current.parent
@@ -43,7 +43,7 @@ interface RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
                 grandparent.data.color = Red
                 current = grandparent
             } else {
-                fun update(current: RotatableBinaryNode<Data>, parent: RotatableBinaryNode<Data>) {
+                fun update(current: BinaryTreeNode<Data>, parent: BinaryTreeNode<Data>) {
                     grandparent.data.color = Red
                     parent.data.color = Black
 

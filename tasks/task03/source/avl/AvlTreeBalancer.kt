@@ -2,7 +2,7 @@ package avl
 
 import avl.BalanceFactor.*
 import binary.BinaryTreeBalancer
-import binary.RotatableBinaryNode
+import binary.BinaryTreeNode
 
 enum class BalanceFactor {
     LEFT_HEAVY,
@@ -31,8 +31,8 @@ interface AvlData {
 
 interface AvlTreeBalancer<Data : AvlData> : BinaryTreeBalancer<Data> {
 
-    override fun balance(inserted: RotatableBinaryNode<Data>) {
-        var current = inserted.apply { data.state = BALANCED }
+    override fun balance(inserted: BinaryTreeNode<Data>) {
+        var current = inserted
 
         while (true) {
             val parent = current.parent ?: break

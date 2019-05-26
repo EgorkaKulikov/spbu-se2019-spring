@@ -1,15 +1,16 @@
 import binary.BinaryNode
 import binary.BinarySearchTree
+import binary.Copyable
 import binary.SearchData
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-interface BalancedBinarySearchTreeTest<VisibleData : SearchData<Int, Int>> {
+interface BalancedBinarySearchTreeTest<Data> where Data : SearchData<Int, Int>, Data : Copyable<Data> {
 
-    fun checkBalance(root: BinaryNode<VisibleData>?): Boolean
+    fun checkBalance(root: BinaryNode<Data>?): Boolean
 
-    fun createTree(): BinarySearchTree<Int, Int, VisibleData, *>
+    fun createTree(): BinarySearchTree<Int, Int, Data>
 
     private fun createRandomKeys(size: Int) = Array(size) { Random.nextInt() }
 
@@ -31,7 +32,7 @@ interface BalancedBinarySearchTreeTest<VisibleData : SearchData<Int, Int>> {
             }
         }
 
-        val isBalanced = checkBalance(tree.openRoot)
+        val isBalanced = checkBalance(tree.rootCopy)
 
         assertTrue(hasAllKeys)
         assertTrue(isBalanced)

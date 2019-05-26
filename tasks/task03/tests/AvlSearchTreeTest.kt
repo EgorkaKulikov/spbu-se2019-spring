@@ -1,16 +1,16 @@
 import avl.AvlSearchTree
-import avl.AvlVisibleSearchData
+import avl.AvlSearchTreeData
 import avl.BalanceFactor
 import binary.BinaryNode
 import kotlin.math.max
 
-class AvlSearchTreeTest : BalancedBinarySearchTreeTest<AvlVisibleSearchData<Int, Int>> {
+class AvlSearchTreeTest : BalancedBinarySearchTreeTest<AvlSearchTreeData<Int, Int>> {
 
     private companion object {
         const val INVALID_HEIGHT = -1
     }
 
-    private val BinaryNode<AvlVisibleSearchData<Int, Int>>?.height: Int
+    private val BinaryNode<AvlSearchTreeData<Int, Int>>?.height: Int
         get() {
             this ?: return 0
 
@@ -36,7 +36,7 @@ class AvlSearchTreeTest : BalancedBinarySearchTreeTest<AvlVisibleSearchData<Int,
             return max(leftHeight, rightHeight) + 1
         }
 
-    override fun checkBalance(root: BinaryNode<AvlVisibleSearchData<Int, Int>>?): Boolean {
+    override fun checkBalance(root: BinaryNode<AvlSearchTreeData<Int, Int>>?): Boolean {
         return root.height != INVALID_HEIGHT
     }
 

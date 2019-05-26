@@ -1,12 +1,12 @@
-import binary.BinaryTreeNode
 import binary.BinaryTreeIterator
+import binary.BinaryTreeNode
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class BinaryTreeIteratorTest {
 
-    fun createIterator(): BinaryTreeIterator<Int> {
+    private fun createIterator(): BinaryTreeIterator<Int> {
         val root = BinaryTreeNode(5).apply {
             left = BinaryTreeNode(3).apply {
                 left = BinaryTreeNode(2).apply {

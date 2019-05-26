@@ -17,7 +17,7 @@ abstract class BinarySearchTree<Key : Comparable<Key>, Value, Data> :
     var size = 0
         private set
 
-    override fun iterator() = BinaryTreeIterator(root)
+    override fun iterator() = BinaryTreeIterator(rootCopy)
 
     operator fun get(key: Key): Value? {
         var node = root

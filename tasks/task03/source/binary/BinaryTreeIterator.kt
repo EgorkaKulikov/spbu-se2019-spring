@@ -1,6 +1,6 @@
 package binary
 
-class BinaryTreeIterator<Data : Copyable<Data>>(begin: BinaryNode<Data>?) : Iterator<Data> {
+class BinaryTreeIterator<Data>(begin: BinaryNode<Data>?) : Iterator<Data> {
 
     private val path = mutableListOf<BinaryNode<Data>>()
 
@@ -30,6 +30,6 @@ class BinaryTreeIterator<Data : Copyable<Data>>(begin: BinaryNode<Data>?) : Iter
             rebuildPath(next.right)
         }
 
-        return next.data.copy()
+        return next.data
     }
 }
