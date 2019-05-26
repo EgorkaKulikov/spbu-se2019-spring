@@ -1,25 +1,23 @@
 package binary
 
-class BinaryTreeNode<VisibleData, Data : VisibleData>(
-    override val data: Data
-): BinaryNode<VisibleData>, RotatableBinaryNode<Data> {
+class BinaryTreeNode<Data>(override val data: Data) : BinaryNode<Data> {
 
-    override var parent: BinaryTreeNode<VisibleData, Data>? = null
+    override var parent: BinaryTreeNode<Data>? = null
         private set
 
-    override var left: BinaryTreeNode<VisibleData, Data>? = null
+    override var left: BinaryTreeNode<Data>? = null
         set(value) {
             value?.parent = this
             field = value
         }
 
-    override var right: BinaryTreeNode<VisibleData, Data>? = null
+    override var right: BinaryTreeNode<Data>? = null
         set(value) {
             value?.parent = this
             field = value
         }
 
-    private fun updateParent(child: BinaryTreeNode<VisibleData, Data>) {
+    private fun updateParent(child: BinaryTreeNode<Data>) {
         parent?.let {
             if (this === it.left) {
                 it.left = child
@@ -31,13 +29,13 @@ class BinaryTreeNode<VisibleData, Data : VisibleData>(
         }
     }
 
-    override fun rotateLeft() = right?.let {
+    fun rotateLeft() = right?.let {
         updateParent(it)
         right = it.left
         it.left = this
     } ?: throw IllegalStateException("Right child does not exist")
 
-    override fun rotateRight() = left?.let {
+    fun rotateRight() = left?.let {
         updateParent(it)
         left = it.right
         it.right = this

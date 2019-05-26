@@ -2,5 +2,5 @@ package binary
 
 interface BinaryTreeBalancer<Data> {
 
-    fun balance(inserted: RotatableBinaryNode<Data>)
+    fun balance(inserted: BinaryTreeNode<Data>)
 }

@@ -5,13 +5,14 @@ interface SearchData<Key, Value> {
     var value: Value
 }
 
-abstract class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : SearchData<Key, Value>, Data : VisibleData> :
+abstract class BinarySearchTree<Key : Comparable<Key>, Value, Data> :
     BinaryTreeBalancer<Data>,
-    Iterable<VisibleData> {
+    Iterable<Data>
+    where Data : Copyable<Data>, Data : SearchData<Key, Value> {
 
-    private var root: BinaryTreeNode<VisibleData, Data>? = null
+    private var root: BinaryTreeNode<Data>? = null
 
-    val openRoot: BinaryNode<VisibleData>? get() = root
+    val rootCopy: BinaryNode<Data>? get() = root?.let { BinaryTreeNodeCopy(it) }
 
     var size = 0
         private set
@@ -37,7 +38,7 @@ abstract class BinarySearchTree<Key : Comparable<Key>, Value, VisibleData : Sear
 
     abstract fun createData(key: Key, value: Value): Data
 
-    private fun createNode(key: Key, value: Value) = BinaryTreeNode<VisibleData, Data>(createData(key, value))
+    private fun createNode(key: Key, value: Value) = BinaryTreeNode(createData(key, value))
 
     operator fun set(key: Key, value: Value): Value? {
         var wasInserted = false
