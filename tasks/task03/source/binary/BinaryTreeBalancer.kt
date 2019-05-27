@@ -1,6 +1,6 @@
 package binary
 
-interface BinaryTreeBalancer<Data> {
+interface BinaryTreeBalancer<Info> {
 
-    fun balance(inserted: BinaryTreeNode<Data>)
+    fun balance(inserted: BinarySearchTreeNode<*, *, Info>)
 }

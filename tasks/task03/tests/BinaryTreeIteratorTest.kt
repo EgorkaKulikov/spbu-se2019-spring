@@ -1,39 +1,41 @@
-import binary.BinaryTreeIterator
-import binary.BinaryTreeNode
+import binary.BinarySearchTreeIterator
+import binary.BinarySearchTreeNode
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class BinaryTreeIteratorTest {
 
-    private fun createIterator(): BinaryTreeIterator<Int> {
-        val root = BinaryTreeNode(5).apply {
-            left = BinaryTreeNode(3).apply {
-                left = BinaryTreeNode(2).apply {
-                    left = BinaryTreeNode(1)
+    private fun createNode(key: Int) = BinarySearchTreeNode(key, 0, 0)
+
+    private fun createIterator(): BinarySearchTreeIterator<Int, Int> {
+        val root = createNode(5).apply {
+            left = createNode(3).apply {
+                left = createNode(2).apply {
+                    left = createNode(1)
                 }
-                right = BinaryTreeNode(4)
+                right = createNode(4)
             }
-            right = BinaryTreeNode(8).apply {
-                left = BinaryTreeNode(6).apply {
-                    right = BinaryTreeNode(7)
+            right = createNode(8).apply {
+                left = createNode(6).apply {
+                    right = createNode(7)
                 }
-                right = BinaryTreeNode(10).apply {
-                    left = BinaryTreeNode(9)
+                right = createNode(10).apply {
+                    left = createNode(9)
                 }
             }
         }
 
-        return BinaryTreeIterator(root)
+        return BinarySearchTreeIterator(root)
     }
 
     @Test
     fun `Test iteration for empty tree`() {
-        val iterator = BinaryTreeIterator<Int>(null)
+        val iterator = BinarySearchTreeIterator<Int, Int>(null)
         val actualList = mutableListOf<Int>()
 
         while (iterator.hasNext()) {
-            actualList.add(iterator.next())
+            actualList.add(iterator.next().first)
         }
 
         assertArrayEquals(intArrayOf(), actualList.toIntArray())
@@ -41,7 +43,7 @@ class BinaryTreeIteratorTest {
 
     @Test
     fun `Iterator throws exception after request of data from empty tree`() {
-        val iterator = BinaryTreeIterator<Int>(null)
+        val iterator = BinarySearchTreeIterator<Int, Int>(null)
 
         assertThrows<NoSuchElementException> {
             iterator.next()
@@ -55,7 +57,7 @@ class BinaryTreeIteratorTest {
         val actual = mutableListOf<Int>()
 
         while (iterator.hasNext()) {
-            actual.add(iterator.next())
+            actual.add(iterator.next().first)
         }
 
         val expected = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)

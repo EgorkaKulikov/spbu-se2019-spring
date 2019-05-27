@@ -1,28 +1,21 @@
 package rb
 
 import binary.BinaryTreeBalancer
-import binary.BinaryTreeNode
+import binary.BinarySearchTreeNode
 import rb.Color.Black
 import rb.Color.Red
 
-enum class Color {
-    Red,
-    Black,
-}
+object RedBlackTreeBalancer : BinaryTreeBalancer<Color> {
 
-open class RedBlackData(var color: Color)
-
-interface RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
-
-    override fun balance(inserted: BinaryTreeNode<Data>) {
+    override fun balance(inserted: BinarySearchTreeNode<*, *, Color>) {
         val parent = inserted.parent
 
         if (parent == null) {
-            inserted.data.color = Black
+            inserted.info = Black
             return
         }
 
-        if (parent.data.color == Black) {
+        if (parent.info == Black) {
             return
         }
 
@@ -32,15 +25,15 @@ interface RedBlackTreeBalancer<Data : RedBlackData> : BinaryTreeBalancer<Data> {
             else -> grandparent.left
         }
 
-        if (uncle != null && uncle.data.color == Red) {
-            uncle.data.color = Black
-            parent.data.color = Black
-            grandparent.data.color = Red
+        if (uncle != null && uncle.info == Red) {
+            uncle.info = Black
+            parent.info = Black
+            grandparent.info = Red
             balance(grandparent)
         } else {
-            fun update(current: BinaryTreeNode<Data>, parent: BinaryTreeNode<Data>) {
-                grandparent.data.color = Red
-                parent.data.color = Black
+            fun update(current: BinarySearchTreeNode<*, *, Color>, parent: BinarySearchTreeNode<*, *, Color>) {
+                grandparent.info = Red
+                parent.info = Black
 
                 if (current === parent.left) {
                     grandparent.rotateRight()

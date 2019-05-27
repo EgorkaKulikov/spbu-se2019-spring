@@ -1,14 +1,16 @@
 package binary
 
-class BinaryTreeIterator<Data>(begin: BinaryNode<Data>?) : Iterator<Data> {
+class BinarySearchTreeIterator<Key, Value>(
+    begin: BinarySearchTreeNode<Key, Value, *>?
+) : Iterator<Pair<Key, Value>> {
 
-    private val path = mutableListOf<BinaryNode<Data>>()
+    private val path = mutableListOf<BinarySearchTreeNode<Key, Value, *>>()
 
     init {
         rebuildPath(begin)
     }
 
-    private fun rebuildPath(from: BinaryNode<Data>?) {
+    private fun rebuildPath(from: BinarySearchTreeNode<Key, Value, *>?) {
         var node = from
 
         while (node != null) {
@@ -19,7 +21,7 @@ class BinaryTreeIterator<Data>(begin: BinaryNode<Data>?) : Iterator<Data> {
 
     override fun hasNext() = path.isNotEmpty()
 
-    override fun next(): Data {
+    override fun next(): Pair<Key, Value> {
         if (path.isEmpty()) {
             throw NoSuchElementException("")
         }
@@ -30,6 +32,6 @@ class BinaryTreeIterator<Data>(begin: BinaryNode<Data>?) : Iterator<Data> {
             rebuildPath(next.right)
         }
 
-        return next.data
+        return Pair(next.key, next.value)
     }
 }

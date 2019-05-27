@@ -1,13 +1,15 @@
-import binary.BinaryTreeNode
+import binary.BinarySearchTreeNode
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class BinaryNodeTest {
 
+    private fun createNode() = BinarySearchTreeNode(0, 0, 0)
+
     @Test
     fun `Left rotation of node without right child fails`() {
-        val node = BinaryTreeNode(0)
+        val node = createNode()
 
         assertThrows<IllegalStateException> {
             node.rotateLeft()
@@ -16,8 +18,8 @@ class BinaryNodeTest {
 
     @Test
     fun `Test left rotation of node without parent and grandchild`() {
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
+        val node = createNode()
+        val child = createNode()
         node.right = child
 
         node.rotateLeft()
@@ -29,9 +31,9 @@ class BinaryNodeTest {
 
     @Test
     fun `Test left rotation of node without parent`() {
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
-        val grandchild = BinaryTreeNode(2)
+        val node = createNode()
+        val child = createNode()
+        val grandchild = createNode()
         node.right = child
         child.left = grandchild
 
@@ -46,9 +48,9 @@ class BinaryNodeTest {
 
     @Test
     fun `Test left rotation of node without grandchild`() {
-        val parent = BinaryTreeNode(-1)
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
+        val parent = createNode()
+        val node = createNode()
+        val child = createNode()
         parent.right = node
         node.right = child
 
@@ -62,10 +64,10 @@ class BinaryNodeTest {
 
     @Test
     fun `Test left rotation`() {
-        val parent = BinaryTreeNode(-1)
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
-        val grandchild = BinaryTreeNode(2)
+        val parent = createNode()
+        val node = createNode()
+        val child = createNode()
+        val grandchild = createNode()
         parent.left = node
         node.right = child
         child.left = grandchild
@@ -82,7 +84,7 @@ class BinaryNodeTest {
 
     @Test
     fun `Right rotation of node without left child fails`() {
-        val node = BinaryTreeNode(0)
+        val node = createNode()
 
         assertThrows<IllegalStateException> {
             node.rotateRight()
@@ -91,8 +93,8 @@ class BinaryNodeTest {
 
     @Test
     fun `Test right rotation of node without parent and grandchild`() {
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
+        val node = createNode()
+        val child = createNode()
         node.left = child
 
         node.rotateRight()
@@ -104,9 +106,9 @@ class BinaryNodeTest {
 
     @Test
     fun `Test right rotation of node without parent`() {
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
-        val grandchild = BinaryTreeNode(2)
+        val node = createNode()
+        val child = createNode()
+        val grandchild = createNode()
         node.left = child
         child.right = grandchild
 
@@ -121,9 +123,9 @@ class BinaryNodeTest {
 
     @Test
     fun `Test right rotation of node without grandchild`() {
-        val parent = BinaryTreeNode(-1)
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
+        val parent = createNode()
+        val node = createNode()
+        val child = createNode()
         parent.left = node
         node.left = child
 
@@ -137,10 +139,10 @@ class BinaryNodeTest {
 
     @Test
     fun `Test right rotation`() {
-        val parent = BinaryTreeNode(-1)
-        val node = BinaryTreeNode(0)
-        val child = BinaryTreeNode(1)
-        val grandchild = BinaryTreeNode(2)
+        val parent = createNode()
+        val node = createNode()
+        val child = createNode()
+        val grandchild = createNode()
         parent.left = node
         node.left = child
         child.right = grandchild

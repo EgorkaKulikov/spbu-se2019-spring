@@ -1,23 +1,26 @@
 package binary
 
-class BinaryTreeNode<Data>(override val data: Data) : BinaryNode<Data> {
-
-    override var parent: BinaryTreeNode<Data>? = null
+class BinarySearchTreeNode<Key, Value, Info>(
+    val key: Key,
+    var value: Value,
+    var info: Info
+) {
+    var parent: BinarySearchTreeNode<Key, Value, Info>? = null
         private set
 
-    override var left: BinaryTreeNode<Data>? = null
+    var left: BinarySearchTreeNode<Key, Value, Info>? = null
         set(value) {
             value?.parent = this
             field = value
         }
 
-    override var right: BinaryTreeNode<Data>? = null
+    var right: BinarySearchTreeNode<Key, Value, Info>? = null
         set(value) {
             value?.parent = this
             field = value
         }
 
-    private fun updateParent(child: BinaryTreeNode<Data>) {
+    private fun updateParent(child: BinarySearchTreeNode<Key, Value, Info>) {
         parent?.let {
             if (this === it.left) {
                 it.left = child

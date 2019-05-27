@@ -1,27 +1,24 @@
-import avl.AvlData
 import avl.AvlTreeBalancer
 import avl.BalanceFactor
 import avl.BalanceFactor.*
-import binary.BinaryTreeNode
+import binary.BinarySearchTreeNode
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class AvlTreeBalancerTest {
 
-    private val balancer = object : AvlTreeBalancer<AvlData> {}
-
-    private fun createNode(state: BalanceFactor) = BinaryTreeNode(AvlData(state))
+    private fun createNode(state: BalanceFactor) = BinarySearchTreeNode(0, 0, state)
 
     @Test
     fun `Test balancing of balanced left child of root`() {
         val root = createNode(BALANCED)
         val child = createNode(BALANCED).also { root.left = it }
 
-        balancer.balance(child)
+        AvlTreeBalancer.balance(child)
 
-        assertEquals(LEFT_HEAVY, root.data.state)
-        assertEquals(BALANCED, child.data.state)
+        assertEquals(LEFT_HEAVY, root.info)
+        assertEquals(BALANCED, child.info)
 
         assertTrue(root.left === child)
     }
@@ -32,11 +29,11 @@ class AvlTreeBalancerTest {
         val child = createNode(LEFT_HEAVY).also { root.left = it }
         val grandchild = createNode(BALANCED).also { child.left = it }
 
-        balancer.balance(child)
+        AvlTreeBalancer.balance(child)
 
-        assertEquals(BALANCED, root.data.state)
-        assertEquals(BALANCED, child.data.state)
-        assertEquals(BALANCED, grandchild.data.state)
+        assertEquals(BALANCED, root.info)
+        assertEquals(BALANCED, child.info)
+        assertEquals(BALANCED, grandchild.info)
 
         assertTrue(child.left === grandchild)
         assertTrue(child.right === root)
@@ -48,11 +45,11 @@ class AvlTreeBalancerTest {
         val child = createNode(RIGHT_HEAVY).also { root.left = it }
         val grandchild = createNode(BALANCED).also { child.right = it }
 
-        balancer.balance(child)
+        AvlTreeBalancer.balance(child)
 
-        assertEquals(BALANCED, root.data.state)
-        assertEquals(BALANCED, child.data.state)
-        assertEquals(BALANCED, grandchild.data.state)
+        assertEquals(BALANCED, root.info)
+        assertEquals(BALANCED, child.info)
+        assertEquals(BALANCED, grandchild.info)
 
         assertTrue(grandchild.left === child)
         assertTrue(grandchild.right === root)
@@ -63,10 +60,10 @@ class AvlTreeBalancerTest {
         val root = createNode(BALANCED)
         val child = createNode(BALANCED).also { root.right = it }
 
-        balancer.balance(child)
+        AvlTreeBalancer.balance(child)
 
-        assertEquals(RIGHT_HEAVY, root.data.state)
-        assertEquals(BALANCED, child.data.state)
+        assertEquals(RIGHT_HEAVY, root.info)
+        assertEquals(BALANCED, child.info)
 
         assertTrue(root.right === child)
     }
@@ -77,11 +74,11 @@ class AvlTreeBalancerTest {
         val child = createNode(LEFT_HEAVY).also { root.right = it }
         val grandchild = createNode(BALANCED).also { child.left = it }
 
-        balancer.balance(child)
+        AvlTreeBalancer.balance(child)
 
-        assertEquals(BALANCED, root.data.state)
-        assertEquals(BALANCED, child.data.state)
-        assertEquals(BALANCED, grandchild.data.state)
+        assertEquals(BALANCED, root.info)
+        assertEquals(BALANCED, child.info)
+        assertEquals(BALANCED, grandchild.info)
 
         assertTrue(grandchild.right === child)
         assertTrue(grandchild.left === root)
@@ -93,11 +90,11 @@ class AvlTreeBalancerTest {
         val child = createNode(RIGHT_HEAVY).also { root.right = it }
         val grandchild = createNode(BALANCED).also { child.right = it }
 
-        balancer.balance(child)
+        AvlTreeBalancer.balance(child)
 
-        assertEquals(BALANCED, root.data.state)
-        assertEquals(BALANCED, child.data.state)
-        assertEquals(BALANCED, grandchild.data.state)
+        assertEquals(BALANCED, root.info)
+        assertEquals(BALANCED, child.info)
+        assertEquals(BALANCED, grandchild.info)
 
         assertTrue(child.right === grandchild)
         assertTrue(child.left === root)

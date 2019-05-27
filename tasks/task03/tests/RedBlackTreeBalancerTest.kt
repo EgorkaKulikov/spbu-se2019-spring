@@ -1,26 +1,23 @@
-import binary.BinaryTreeNode
+import binary.BinarySearchTreeNode
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import rb.Color
 import rb.Color.Black
 import rb.Color.Red
-import rb.RedBlackData
 import rb.RedBlackTreeBalancer
 
 class RedBlackTreeBalancerTest {
 
-    private val balancer = object : RedBlackTreeBalancer<RedBlackData> {}
-
-    private fun createNode(color: Color) = BinaryTreeNode(RedBlackData(color))
+    private fun createNode(color: Color) = BinarySearchTreeNode(0, 0, color)
 
     @Test
     fun `Test balancing of root`() {
         val root = createNode(Red)
 
-        balancer.balance(root)
+        RedBlackTreeBalancer.balance(root)
 
-        assertEquals(Black, root.data.color)
+        assertEquals(Black, root.info)
     }
 
     @Test
@@ -28,10 +25,10 @@ class RedBlackTreeBalancerTest {
         val root = createNode(Black)
         val child = createNode(Red).also { root.left = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Black, root.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Black, root.info)
+        assertEquals(Red, child.info)
 
         assertTrue(root.left === child)
     }
@@ -42,11 +39,11 @@ class RedBlackTreeBalancerTest {
         val parent = createNode(Red).also { root.left = it }
         val child = createNode(Red).also { parent.left = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Red, root.data.color)
-        assertEquals(Black, parent.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Red, root.info)
+        assertEquals(Black, parent.info)
+        assertEquals(Red, child.info)
 
         assertTrue(parent.left === child)
         assertTrue(parent.right === root)
@@ -58,11 +55,11 @@ class RedBlackTreeBalancerTest {
         val parent = createNode(Red).also { root.left = it }
         val child = createNode(Red).also { parent.right = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Red, root.data.color)
-        assertEquals(Red, parent.data.color)
-        assertEquals(Black, child.data.color)
+        assertEquals(Red, root.info)
+        assertEquals(Red, parent.info)
+        assertEquals(Black, child.info)
 
         assertTrue(child.left === parent)
         assertTrue(child.right === root)
@@ -75,12 +72,12 @@ class RedBlackTreeBalancerTest {
         val uncle = createNode(Red).also { root.right = it }
         val child = createNode(Red).also { parent.left = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Black, root.data.color)
-        assertEquals(Black, parent.data.color)
-        assertEquals(Black, uncle.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Black, root.info)
+        assertEquals(Black, parent.info)
+        assertEquals(Black, uncle.info)
+        assertEquals(Red, child.info)
 
         assertTrue(root.left === parent)
         assertTrue(root.right === uncle)
@@ -94,12 +91,12 @@ class RedBlackTreeBalancerTest {
         val uncle = createNode(Red).also { root.right = it }
         val child = createNode(Red).also { parent.right = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Black, root.data.color)
-        assertEquals(Black, parent.data.color)
-        assertEquals(Black, uncle.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Black, root.info)
+        assertEquals(Black, parent.info)
+        assertEquals(Black, uncle.info)
+        assertEquals(Red, child.info)
 
         assertTrue(root.left === parent)
         assertTrue(root.right === uncle)
@@ -111,10 +108,10 @@ class RedBlackTreeBalancerTest {
         val root = createNode(Black)
         val child = createNode(Red).also { root.right = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Black, root.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Black, root.info)
+        assertEquals(Red, child.info)
 
         assertTrue(root.right === child)
     }
@@ -125,11 +122,11 @@ class RedBlackTreeBalancerTest {
         val parent = createNode(Red).also { root.right = it }
         val child = createNode(Red).also { parent.left = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Red, root.data.color)
-        assertEquals(Red, parent.data.color)
-        assertEquals(Black, child.data.color)
+        assertEquals(Red, root.info)
+        assertEquals(Red, parent.info)
+        assertEquals(Black, child.info)
 
         assertTrue(child.right === parent)
         assertTrue(child.left === root)
@@ -141,11 +138,11 @@ class RedBlackTreeBalancerTest {
         val parent = createNode(Red).also { root.right = it }
         val child = createNode(Red).also { parent.right = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Red, root.data.color)
-        assertEquals(Black, parent.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Red, root.info)
+        assertEquals(Black, parent.info)
+        assertEquals(Red, child.info)
 
         assertTrue(parent.right === child)
         assertTrue(parent.left === root)
@@ -158,12 +155,12 @@ class RedBlackTreeBalancerTest {
         val uncle = createNode(Red).also { root.left = it }
         val child = createNode(Red).also { parent.left = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Black, root.data.color)
-        assertEquals(Black, parent.data.color)
-        assertEquals(Black, uncle.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Black, root.info)
+        assertEquals(Black, parent.info)
+        assertEquals(Black, uncle.info)
+        assertEquals(Red, child.info)
 
         assertTrue(root.right === parent)
         assertTrue(root.left === uncle)
@@ -177,12 +174,12 @@ class RedBlackTreeBalancerTest {
         val uncle = createNode(Red).also { root.left = it }
         val child = createNode(Red).also { parent.right = it }
 
-        balancer.balance(child)
+        RedBlackTreeBalancer.balance(child)
 
-        assertEquals(Black, root.data.color)
-        assertEquals(Black, parent.data.color)
-        assertEquals(Black, uncle.data.color)
-        assertEquals(Red, child.data.color)
+        assertEquals(Black, root.info)
+        assertEquals(Black, parent.info)
+        assertEquals(Black, uncle.info)
+        assertEquals(Red, child.info)
 
         assertTrue(root.right === parent)
         assertTrue(root.left === uncle)
