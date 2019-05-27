@@ -2,7 +2,7 @@ package redBlackTree
 
 import INode
 
-class Node<K : Comparable<K>, V> (var key   : K,
+class Node<K : Comparable<K>, V> (val key   : K,
                                   var value : V,
                                   override var parent : Node<K, V>? = null,
                                   private var isBlack : Boolean = false
@@ -49,7 +49,7 @@ class Node<K : Comparable<K>, V> (var key   : K,
         }
     }
 
-    fun rotateLeft()
+    internal fun rotateLeft()
     {
 
         val currentRight = this.rightChild ?: return
@@ -69,7 +69,7 @@ class Node<K : Comparable<K>, V> (var key   : K,
         currentRight.parent = parent
     }
 
-    fun rotateRight()
+    internal fun rotateRight()
     {
         val currentLeft = this.leftChild ?: return
         val parent = this.parent
@@ -98,14 +98,14 @@ class Node<K : Comparable<K>, V> (var key   : K,
         return null
     }
 
-    fun invertColor()
+    internal fun invertColor()
     {
         isBlack = !isBlack
     }
 
-    fun grandparent() = parent?.parent
+    internal fun grandparent() = parent?.parent
 
-    fun isRed()   = !isBlack
+    internal fun isRed()   = !isBlack
 
-    fun isBlack() =  isBlack
+    internal fun isBlack() =  isBlack
 }

@@ -1,8 +1,8 @@
-package AVLTree
+package avlTree
 
 import INode
 
-class Node<K : Comparable<K>, V> (var key   : K,
+class Node<K : Comparable<K>, V> (val key   : K,
                                   var value : V,
                                   override var parent : Node<K, V>? = null
                                  ) : INode<Node<K, V>>
@@ -40,7 +40,7 @@ class Node<K : Comparable<K>, V> (var key   : K,
         return result
     }
 
-    fun rotateLeft()
+    internal fun rotateLeft()
     {
         val currentRight = this.rightChild ?: return
         val parent = this.parent
@@ -62,7 +62,7 @@ class Node<K : Comparable<K>, V> (var key   : K,
         currentRight.parent?.fixHeight()
     }
 
-    fun rotateRight()
+    internal fun rotateRight()
     {
         val currentLeft = this.leftChild ?: return
         val parent = this.parent

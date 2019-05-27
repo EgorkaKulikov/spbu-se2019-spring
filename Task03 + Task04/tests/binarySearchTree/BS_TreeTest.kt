@@ -1,7 +1,9 @@
 import binarySearchTree.BSTree
+import binarySearchTree.Node
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import kotlin.test.assertFailsWith
 
 @DisplayName("Tests for Binary Search tree")
 internal class TestBinarySearchTree {
@@ -27,9 +29,7 @@ internal class TestBinarySearchTree {
                 assertEquals(Pair(data, data), tree.find(data))
             }
 
-            tree.root?.leftChild?.parent = null
-            tree.root?.rightChild?.parent = null
-            tree.root = null
+            tree.clear()
 
         }
 
@@ -121,9 +121,7 @@ internal class TestBinarySearchTree {
                 assertEquals(tree.find(x), Pair(x, x))
             }
 
-            tree.root?.leftChild?.parent = null
-            tree.root?.rightChild?.parent = null
-            tree.root = null
+            tree.clear()
 
         }
 
@@ -161,9 +159,7 @@ internal class TestBinarySearchTree {
                 assertEquals(tree.find(i.key), Pair(i.key, i.value))
             }
 
-            tree.root?.leftChild?.parent = null
-            tree.root?.rightChild?.parent = null
-            tree.root = null
+            tree.clear()
 
         }
 
@@ -189,9 +185,7 @@ internal class TestBinarySearchTree {
                 assertEquals(tree.find(i.key), Pair(i.key, i.value))
             }
 
-            tree.root?.leftChild?.parent = null
-            tree.root?.rightChild?.parent = null
-            tree.root = null
+            tree.clear()
 
         }
 
@@ -199,7 +193,7 @@ internal class TestBinarySearchTree {
 
     @DisplayName("Iterate tree in reverse order")
     @Test
-    fun tree_itearation_in_reverse_order_success_asserted()
+    fun tree_iteration_in_reverse_order_success_asserted()
     {
 
         for (testInputLength in 1..1000) {
@@ -217,12 +211,57 @@ internal class TestBinarySearchTree {
                 assertEquals(tree.find(i.key), Pair(i.key, i.value))
             }
 
-            tree.root?.leftChild?.parent = null
-            tree.root?.rightChild?.parent = null
-            tree.root = null
+            tree.clear()
 
         }
 
     }
 
+    @DisplayName("Stack overflow if looped")
+    @Test
+    fun tree_loop_iteration_assert_stack_overflow()
+    {
+        assertFailsWith(StackOverflowError::class)
+        {
+            val B = Node(2, 2)
+            val C = Node(3, 3)
+
+            tree.insert(1, 1)
+
+            tree.root!!.leftChild = B
+            B.rightChild = tree.root!!
+
+            tree.root!!.rightChild = C
+            B.leftChild = C
+
+            C.leftChild = tree.root!!
+            C.rightChild = B
+
+            for (i in tree)
+            {
+
+            }
+        }
+
+        tree.clear()
+    }
+
+    @DisplayName("Stack overflow if root is his own child")
+    @Test
+    fun tree_endless_iteration_assert_stack_overflow()
+    {
+        assertFailsWith(StackOverflowError::class)
+        {
+            tree.insert(1, 1)
+
+            tree.root!!.leftChild = tree.root
+
+            for (i in tree)
+            {
+
+            }
+        }
+
+        tree.clear()
+    }
 }

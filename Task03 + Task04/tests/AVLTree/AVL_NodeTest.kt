@@ -1,6 +1,4 @@
-package tests.AVLTree
-
-import AVLTree.Node
+import avlTree.Node
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -15,7 +13,6 @@ internal class TestAVLTreeNode {
         val node = Node(0, 0)
 
         assertNotEquals(null, node )
-
     }
 
     @DisplayName("Self comparison")
@@ -52,7 +49,7 @@ internal class TestAVLTreeNode {
 
     @DisplayName("Simple equality")
     @Test
-    fun same_nodes_comparsion_true_asserted() {
+    fun same_nodes_comparison_true_asserted() {
 
         val thisNode = Node(1, 1, null)
         val otherNode = Node(1, 1, null)
@@ -63,7 +60,7 @@ internal class TestAVLTreeNode {
 
     @DisplayName("Equality with same parents")
     @Test
-    fun same_nodes_with_same_parents_comparsion_true_asserted() {
+    fun same_nodes_with_same_parents_comparison_true_asserted() {
 
         val thisNode = Node(1, 1, null)
         thisNode.parent = Node(3, 3, null)
@@ -79,7 +76,7 @@ internal class TestAVLTreeNode {
 
     @DisplayName("Equality with different parents")
     @Test
-    fun same_nodes_with_different_parents_comparsion_false_asserted() {
+    fun same_nodes_with_different_parents_comparison_false_asserted() {
 
         val thisNode = Node(1, 1, null)
         thisNode.parent = Node(2, 2, null)
@@ -95,7 +92,7 @@ internal class TestAVLTreeNode {
 
     @DisplayName("Equality with same children")
     @Test
-    fun same_nodes_with_same_child_comparsion_true_asserted() {
+    fun same_nodes_with_same_child_comparison_true_asserted() {
 
         val thisNode = Node(1, 1, null)
         thisNode.leftChild = Node(2, 2, null)
@@ -111,7 +108,7 @@ internal class TestAVLTreeNode {
 
     @DisplayName("Equality with different children")
     @Test
-    fun same_nodes_with_diff_parents_comparsion_false_asserted() {
+    fun same_nodes_with_diff_parents_comparison_false_asserted() {
 
         val thisNode = Node(1, 1, null)
         thisNode.leftChild = Node(2, 2, null)
@@ -215,7 +212,7 @@ internal class TestAVLTreeNode {
 
     }
 
-    @DisplayName("Pair left rotate Case 1")
+    @DisplayName("Pair left rotate")
     @Test
     fun pair_left_rotate_success_asserted_1() {
 
@@ -233,7 +230,7 @@ internal class TestAVLTreeNode {
 
     }
 
-    @DisplayName("Pair right rotate Case 1")
+    @DisplayName("Parent -> Right child, left-left grandchild -> Left child")
     @Test
     fun pair_right_rotate_success_asserted_1() {
 
@@ -251,7 +248,7 @@ internal class TestAVLTreeNode {
 
     }
 
-    @DisplayName("Pair left rotate Case 2")
+    @DisplayName("Parent -> Left child, right-left grandchild -> Right child")
     @Test
     fun pair_left_rotate_success_asserted_2() {
 
@@ -269,7 +266,7 @@ internal class TestAVLTreeNode {
 
     }
 
-    @DisplayName("Pair right rotate Case 2")
+    @DisplayName("Parent -> Right child, left-right grandchild -> Left child")
     @Test
     fun pair_right_rotate_success_asserted_2() {
 
@@ -287,7 +284,7 @@ internal class TestAVLTreeNode {
 
     }
 
-    @DisplayName("Pair left rotate Case 3")
+    @DisplayName("Parent -> Left child, right-right grandchild -> Right child")
     @Test
     fun pair_left_rotate_success_asserted_3() {
 
@@ -305,7 +302,7 @@ internal class TestAVLTreeNode {
 
     }
 
-    @DisplayName("Pair right rotate Case 3")
+    @DisplayName("Pair right rotate")
     @Test
     fun pair_right_rotate_success_asserted_3() {
 

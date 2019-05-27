@@ -3,8 +3,17 @@ import java.util.*
 abstract class AbstractTree<K : Comparable<K>, V, N : INode<N>> : ITree<K, V>, Iterable<N>
 {
     var root : N? = null
+        protected set
 
     protected abstract fun buildDeque(current : N?, deque : Deque<N>)
+
+    //For tests
+    internal fun clear()
+    {
+        root?.leftChild?.parent = null
+        root?.rightChild?.parent = null
+        root = null
+    }
 
     override fun iterator(): Iterator<N>
     {

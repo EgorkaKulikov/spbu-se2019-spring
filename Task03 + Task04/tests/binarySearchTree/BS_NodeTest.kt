@@ -1,5 +1,3 @@
-package tests.binarySearchTree
-
 import binarySearchTree.Node
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
@@ -56,7 +54,7 @@ internal class TestBinarySearchTreeNode {
 
     @DisplayName("Simple equality")
     @Test
-    fun same_nodes_comparsion_true_asserted()
+    fun same_nodes_comparison_true_asserted()
     {
 
         val thisNode = Node(1, 1, null)
@@ -68,7 +66,7 @@ internal class TestBinarySearchTreeNode {
 
     @DisplayName("Equality with same parents")
     @Test
-    fun same_nodes_with_same_parents_comparsion_true_asserted()
+    fun same_nodes_with_same_parents_comparison_true_asserted()
     {
 
         val thisNode = Node(1, 1, null)
@@ -85,7 +83,7 @@ internal class TestBinarySearchTreeNode {
 
     @DisplayName("Equality with different parents")
     @Test
-    fun same_nodes_with_different_parents_comparsion_false_asserted()
+    fun same_nodes_with_different_parents_comparison_false_asserted()
     {
 
         val thisNode = Node(1, 1, null)
@@ -102,7 +100,7 @@ internal class TestBinarySearchTreeNode {
 
     @DisplayName("Equality with same children")
     @Test
-    fun same_nodes_with_same_child_comparsion_true_asserted()
+    fun same_nodes_with_same_child_comparison_true_asserted()
     {
 
         val thisNode = Node(1, 1, null)
@@ -119,7 +117,7 @@ internal class TestBinarySearchTreeNode {
 
     @DisplayName("Equality with different children")
     @Test
-    fun same_nodes_with_diff_parents_comparsion_false_asserted()
+    fun same_nodes_with_diff_parents_comparison_false_asserted()
     {
 
         val thisNode = Node(1, 1, null)

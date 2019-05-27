@@ -2,7 +2,7 @@ package binarySearchTree
 
 import INode
 
-class Node<K : Comparable<K>, V> (var key   : K,
+class Node<K : Comparable<K>, V> (val key   : K,
                                   var value : V,
                                   override var parent: Node<K, V>? = null
                                  ) : INode<Node<K, V>>

@@ -17,9 +17,8 @@ class RBTree<K : Comparable<K>, V> : AbstractTree<K, V, Node<K, V>>()
             node.invertColor()
     }
 
-    private fun findNode(key: K, current: Node<K, V>? = root): Node<K, V>?
-    {
-        return when
+    private fun findNode(key: K, current: Node<K, V>? = root): Node<K, V>? =
+        when
         {
             current == null -> null
             current.key == key -> current
@@ -27,7 +26,6 @@ class RBTree<K : Comparable<K>, V> : AbstractTree<K, V, Node<K, V>>()
             key < current.key -> findNode(key, current.leftChild)
             else -> null
         }
-    }
 
     override fun buildDeque(current: Node<K, V>?, deque: Deque<Node<K, V>>)
     {
@@ -92,7 +90,8 @@ class RBTree<K : Comparable<K>, V> : AbstractTree<K, V, Node<K, V>>()
                 makeRed(node.grandparent())
                 balance(node.grandparent())
             }
-            else when{
+            else when
+            {
                 node.grandparent()?.leftChild == parent ->
                 {
                     if (node == parent.leftChild)
