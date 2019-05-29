@@ -11,30 +11,33 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
                          ,(right as AVLNode?)?.height ?: 0) + 1
         }
 
-        internal fun balanceFactor() = ((right as AVLNode?)?.height ?: 0) -
-                                       ((left as AVLNode?)?.height ?: 0)
+        internal var balanceFactor: Int = 0
+            get() {
+                return ((right as AVLNode?)?.height ?: 0) -
+                        ((left as AVLNode?)?.height ?: 0)
+            }
 
         internal fun verifyAVL(): Pair<Boolean, Int> {
-            var leftCorrectness = true
+            var leftTreeIsAVL = true
             var leftHeight = 0
 
-            if (this.left != null) {
-                val tmp = (this.left as AVLNode).verifyAVL()
-                leftCorrectness = tmp.first
-                leftHeight = tmp.second
+            if (left != null) {
+                val leftVerify = (left as AVLNode).verifyAVL()
+                leftTreeIsAVL = leftVerify.first
+                leftHeight = leftVerify.second
             }
 
-            var rightCorrectness = true
+            var rightTreeIsAVL = true
             var rightHeight = 0
 
-            if (this.right != null) {
-                val tmp = (this.right as AVLNode).verifyAVL()
-                rightCorrectness = tmp.first
-                rightHeight = tmp.second
+            if (right != null) {
+                val rightVerify = (right as AVLNode).verifyAVL()
+                rightTreeIsAVL = rightVerify.first
+                rightHeight = rightVerify.second
             }
 
-            return Pair(leftCorrectness
-                    && rightCorrectness
+            return Pair(leftTreeIsAVL
+                    && rightTreeIsAVL
                     && abs(rightHeight - leftHeight) < 2
                     , max(rightHeight, leftHeight) + 1)
         }
@@ -45,11 +48,11 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
     }
 
     override fun innerInsert(key: K, value: V): Node {
-        val newNode = super.innerInsert(key, value) as AVLNode
-        var tmpNode = newNode as AVLNode?
+        val newNode: AVLNode = super.innerInsert(key, value) as AVLNode
+        var tmpNode: AVLNode? = newNode
         while (tmpNode != null) {
             tmpNode.updateHeight()
-            if (tmpNode.balanceFactor() == 2) {
+            if (tmpNode.balanceFactor == 2) {
                 val rightSon = tmpNode.right as AVLNode?
                 if ((rightSon?.right as AVLNode?)?.height ?: 0
                     < (rightSon?.left as AVLNode?)?.height ?: 0) {
@@ -63,7 +66,7 @@ class AVLTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
                 }
 
             }
-            else if (tmpNode.balanceFactor() == -2) {
+            else if (tmpNode.balanceFactor == -2) {
                 val leftSon = tmpNode.left as AVLNode?
                 if ((leftSon?.left as AVLNode?)?.height ?: 0
                     < (leftSon?.right as AVLNode?)?.height ?: 0) {

@@ -10,37 +10,37 @@ class RBTree<K : Comparable<K>, V> : BalancedSearchTree<K, V>() {
         internal var color = Color.RED
 
         internal fun verifyRB() : Pair<Boolean, Int> {
-            if (this.color == Color.RED) {
-                if ((this.left != null
-                            && (this.left as RBNode).color == Color.RED)
-                    || (this.right != null
-                            && (this.right as RBNode).color == Color.RED)) {
+            if (color == Color.RED) {
+                if ((left != null
+                            && (left as RBNode).color == Color.RED)
+                    || (right != null
+                            && (right as RBNode).color == Color.RED)) {
                     return Pair(false, 0)
                 }
             }
 
-            var leftCorrectness = true
+            var leftTreeBlackNodesCorrectness = true
             var leftBlackHeight = 1
 
-            if (this.left != null) {
-                val tmp = (this.left as RBNode).verifyRB()
-                leftCorrectness = tmp.first
-                leftBlackHeight = tmp.second
+            if (left != null) {
+                val leftVerify = (left as RBNode).verifyRB()
+                leftTreeBlackNodesCorrectness = leftVerify.first
+                leftBlackHeight = leftVerify.second
             }
 
-            var rightCorrectness = true
+            var rightTreeBlackNodesCorrectness = true
             var rightBlackHeight = 1
 
-            if (this.right != null) {
-                val tmp = (this.right as RBNode).verifyRB()
-                rightCorrectness = tmp.first
-                rightBlackHeight = tmp.second
+            if (right != null) {
+                val rightVerify = (right as RBNode).verifyRB()
+                rightTreeBlackNodesCorrectness = rightVerify.first
+                rightBlackHeight = rightVerify.second
             }
 
-            return Pair(leftCorrectness
-                    && rightCorrectness
+            return Pair(leftTreeBlackNodesCorrectness
+                    && rightTreeBlackNodesCorrectness
                     && rightBlackHeight == leftBlackHeight
-                , leftBlackHeight + if (this.color == Color.BLACK) 1 else 0)
+                , leftBlackHeight + if (color == Color.BLACK) 1 else 0)
         }
 
 

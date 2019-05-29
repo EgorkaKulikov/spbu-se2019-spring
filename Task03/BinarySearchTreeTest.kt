@@ -39,7 +39,7 @@ class BinarySearchTreeTest {
     }
 
     @Test
-    fun stressTest() {
+    fun structureTest() {
         val tree = randomBinarySearchTree(1000)
         assert(tree.isBinarySearchTree())
     }
@@ -84,7 +84,6 @@ class BinarySearchTreeTest {
         assertEquals(root.right , rightSon)
         assertEquals(root.left, leftSon)
         assertEquals(root, leftSon.parent)
-        assertEquals(root, leftSon.parent)
     }
 
     @Test
@@ -93,10 +92,10 @@ class BinarySearchTreeTest {
 
         tree.insert(2, 3)
 
-        val sizeBefore = tree.size
+        val sizeBefore = tree.numberOfNodes
         tree.insert(6, 6)
 
-        assertEquals(sizeBefore + 1, tree.size)
+        assertEquals(sizeBefore + 1, tree.numberOfNodes)
     }
 
     @Test
@@ -105,10 +104,10 @@ class BinarySearchTreeTest {
 
         tree.insert(3, 5)
 
-        val sizeBefore = tree.size
+        val sizeBefore = tree.numberOfNodes
         tree.insert(2, 4)
 
-        assertEquals(sizeBefore + 1, tree.size)
+        assertEquals(sizeBefore + 1, tree.numberOfNodes)
     }
 
     @Test
@@ -119,16 +118,16 @@ class BinarySearchTreeTest {
             tree.insert(i, i+3)
         }
 
-        val sizeBefore = tree.size
+        val sizeBefore = tree.numberOfNodes
         tree.insert(4, 4)
 
-        assertEquals(sizeBefore, tree.size)
+        assertEquals(sizeBefore, tree.numberOfNodes)
     }
 
     @Test
     fun sizeOfEmptyTreeTest(){
         val tree = BinarySearchTree<Int, Int>()
 
-        assertEquals(tree.size, 0)
+        assertEquals(tree.numberOfNodes, 0)
     }
 }

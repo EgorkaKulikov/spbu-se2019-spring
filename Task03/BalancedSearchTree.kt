@@ -23,9 +23,6 @@ abstract class BalancedSearchTree<K : Comparable<K>, V> : BinarySearchTree<K, V>
             }
 
         internal fun rotateLeft() {
-            if (this.right == null)
-                return
-
             val rightSon = this.right
             if (this.parent == null) {
                 rightSon?.parent = null
@@ -50,9 +47,6 @@ abstract class BalancedSearchTree<K : Comparable<K>, V> : BinarySearchTree<K, V>
         }
 
         internal fun rotateRight() {
-            if (this.left == null)
-                return
-
             val leftSon = this.left
             if (this.parent == null) {
                 leftSon?.parent = null

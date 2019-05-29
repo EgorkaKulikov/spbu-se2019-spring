@@ -39,7 +39,7 @@ class AVLTreeTest {
     }
 
     @Test
-    fun stressTest() {
+    fun structureTest() {
         val tree = randomAVLTree(10000)
         assert(tree.parentsCorrectness())
         assert(tree.isAVLTree())

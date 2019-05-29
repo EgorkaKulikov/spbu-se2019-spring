@@ -32,7 +32,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
     }
 
     protected var root: Node? = null
-    var size = 0
+    var numberOfNodes = 0
 
     fun find(key: K): V? {
         var tempNode = root
@@ -54,7 +54,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
     internal open fun innerInsert(key: K, value: V): Node {
         if (root == null) {
             root = createNode(key, value, null)
-            size++
+            numberOfNodes++
             return root!!
         }
 
@@ -64,7 +64,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
                 if (tempNode.left == null) {
                     val newNode = createNode(key, value, tempNode)
                     tempNode.left = newNode
-                    size++
+                    numberOfNodes++
                     return newNode
                 }
                 else {
@@ -75,7 +75,7 @@ open class BinarySearchTree<K : Comparable<K>, V> {
                 if (tempNode.right == null) {
                     val newNode = createNode(key, value, tempNode)
                     tempNode.right = newNode
-                    size++
+                    numberOfNodes++
                     return newNode
                 }
                 else {
