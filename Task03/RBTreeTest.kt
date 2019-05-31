@@ -41,7 +41,7 @@ class RBTreeTest {
 
     @Test
     fun structureTest() {
-        val tree = randomRBTree(10000)
+        val tree = randomRBTree(100000)
         assert(tree.isRBTree())
         assert(tree.isBinarySearchTree())
     }

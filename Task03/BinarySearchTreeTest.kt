@@ -40,7 +40,7 @@ class BinarySearchTreeTest {
 
     @Test
     fun structureTest() {
-        val tree = randomBinarySearchTree(1000)
+        val tree = randomBinarySearchTree(100000)
         assert(tree.isBinarySearchTree())
     }
 

@@ -40,7 +40,7 @@ class AVLTreeTest {
 
     @Test
     fun structureTest() {
-        val tree = randomAVLTree(10000)
+        val tree = randomAVLTree(100000)
         assert(tree.parentsCorrectness())
         assert(tree.isAVLTree())
         assert(tree.isBinarySearchTree())
