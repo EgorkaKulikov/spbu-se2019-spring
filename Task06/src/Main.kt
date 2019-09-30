@@ -1,12 +1,26 @@
 import java.io.File
+import java.io.FileNotFoundException
+import kotlin.system.exitProcess
 
 const val BMP_HEADER_SIZE = 112 //14 * 8 bytes
 const val WORD_SIZE = 21
-const val PATH_TO_PICTURE = "images/img.bmp"
 
 fun main()
 {
-    val data = File(PATH_TO_PICTURE).readBytes()
+    println("Enter path to .bmp image:")
+    val pathToPicture = readLine()
+    var data = ByteArray(0)
+
+    try
+    {
+        data = File(pathToPicture).readBytes()
+    }
+    catch (e: FileNotFoundException)
+    {
+        println("File not found! ($pathToPicture)")
+        exitProcess(1)
+    }
+
     val size = data.size
 
     val header = ByteArray(BMP_HEADER_SIZE) { i -> data[i] }
@@ -26,6 +40,7 @@ fun createImages(imageSize : Int, imageData : ByteArray, header: ByteArray)
 
         for (i in 0 until imageSize step 2)
         {
+            //Merging two bytes into single data segment
             val currentDataSegment =
                 if (i + 1 < imageSize)
                     imageData[i].toInt().and(0xFF).shl(8) +
@@ -35,18 +50,21 @@ fun createImages(imageSize : Int, imageData : ByteArray, header: ByteArray)
 
             val corruptedEncodedSegment = corrupt(encode(currentDataSegment), currentPercent)
 
+            //Corrupting data and splitting data segment
             corruptedData[i] = removeControlBits(corruptedEncodedSegment).and(0xFF00).shr(8).toByte()
             if (i + 1 < imageSize)
                 corruptedData[i + 1] = removeControlBits(corruptedEncodedSegment).and(0xFF).toByte()
 
+            //Restoration data and splitting data segment
             restoredData[i] = decode(corruptedEncodedSegment).and(0xFF00).shr(8).toByte()
             if (i + 1 < imageSize)
                 restoredData[i + 1] = decode(corruptedEncodedSegment).and(0xFF).toByte()
         }
 
         createFile(header, corruptedData, "images/img_corrupted_$currentPercent.bmp")
-        createFile(header, restoredData, "images/img_restored_$currentPercent.bmp")
+        createFile(header, restoredData,  "images/img_restored_$currentPercent.bmp")
     }
+    println("Images created in 'images' folder")
 }
 
 fun createFile(header: ByteArray, data: ByteArray, name: String)
@@ -118,7 +136,7 @@ private fun decode(encodedData: Int): Int
 
     for (i in listOf(1, 2, 4, 8, 16))
         if (encodedData.and(1 shl (WORD_SIZE - i)) !=
-                    newData.and(1 shl (WORD_SIZE - i)))
+            newData.and(1 shl (WORD_SIZE - i)))
             incorrectIndex += i
 
 
